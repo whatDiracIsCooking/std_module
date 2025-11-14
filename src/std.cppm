@@ -7,4 +7,5 @@ export module std_module;
 
 // Re-export submodules
 export import std_module.format;
+export import std_module.string_view;
 
