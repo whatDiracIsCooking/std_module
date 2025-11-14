@@ -83,6 +83,7 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_ALGORITHM` | ON | Build std_module.algorithm |
 | `STD_MODULE_BUILD_BITSET` | ON | Build std_module.bitset |
 | `STD_MODULE_BUILD_STRING_VIEW` | ON | Build std_module.string_view |
+| `STD_MODULE_BUILD_DEQUE` | ON | Build std_module.deque |
 
 Example:
 
@@ -102,6 +103,7 @@ Currently wrapped standard library headers:
 - ✅ `<algorithm>` → `import std_module.algorithm;`
 - ✅ `<bitset>` → `import std_module.bitset;`
 - ✅ `<string_view>` → `import std_module.string_view;`
+- ✅ `<deque>` → `import std_module.deque;`
 
 *More modules coming soon!*
 

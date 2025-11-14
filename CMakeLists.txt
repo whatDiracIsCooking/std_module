@@ -19,6 +19,7 @@ option(STD_MODULE_BUILD_VECTOR "Build std_module.vector" ON)
 option(STD_MODULE_BUILD_ALGORITHM "Build std_module.algorithm" ON)
 option(STD_MODULE_BUILD_BITSET "Build std_module.bitset" ON)
 option(STD_MODULE_BUILD_STRING_VIEW "Build std_module.string_view" ON)
+option(STD_MODULE_BUILD_DEQUE "Build std_module.deque" ON)
 # More options will be added as we wrap more headers:
 # option(STD_MODULE_BUILD_STRING "Build std_module.string" ON)
 # etc.
@@ -134,4 +135,5 @@ message(STATUS "  vector:                 ${STD_MODULE_BUILD_VECTOR}")
 message(STATUS "  algorithm:              ${STD_MODULE_BUILD_ALGORITHM}")
 message(STATUS "  bitset:                 ${STD_MODULE_BUILD_BITSET}")
 message(STATUS "  string_view:            ${STD_MODULE_BUILD_STRING_VIEW}")
+message(STATUS "  deque:                  ${STD_MODULE_BUILD_DEQUE}")
 message(STATUS "")

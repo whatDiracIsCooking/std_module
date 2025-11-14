@@ -90,3 +90,20 @@ if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_VECTOR)
 
     message(STATUS "Configured test: test_vector")
 endif()
+
+# Test for deque module
+if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_DEQUE)
+    add_executable(test_deque test_deque.cpp)
+
+    target_link_libraries(test_deque
+        PRIVATE
+            std_module::deque
+    )
+
+    target_compile_features(test_deque PRIVATE cxx_std_20)
+
+    # Register as a CTest test
+    add_test(NAME test_deque COMMAND test_deque)
+
+    message(STATUS "Configured test: test_deque")
+endif()
