@@ -17,6 +17,7 @@
 # Add all available modules
 std_module_add_module(algorithm)
 std_module_add_module(any)
+std_module_add_module(array)
 std_module_add_module(atomic)
 std_module_add_module(bitset)
 std_module_add_module(complex)
