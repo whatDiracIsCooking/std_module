@@ -145,3 +145,25 @@ macro(std_module_add_to_aggregate MODULE_NAME)
         target_link_libraries(std_module_all INTERFACE std_module::${MODULE_NAME})
     endif()
 endmacro()
+
+# ------------------------------------------------------------------------------
+# std_module_link_test_framework
+# ------------------------------------------------------------------------------
+# Links a test executable to the test_framework module (if tests are enabled).
+#
+# Usage:
+#   std_module_link_test_framework(bit)
+#   std_module_link_test_framework(vector)
+#
+# This macro will:
+#   - Check if target test_<name> exists
+#   - Link it against std_module::test_framework
+#
+# Parameters:
+#   MODULE_NAME - The name of the module being tested (e.g., "bit", "vector")
+#
+macro(std_module_link_test_framework MODULE_NAME)
+    if(TARGET test_${MODULE_NAME})
+        target_link_libraries(test_${MODULE_NAME} PRIVATE std_module::test_framework)
+    endif()
+endmacro()

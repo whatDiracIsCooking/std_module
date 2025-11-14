@@ -10,38 +10,6 @@
 #   - Registering with CTest
 #   - Printing status message
 
-# ==============================================================================
-# Test Framework Module (Testing Utility)
-# ==============================================================================
-
-# The test_framework is a testing utility module (not a stdlib wrapper).
-# It provides assert functions, I/O utilities, and formatting helpers for
-# pure module-only tests. Only built when tests are enabled.
-
-if(STD_MODULE_BUILD_TESTS)
-    # Create the test_framework module library
-    add_library(std_module_test_framework)
-
-    # Add the module source file
-    target_sources(std_module_test_framework
-        PUBLIC
-            FILE_SET CXX_MODULES FILES
-                test_framework.cppm
-    )
-
-    # Require C++20
-    target_compile_features(std_module_test_framework PUBLIC cxx_std_20)
-
-    # Create namespaced alias for consistent usage
-    add_library(std_module::test_framework ALIAS std_module_test_framework)
-
-    message(STATUS "Configured test utility: std_module::test_framework")
-endif()
-
-# ==============================================================================
-# Module Tests
-# ==============================================================================
-
 # Add tests for all available modules (alphabetical order)
 std_module_add_test(algorithm)
 
@@ -59,12 +27,6 @@ std_module_add_test(array)
 # std_module_add_test(atomic)  # TODO: Fix linking with libatomic
 std_module_add_test(barrier)
 std_module_add_test(bit)
-
-# test_bit uses test_framework for cleaner testing
-if(TARGET test_bit)
-    target_link_libraries(test_bit PRIVATE std_module::test_framework)
-endif()
-
 std_module_add_test(bitset)
 std_module_add_test(charconv)
 std_module_add_test(chrono)
@@ -129,16 +91,6 @@ std_module_add_test(string)
 std_module_add_test(string_view)
 std_module_add_test(syncstream)
 std_module_add_test(system_error)
-
-# Test the test_framework itself
-if(STD_MODULE_BUILD_TESTS)
-    add_executable(test_test_framework test_test_framework.cpp)
-    target_link_libraries(test_test_framework PRIVATE std_module::test_framework)
-    target_compile_features(test_test_framework PRIVATE cxx_std_20)
-    add_test(NAME test_test_framework COMMAND test_test_framework)
-    message(STATUS "Configured test: test_test_framework")
-endif()
-
 std_module_add_test(thread)
 std_module_add_test(tuple)
 std_module_add_test(type_traits)
@@ -149,6 +101,37 @@ std_module_add_test(unordered_set)
 std_module_add_test(valarray)
 std_module_add_test(variant)
 std_module_add_test(vector)
+
+# ==============================================================================
+# Test Framework - Testing Utility Module
+# ==============================================================================
+
+# The test_framework is a testing utility module (not a stdlib wrapper).
+# It provides assert functions, I/O utilities, and formatting helpers for
+# pure module-only tests. Only built when tests are enabled.
+
+if(STD_MODULE_BUILD_TESTS)
+    # Build the test_framework module library
+    add_library(std_module_test_framework)
+    target_sources(std_module_test_framework
+        PUBLIC
+            FILE_SET CXX_MODULES FILES
+                test_framework.cppm
+    )
+    target_compile_features(std_module_test_framework PUBLIC cxx_std_20)
+    add_library(std_module::test_framework ALIAS std_module_test_framework)
+    message(STATUS "Configured test utility: std_module::test_framework")
+
+    # Test the test_framework itself
+    add_executable(test_test_framework test_test_framework.cpp)
+    target_link_libraries(test_test_framework PRIVATE std_module::test_framework)
+    target_compile_features(test_test_framework PRIVATE cxx_std_20)
+    add_test(NAME test_test_framework COMMAND test_test_framework)
+    message(STATUS "Configured test: test_test_framework")
+
+    # Link tests that use test_framework
+    std_module_link_test_framework(bit)
+endif()
 
 # ==============================================================================
 # Symbol Coverage Analysis
