@@ -15,6 +15,7 @@ std_module_add_test(format)
 std_module_add_test(algorithm)
 std_module_add_test(bitset)
 std_module_add_test(string_view)
+std_module_add_test(complex)
 std_module_add_test(vector)
 
 # Add more tests here as modules are implemented:
