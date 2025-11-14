@@ -18,6 +18,7 @@ std_module_add_test(string_view)
 std_module_add_test(complex)
 std_module_add_test(vector)
 std_module_add_test(exception)
+std_module_add_test(deque)
 
 # Add more tests here as modules are implemented:
 # std_module_add_test(string)
