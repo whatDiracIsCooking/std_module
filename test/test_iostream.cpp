@@ -9,11 +9,10 @@
 
 import std_module.iostream;
 
-// EXPERIMENT: NO #include directives - testing pure module-only compilation
-// This tests whether C++20 modules can be self-sufficient without #include
+// Pure module-only compilation test (NO #include directives)
+// Validates that C++20 modules are self-sufficient with proper operator exports
 
-// Define our own assert since we can't include <cassert>
-// Note: Using soft assert to avoid crashes - just warn instead of trap
+// Define assert since we're not using #include <cassert>
 #define assert(condition) \
     if (!(condition)) { \
         std::cerr << "⚠️  Assertion failed: " #condition << "\n"; \

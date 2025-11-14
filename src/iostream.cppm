@@ -29,8 +29,8 @@ export namespace std {
     using std::ends;
     using std::flush;
 
-    // EXPERIMENTAL: Export operator<< overloads (attempting to fix ADL limitation)
-    // Note: This may not work due to C++20 module ADL limitations
+    // Export operator overloads (fixes C++20 module ADL limitation)
+    // CRITICAL: Without these, operators won't be found across module boundaries
     using std::operator<<;
     using std::operator>>;
 }
