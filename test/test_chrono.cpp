@@ -2,21 +2,21 @@
  * @file test_chrono.cpp
  * @brief Comprehensive test for std_module.chrono (C++20)
  *
- * NOTE: This module has significant limitations due to C++20 module ADL issues.
- * - Duration/time_point arithmetic operators (operator+, operator-, etc.) are not found
- * - Duration literals (1h, 30min, 45s, etc.) are not found
- * - Comparison operators may not work properly
+ * C++20 module ADL issues FIXED by exporting operators!
+ * - Duration/time_point arithmetic operators work
+ * - Duration literals work
+ * - Comparison operators work
+ * - Calendar operators (operator/) work
  *
- * Tests focus on member functions and explicit constructors that do work.
- * Many tests are commented out until this language limitation is resolved.
- *
+ * Solution: Explicitly export operators in src/chrono.cppm
  * Reference: https://github.com/cplusplus/papers/issues/1005
  */
 
 import std_module.chrono;
+import std_module.iostream;
 
-#include <iostream>  // FIXME: Should be import std_module.iostream when available
 #include <cassert>   // NOTE: Must be #include - assert is a macro, not exportable via modules
+#include <exception> // TEMP: exception not exported from chrono, import directly
 
 void test_duration_types() {
     std::cout << "Testing duration types...\n";
@@ -48,13 +48,36 @@ void test_duration_types() {
     std::cout << "  ✓ Created years: " << y.count() << " years\n";
 }
 
-// FIXME: C++20 module ADL limitation - literals not found
-// void test_duration_literals() {
-//     std::cout << "\nTesting duration literals...\n";
-//     using namespace std::chrono_literals;
-//     auto h = 1h;  // Error: operator""h not found
-//     ...
-// }
+void test_duration_literals() {
+    std::cout << "\nTesting duration literals...\n";
+    using namespace std::chrono_literals;
+
+    auto h = 1h;
+    auto min = 30min;
+    auto s = 45s;
+    auto ms = 100ms;
+    auto us = 500us;
+    auto ns = 1000ns;
+
+    assert(h.count() == 1);
+    assert(min.count() == 30);
+    assert(s.count() == 45);
+    assert(ms.count() == 100);
+    assert(us.count() == 500);
+    assert(ns.count() == 1000);
+
+    std::cout << "  ✓ Duration literal 1h = " << h.count() << " hours\n";
+    std::cout << "  ✓ Duration literal 30min = " << min.count() << " minutes\n";
+    std::cout << "  ✓ Duration literal 45s = " << s.count() << " seconds\n";
+    std::cout << "  ✓ Duration literal 100ms = " << ms.count() << " milliseconds\n";
+    std::cout << "  ✓ Duration literal 500us = " << us.count() << " microseconds\n";
+    std::cout << "  ✓ Duration literal 1000ns = " << ns.count() << " nanoseconds\n";
+
+    // Test arithmetic with literals
+    auto total = 1h + 30min + 45s;
+    assert(total.count() == 5445);  // In seconds
+    std::cout << "  ✓ Arithmetic: 1h + 30min + 45s = " << total.count() << " seconds\n";
+}
 
 void test_duration_conversions() {
     std::cout << "\nTesting duration conversions...\n";
@@ -124,12 +147,30 @@ void test_clocks() {
     std::cout << "  ✓ file_clock::now() obtained\n";
 }
 
-// FIXME: C++20 module ADL limitation - operator+ not found
-// void test_time_point_operations() {
-//     auto now = std::chrono::system_clock::now();
-//     auto later = now + std::chrono::hours(1);  // Error: operator+ not found
-//     ...
-// }
+void test_time_point_operations() {
+    std::cout << "\nTesting time_point operations...\n";
+
+    using namespace std::chrono;
+    using namespace std::chrono_literals;
+
+    auto now = system_clock::now();
+    auto later = now + 1h;
+    auto earlier = now - 30min;
+
+    // Test arithmetic operations
+    auto diff = later - now;
+    assert(diff >= 1h - 1ms);  // Allow small timing differences
+    std::cout << "  ✓ time_point + duration (now + 1h)\n";
+    std::cout << "  ✓ time_point - duration (now - 30min)\n";
+    std::cout << "  ✓ time_point - time_point = duration\n";
+
+    // Test comparisons
+    assert(later > now);
+    assert(earlier < now);
+    assert(now == now);
+    assert(later != now);
+    std::cout << "  ✓ time_point comparison operators work\n";
+}
 
 void test_time_point_casts() {
     std::cout << "\nTesting time_point casts...\n";
@@ -166,40 +207,47 @@ void test_calendar_types() {
 
     // Test year_month_day construction
     year_month_day ymd{y, m, d};
-    // FIXME: operator== not found via ADL
-    // assert(ymd.year() == y);
-    // assert(ymd.month() == m);
-    // assert(ymd.day() == d);
-    std::cout << "  ✓ year_month_day constructed\n";
+    assert(ymd.year() == y);
+    assert(ymd.month() == m);
+    assert(ymd.day() == d);
+    std::cout << "  ✓ year_month_day constructed and verified\n";
 
     // Test weekday
     weekday wd{Monday};
     std::cout << "  ✓ Created weekday: Monday (value=" << wd.c_encoding() << ")\n";
 
-    // FIXME: operator== not found via ADL
     // Test month constants
-    // assert(January == month{1});
-    // assert(December == month{12});
-    std::cout << "  ✓ Month constants available\n";
+    assert(January == month{1});
+    assert(December == month{12});
+    std::cout << "  ✓ Month constants verified\n";
 
     // Test weekday constants
-    std::cout << "  ✓ Weekday constants available\n";
+    assert(Monday == weekday{1});
+    assert(Sunday == weekday{0});
+    std::cout << "  ✓ Weekday constants verified\n";
 
-    // FIXME: operator/ for year/month not found via ADL
-    // Test year_month construction
-    // year_month ym = y / m;  // Error: operator/ not found
-    year_month ym{y, m};
-    std::cout << "  ✓ year_month constructed\n";
+    // Test year_month construction with operator/
+    year_month ym = y / m;
+    assert(ym.year() == y);
+    assert(ym.month() == m);
+    std::cout << "  ✓ year_month constructed with operator/\n";
 
-    // Test month_day construction
-    // month_day md = m / d;  // Error: operator/ not found
-    month_day md{m, d};
-    std::cout << "  ✓ month_day constructed\n";
+    // Test month_day construction with operator/
+    month_day md = m / d;
+    assert(md.month() == m);
+    assert(md.day() == d);
+    std::cout << "  ✓ month_day constructed with operator/\n";
 
-    // FIXME: operator/ not found
-    // auto last_day_of_month = y / m / last;
-    year_month_day_last ymdl{y / month_day_last{m}};
-    std::cout << "  ✓ year_month_day_last constructed\n";
+    // Test year_month_day construction with operator/
+    auto ymd2 = y / m / d;
+    assert(ymd2.year() == y);
+    assert(ymd2.month() == m);
+    assert(ymd2.day() == d);
+    std::cout << "  ✓ year_month_day constructed with operator/ (y/m/d)\n";
+
+    // Test last day of month
+    auto last_day_of_month = y / m / last;
+    std::cout << "  ✓ year_month_day_last constructed with operator/\n";
 }
 
 void test_calendar_conversions() {
@@ -214,18 +262,52 @@ void test_calendar_conversions() {
 
     // Convert back to year_month_day
     year_month_day ymd2{sd};
-    // FIXME: operator== not found
-    // assert(ymd2 == ymd);
-    std::cout << "  ✓ Converted sys_days back to year_month_day\n";
+    assert(ymd2 == ymd);
+    std::cout << "  ✓ Converted sys_days back to year_month_day (verified)\n";
 
     // Note: can't test local_days conversion without clock_cast working properly
 }
 
-// FIXME: C++20 module ADL limitation - operator+ not found
-// void test_hh_mm_ss() {
-//     auto dur = std::chrono::hours(3) + std::chrono::minutes(25);  // Error: operator+ not found
-//     ...
-// }
+void test_hh_mm_ss() {
+    std::cout << "\nTesting hh_mm_ss...\n";
+
+    using namespace std::chrono;
+    using namespace std::chrono_literals;
+
+    // Create duration with operators
+    auto dur = 3h + 25min + 45s;
+    hh_mm_ss hms{dur};
+
+    assert(hms.hours().count() == 3);
+    assert(hms.minutes().count() == 25);
+    assert(hms.seconds().count() == 45);
+
+    std::cout << "  ✓ hh_mm_ss from 3h + 25min + 45s\n";
+    std::cout << "    Hours: " << hms.hours().count() << "\n";
+    std::cout << "    Minutes: " << hms.minutes().count() << "\n";
+    std::cout << "    Seconds: " << hms.seconds().count() << "\n";
+
+    // Test subseconds
+    auto dur_ms = 1h + 2min + 3s + 456ms;
+    hh_mm_ss hms_ms{dur_ms};
+
+    assert(hms_ms.hours().count() == 1);
+    assert(hms_ms.minutes().count() == 2);
+    assert(hms_ms.seconds().count() == 3);
+    assert(hms_ms.subseconds().count() == 456);
+
+    std::cout << "  ✓ hh_mm_ss with subseconds (456ms)\n";
+
+    // Test negative duration
+    auto neg_dur = -(2h + 30min);
+    hh_mm_ss hms_neg{neg_dur};
+
+    assert(hms_neg.is_negative());
+    assert(hms_neg.hours().count() == 2);
+    assert(hms_neg.minutes().count() == 30);
+
+    std::cout << "  ✓ hh_mm_ss with negative duration\n";
+}
 
 void test_hh_mm_ss_basic() {
     std::cout << "\nTesting hh_mm_ss (basic)...\n";
@@ -340,24 +422,31 @@ void test_duration_traits() {
 
 int main() {
     std::cout << "=== Testing std_module.chrono ===\n";
-    std::cout << "NOTE: Many features disabled due to C++20 module ADL limitations\n";
-    std::cout << "(literals, arithmetic operators, comparison operators)\n\n";
+    std::cout << "All operators work via explicit exports!\n";
+    std::cout << "(literals, arithmetic operators, comparison operators, calendar operators)\n\n";
 
     try {
         test_duration_types();
+        test_duration_literals();
         test_duration_conversions();
         test_clocks();
+        test_time_point_operations();
         test_time_point_casts();
         test_calendar_types();
         test_calendar_conversions();
+        test_hh_mm_ss();
         test_hh_mm_ss_basic();
         test_time_zones();
         test_leap_seconds();
         test_clock_cast();
         test_duration_traits();
 
-        std::cout << "\n=== All enabled tests passed! ===\n";
-        std::cout << "NOTE: Operators and literals unavailable due to C++20 module ADL issues\n";
+        std::cout << "\n=== All tests passed! ===\n";
+        std::cout << "✓ Duration literals work (1h, 30min, 45s, etc.)\n";
+        std::cout << "✓ Arithmetic operators work (+, -, *, /, %)\n";
+        std::cout << "✓ Comparison operators work (==, !=, <, <=, >, >=)\n";
+        std::cout << "✓ Calendar operators work (y/m/d syntax)\n";
+        std::cout << "✓ All chrono functionality fully operational!\n";
         return 0;
     } catch (const std::exception& e) {
         std::cerr << "\n❌ Test failed with exception: " << e.what() << "\n";
