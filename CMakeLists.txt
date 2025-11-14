@@ -26,6 +26,7 @@ option(STD_MODULE_BUILD_FSTREAM "Build std_module.fstream" ON)
 option(STD_MODULE_BUILD_FUNCTIONAL "Build std_module.functional" ON)
 option(STD_MODULE_BUILD_IOS "Build std_module.ios" ON)
 option(STD_MODULE_BUILD_IOSTREAM "Build std_module.iostream" ON)
+option(STD_MODULE_BUILD_ISTREAM "Build std_module.istream" ON)
 # More options will be added as we wrap more headers:
 # option(STD_MODULE_BUILD_STRING "Build std_module.string" ON)
 # etc.
@@ -155,4 +156,5 @@ message(STATUS "  fstream:                ${STD_MODULE_BUILD_FSTREAM}")
 message(STATUS "  functional:             ${STD_MODULE_BUILD_FUNCTIONAL}")
 message(STATUS "  ios:                    ${STD_MODULE_BUILD_IOS}")
 message(STATUS "  iostream:               ${STD_MODULE_BUILD_IOSTREAM}")
+message(STATUS "  istream:                ${STD_MODULE_BUILD_ISTREAM}")
 message(STATUS "")

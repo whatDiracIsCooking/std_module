@@ -90,6 +90,7 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_FUNCTIONAL` | ON | Build std_module.functional |
 | `STD_MODULE_BUILD_IOS` | ON | Build std_module.ios |
 | `STD_MODULE_BUILD_IOSTREAM` | ON | Build std_module.iostream |
+| `STD_MODULE_BUILD_ISTREAM` | ON | Build std_module.istream |
 
 Example:
 
@@ -116,6 +117,7 @@ Currently wrapped standard library headers:
 - ✅ `<functional>` → `import std_module.functional;`
 - ✅ `<ios>` → `import std_module.ios;`
 - ✅ `<iostream>` → `import std_module.iostream;`
+- ✅ `<istream>` → `import std_module.istream;`
 
 *More modules coming soon!*
 
@@ -149,6 +151,7 @@ The build system provides these CMake targets:
 - `std_module::functional` - Just the functional module
 - `std_module::ios` - Just the ios module
 - `std_module::iostream` - Just the iostream module
+- `std_module::istream` - Just the istream module
 - `std_module::all` - All available modules (convenience target)
 
 Link only what you need:
@@ -183,6 +186,7 @@ std_module/
 │   ├── functional.cppm     # <functional> wrapper
 │   ├── ios.cppm            # <ios> wrapper
 │   ├── iostream.cppm       # <iostream> wrapper
+│   ├── istream.cppm        # <istream> wrapper
 │   └── std.cppm           # Aggregate module (WIP)
 ├── test/                   # Tests and examples
 │   ├── CMakeLists.txt
@@ -198,6 +202,7 @@ std_module/
 │   ├── test_functional.cpp
 │   ├── test_ios.cpp
 │   ├── test_iostream.cpp
+│   ├── test_istream.cpp
 │   └── build_manual.sh    # Manual build demo
 └── cmake/                  # CMake configuration files
 ```
