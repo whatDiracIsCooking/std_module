@@ -26,6 +26,7 @@ std_module_add_module(deque)
 std_module_add_module(fstream)
 std_module_add_module(functional)
 std_module_add_module(ios)
+std_module_add_module(iostream)
 
 # Add more modules here as they are implemented:
 # std_module_add_module(string)
@@ -54,6 +55,7 @@ std_module_add_to_aggregate(deque)
 std_module_add_to_aggregate(fstream)
 std_module_add_to_aggregate(functional)
 std_module_add_to_aggregate(ios)
+std_module_add_to_aggregate(iostream)
 
 # Add more module dependencies here as they are implemented:
 # std_module_add_to_aggregate(string)
