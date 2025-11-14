@@ -99,7 +99,31 @@ if(Python3_FOUND)
         VERBATIM
     )
 
+    # Add export validation as a CTest test
+    add_test(
+        NAME validate-exports
+        COMMAND ${Python3_EXECUTABLE}
+            ${CMAKE_SOURCE_DIR}/scripts/validate_exports.py --informational
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+
+    # Set test properties
+    set_tests_properties(validate-exports PROPERTIES
+        LABELS "validation"
+        TIMEOUT 120
+    )
+
+    # Also keep as a custom target for manual invocation
+    add_custom_target(validate-exports-target
+        COMMAND ${Python3_EXECUTABLE}
+            ${CMAKE_SOURCE_DIR}/scripts/validate_exports.py --informational
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Validating module exports against Clang AST"
+        VERBATIM
+    )
+
     message(STATUS "Symbol coverage enabled - runs automatically with tests")
+    message(STATUS "Export validation enabled - runs automatically with tests")
 else()
-    message(STATUS "Python3 not found - symbol coverage disabled")
+    message(STATUS "Python3 not found - symbol coverage and export validation disabled")
 endif()

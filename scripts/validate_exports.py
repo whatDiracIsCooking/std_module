@@ -373,6 +373,12 @@ This tool provides authoritative validation by comparing regex extraction
         help='Path to clang++ executable (default: clang++)'
     )
 
+    parser.add_argument(
+        '--informational',
+        action='store_true',
+        help='Always exit with code 0 (informational only, for CI)'
+    )
+
     args = parser.parse_args()
 
     # Disable colors if requested or not a TTY
@@ -414,7 +420,7 @@ This tool provides authoritative validation by comparing regex extraction
             return 1
 
         success = validate_module(args.module, args.list_only)
-        return 0 if success else 1
+        return 0 if (success or args.informational) else 1
 
     else:
         # Validate all modules
@@ -423,7 +429,8 @@ This tool provides authoritative validation by comparing regex extraction
         if args.list_only:
             return 0
 
-        return 0 if failed == 0 else 1
+        # In informational mode, always return 0 (like symbol_coverage.py)
+        return 0 if (failed == 0 or args.informational) else 1
 
 
 if __name__ == "__main__":
