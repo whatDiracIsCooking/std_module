@@ -110,16 +110,61 @@ The coverage report appears in test output but won't fail the build. To track co
 
 ### Current Coverage (as of last check)
 
-| Module | Coverage | Status |
-|--------|----------|--------|
-| bitset | 100.0% | ✅ Perfect |
-| string_view | 85.7% | 🟡 Good |
-| vector | 75.0% | 🟡 Good |
-| algorithm | 58.9% | 🟠 Needs work |
-| format | 56.0% | 🟠 Needs work |
-| **Overall** | **60.9%** | 🟠 |
+| Module | Coverage | Tested/Total | Status |
+|--------|----------|--------------|--------|
+| any | 100.0% | 5/5 | ✅ Perfect |
+| barrier | 100.0% | 1/1 | ✅ Perfect |
+| bit | 100.0% | 13/13 | ✅ Perfect |
+| bitset | 100.0% | 2/2 | ✅ Perfect |
+| complex | 100.0% | 26/26 | ✅ Perfect |
+| iomanip | 100.0% | 11/11 | ✅ Perfect |
+| iterator | 100.0% | 85/85 | ✅ Perfect |
+| latch | 100.0% | 1/1 | ✅ Perfect |
+| limits | 100.0% | 3/3 | ✅ Perfect |
+| locale | 100.0% | 46/46 | ✅ Perfect |
+| map | 100.0% | 4/4 | ✅ Perfect |
+| memory | 100.0% | 103/103 | ✅ Perfect |
+| new_ | 100.0% | 14/14 | ✅ Perfect |
+| numeric | 100.0% | 13/13 | ✅ Perfect |
+| optional | 100.0% | 8/8 | ✅ Perfect |
+| queue | 100.0% | 2/2 | ✅ Perfect |
+| random | 100.0% | 79/79 | ✅ Perfect |
+| semaphore | 100.0% | 2/2 | ✅ Perfect |
+| shared_mutex | 100.0% | 2/2 | ✅ Perfect |
+| span | 100.0% | 10/10 | ✅ Perfect |
+| stdexcept | 100.0% | 9/9 | ✅ Perfect |
+| stop_token | 100.0% | 4/4 | ✅ Perfect |
+| string_view | 100.0% | 51/51 | ✅ Perfect |
+| system_error | 100.0% | 10/10 | ✅ Perfect |
+| thread | 100.0% | 5/5 | ✅ Perfect |
+| tuple | 100.0% | 13/13 | ✅ Perfect |
+| typeindex | 100.0% | 2/2 | ✅ Perfect |
+| utility | 100.0% | 28/28 | ✅ Perfect |
+| variant | 100.0% | 13/13 | ✅ Perfect |
+| vector | 100.0% | 8/8 | ✅ Perfect |
+| concepts | 93.5% | 29/31 | 🟢 Excellent |
+| compare | 90.9% | 20/22 | 🟢 Excellent |
+| execution | 90.0% | 9/10 | 🟢 Excellent |
+| ios | 88.2% | 30/34 | 🟢 Excellent |
+| ostream | 87.0% | 20/23 | 🟢 Excellent |
+| istream | 86.4% | 19/22 | 🟢 Excellent |
+| exception | 85.7% | 12/14 | 🟢 Excellent |
+| type_traits | 84.0% | 137/163 | 🟢 Excellent |
+| list | 75.0% | 3/4 | 🟡 Good |
+| mutex | 71.4% | 15/21 | 🟡 Good |
+| iostream | 70.0% | 7/10 | 🟡 Good |
+| fstream | 66.7% | 8/12 | 🟡 Good |
+| filesystem | 67.3% | 37/55 | 🟡 Good |
+| functional | 63.5% | 40/63 | 🟡 Good |
+| charconv | 60.0% | 3/5 | 🟡 Good |
+| algorithm | 58.9% | 53/90 | 🟠 Needs work |
+| coroutine | 57.1% | 4/7 | 🟠 Needs work |
+| format | 56.0% | 14/25 | 🟠 Needs work |
+| deque | 25.0% | 1/4 | 🔴 Low |
 
-Many untested symbols are low-level types (like `basic_format_arg`, `format_args`) that are implicitly used but not directly referenced. Consider whether these need explicit tests.
+**Overall: 48 modules analyzed**
+
+Many untested symbols are low-level types (like `basic_format_arg`, `format_args`, `basic_ios`) that are implicitly used but not directly referenced. Consider whether these need explicit tests.
 
 ### Adding New Modules
 

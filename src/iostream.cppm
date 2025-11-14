@@ -23,4 +23,14 @@ export namespace std {
     using std::wcout;
     using std::wcerr;
     using std::wclog;
+
+    // Stream manipulators (from <ostream>)
+    using std::endl;
+    using std::ends;
+    using std::flush;
+
+    // Export operator overloads (fixes C++20 module ADL limitation)
+    // CRITICAL: Without these, operators won't be found across module boundaries
+    using std::operator<<;
+    using std::operator>>;
 }
