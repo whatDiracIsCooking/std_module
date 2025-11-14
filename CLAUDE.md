@@ -90,6 +90,48 @@ export namespace std {           // Export namespace
 - **File name:** `{header}.cppm` (e.g., `format.cppm`)
 - **Import statement:** `import std_module.{header};`
 
+### Compiler and Standard Library Compatibility
+
+**TESTED CONFIGURATIONS (2025-11-14):**
+
+With operator exports (see section 8), pure module-only compilation works on all practical configurations:
+
+| Compiler | Std Library | Status | Notes |
+|----------|-------------|--------|-------|
+| **Clang 18.1.3** | **libstdc++ 13** | ✅ **Works** | Most common Linux config |
+| **Clang 18.1.3** | **libc++ 18** | ✅ **Works** | Common on macOS |
+| **GCC 14.2.0** | **libstdc++ 14** | ✅ **Works** | Latest GCC |
+| GCC 14.2.0 | libc++ | ❌ Not supported | GCC doesn't support `-stdlib=` flag |
+
+**Key Findings:**
+
+1. **C++20 standard** (set via `CMAKE_CXX_STANDARD 20`)
+2. **Operator exports are CRITICAL** - Without them:
+   - Clang + libstdc++: String output shows memory addresses
+   - Clang + libc++: Build fails with concept redefinition errors
+   - GCC + libstdc++: Build fails with various template errors
+3. **Pure module-only works** - NO `#include` directives needed when operators are exported
+4. **Mixing import + include causes issues** - Don't mix `import std_module.header;` with `#include <header>`
+
+**Testing with different configurations:**
+
+```bash
+# Clang + libstdc++ (default)
+cmake -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++
+
+# Clang + libc++
+cmake -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++ \
+  -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+  -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi"
+
+# GCC + libstdc++ (default)
+cmake -B build -G Ninja -DCMAKE_CXX_COMPILER=g++-14
+```
+
+**Reference Implementation:**
+- See `src/iostream.cppm` for operator export pattern
+- See `test/test_iostream.cpp` for pure module-only test (no includes)
+
 ## Build System Architecture
 
 ### CMake Build Options
@@ -439,72 +481,117 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-#### 6. Handle C++20 Module ADL Limitations (If Applicable)
+#### 6. Handle C++20 Module ADL Limitations - **SOLUTION FOUND** ✅
 
-**CRITICAL:** If your module fails to compile with operator-related errors, you've likely
-encountered the C++20 module ADL limitation. This is a **known, unfixable limitation** in
-current C++20 module implementations.
+**BREAKTHROUGH DISCOVERY (2025-11-14):** The C++20 module ADL limitation CAN be fixed by
+explicitly exporting operators in the module!
 
-**Symptoms:**
-- Build errors about missing `operator<<`, `operator+`, `operator==`, etc.
-- Errors mentioning "no viable overload" for operators
-- Specifically affects: manipulators (`<iomanip>`), arithmetic types (`<complex>`, `<valarray>`),
-  and types with stream operators
+**The Problem:**
+- Argument-Dependent Lookup (ADL) doesn't work across module boundaries
+- Operators like `operator<<` aren't found even when types are exported
+- Without includes, string output shows memory addresses instead of text
+- Affects: stream operators, manipulators, arithmetic operators, etc.
 
-**DO NOT:**
+**THE SOLUTION:**
+Export operators explicitly in your module:
+
+```cpp
+export module std_module.header;
+
+export namespace std {
+    // Export types/objects
+    using std::cout;
+    using std::vector;
+
+    // CRITICAL: Export operators to fix ADL
+    using std::operator<<;
+    using std::operator>>;
+    using std::operator+;
+    using std::operator-;
+    // ... export all relevant operators
+
+    // Export manipulators if needed
+    using std::endl;
+    using std::flush;
+}
+```
+
+**Verification:**
+After exporting operators, test with **NO `#include` directives** - only `import`:
+
+```cpp
+import std_module.header;
+// NO #include directives!
+
+int main() {
+    std::cout << "Hello World" << std::endl;  // Works!
+}
+```
+
+**DO NOT (anymore):**
 - ❌ Add `#include <header>` to the test file to work around the issue
-- ❌ Try to manually export operator overloads (they won't be found anyway)
-- ❌ Assume you did something wrong - this is a language/compiler limitation
+- ❌ Accept broken operators as "unfixable" - they ARE fixable
+- ❌ Mix `import` + `#include` of the same header (causes different issues)
 
-**REQUIRED ACTIONS:**
+**REQUIRED ACTIONS (UPDATED 2025-11-14):**
 
-1. **Document the limitation in CLAUDE.md:**
-   - Add the module to the "Affected Modules List" in section 3 of "Testing Conventions"
-   - Describe which specific operators/functions don't work
-
-2. **Update README.md to mark as partially functional:**
-   ```markdown
-   - ⚠️ `<header>` → `import std_module.header;` (operators unusable, see limitations)
-   ```
-
-3. **Comment out broken tests with FIXME:**
+1. **Export operators in the module (.cppm file):**
    ```cpp
-   // FIXME: C++20 module ADL limitation - operator<< not found for manipulators
-   // void test_setw() {
-   //     std::ostringstream oss;
-   //     oss << std::setw(10) << 42;  // Fails: operator<< not found
-   // }
+   export namespace std {
+       // Export the types/objects
+       using std::cout;
+
+       // CRITICAL: Export ALL relevant operators
+       using std::operator<<;
+       using std::operator>>;
+       using std::operator+;
+       using std::operator-;
+       // ... etc
+
+       // Export manipulators if needed
+       using std::endl;
+       using std::flush;
+   }
    ```
 
-4. **Add a clear comment at the top of the test file:**
-   ```cpp
-   /**
-    * @file test_header.cpp
-    * @brief Tests for std_module.header
-    *
-    * NOTE: This module has limited functionality due to C++20 module ADL limitations.
-    * Operator overloads (operator<<, operator+, etc.) are not found through module
-    * boundaries. Most tests are commented out until this language issue is resolved.
-    *
-    * Reference: https://github.com/cplusplus/papers/issues/1005
-    */
+2. **Test with NO `#include` directives:**
+   - Remove ALL `#include` statements from test file
+   - Use ONLY `import std_module.header;`
+   - This validates true module isolation
+   - See `test/test_iostream.cpp` for reference
+
+3. **If tests fail, add more operator exports:**
+   - Identify which operators are missing from error messages
+   - Add them to the module's export list
+   - Rebuild and retest
+
+4. **Verify on multiple compilers/stdlibs:**
+   ```bash
+   # Test with Clang + libstdc++
+   cmake -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++
+   cmake --build build && ctest --test-dir build
+
+   # Test with Clang + libc++
+   cmake -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++ \
+     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+     -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi"
+   cmake --build build && ctest --test-dir build
+
+   # Test with GCC
+   cmake -B build -G Ninja -DCMAKE_CXX_COMPILER=g++-14
+   cmake --build build && ctest --test-dir build
    ```
 
-5. **Keep the module implementation complete:**
-   - Even if operators don't work, keep all symbols exported in the .cppm file
-   - This ensures the module is ready when compiler/standard fixes arrive
-   - Users who combine `import` + `#include` (as a workaround) will get full functionality
+5. **Update the "Affected Modules List":**
+   - Add to **✅ FIXED** section when operators work
+   - Document which operators were exported
+   - Note any remaining limitations
 
-6. **Decision point:**
-   - **If <50% of functionality works:** Consider NOT merging the module, document the issue
-   - **If ≥50% of functionality works:** Merge with clear ⚠️ warnings in documentation
-   - **If only operators broken:** Merge, as users can work around with `#include` if needed
-
-**Example - iomanip module:**
-- **Problem:** All manipulators return hidden types; `operator<<` overloads not found
-- **Impact:** ~100% of functionality broken
-- **Decision:** Document as non-functional until ADL is fixed
-- **Status:** Implementation kept for future compiler fixes
+**Example - iostream module (FIXED):**
+- **Solution:** Export `operator<<`, `operator>>`, `endl`, `flush`
+- **Impact:** 100% functionality restored
+- **Status:** Works on all tested compilers (Clang+libstdc++, Clang+libc++, GCC+libstdc++)
+- **Reference:** `src/iostream.cppm`, `test/test_iostream.cpp`
 
 ### Testing Workflow
 
@@ -777,15 +864,23 @@ git push -u origin claude/add-chrono-module-01H9G7pceQwCzk5zrUd8c8M1
    4. **Mark as known limitation:** Update module documentation to note which features don't work
    5. **Track affected modules:** Maintain a list of partially functional modules
 
-   **Affected Modules List:**
-   - ❌ `<iomanip>` - Manipulators unusable due to operator<< not found
-   - ⚠️ `<complex>` - Arithmetic operators not found (commented out in tests)
-   - ⚠️ Potentially: `<valarray>`, `<chrono>`, `<filesystem>`, `<thread>`, etc.
+   **Affected Modules List (UPDATED 2025-11-14):**
 
-   **Long-term Solutions (Future C++ Standards):**
-   - Wait for compiler/standard fixes to ADL with modules
-   - Potentially need language changes to export hidden operator overloads
-   - May require explicit operator export mechanisms in future C++ versions
+   **✅ FIXED (operator exports work):**
+   - ✅ `<iostream>` - **FIXED** by exporting `operator<<`, `operator>>`, `endl`, `flush`
+     - Reference: `src/iostream.cppm`, `test/test_iostream.cpp`
+     - Works on Clang + libstdc++, Clang + libc++, GCC + libstdc++
+
+   **⚠️ TODO (not yet tested with operator exports):**
+   - ⚠️ `<iomanip>` - May be fixable by exporting manipulator operators
+   - ⚠️ `<complex>` - Should be fixable by exporting arithmetic operators
+   - ⚠️ Potentially fixable: `<valarray>`, `<chrono>`, `<filesystem>`, `<thread>`, etc.
+
+   **SOLUTION FOUND (2025-11-14):**
+   - ✅ Export operators explicitly: `using std::operator<<;`
+   - ✅ Export manipulators explicitly: `using std::endl;`
+   - ✅ Test with NO `#include` directives
+   - ✅ Works across all practical compiler/stdlib combinations
 
 4. **Test all exported symbols** - Easy to miss symbols in export list
    - Check the module file for complete export list
