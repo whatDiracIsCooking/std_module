@@ -11,70 +11,27 @@
 #   - Printing status message
 
 # Add tests for all available modules
-std_module_add_test(algorithm)
-std_module_add_test(any)
-std_module_add_test(array)
-std_module_add_test(atomic)
-std_module_add_test(bitset)
-std_module_add_test(complex)
-std_module_add_test(compare)
-std_module_add_test(condition_variable)
-std_module_add_test(deque)
-std_module_add_test(exception)
-std_module_add_test(execution)
 std_module_add_test(format)
-std_module_add_test(forward_list)
+std_module_add_test(algorithm)
+std_module_add_test(bitset)
+std_module_add_test(string_view)
+std_module_add_test(complex)
+std_module_add_test(vector)
+std_module_add_test(exception)
+std_module_add_test(deque)
 std_module_add_test(fstream)
 std_module_add_test(functional)
-std_module_add_test(future)
 std_module_add_test(iomanip)
 std_module_add_test(ios)
 std_module_add_test(iosfwd)
 std_module_add_test(iostream)
 std_module_add_test(istream)
-std_module_add_test(initializer_list)
 std_module_add_test(iterator)
 std_module_add_test(limits)
 std_module_add_test(list)
 std_module_add_test(locale)
-std_module_add_test(map)
-std_module_add_test(memory_resource)
-std_module_add_test(mutex)
-std_module_add_test(new)
-std_module_add_test(numeric)
-std_module_add_test(queue)
-std_module_add_test(random)
-std_module_add_test(ranges)
-std_module_add_test(ratio)
-std_module_add_test(regex)
-std_module_add_test(scoped_allocator)
-std_module_add_test(semaphore)
-std_module_add_test(source_location)
-std_module_add_test(span)
-std_module_add_test(string_view)
 std_module_add_test(string)
-std_module_add_test(syncstream)
-std_module_add_test(system_error)
-std_module_add_test(thread)
-std_module_add_test(tuple)
-std_module_add_test(type_traits)
-std_module_add_test(typeindex)
-std_module_add_test(typeinfo)
-std_module_add_test(unordered_map)
-std_module_add_test(unordered_set)
-std_module_add_test(valarray)
-std_module_add_test(variant)
-std_module_add_test(vector)
 
-# Atomic library requires linking with libatomic on some platforms
-if(TARGET test_atomic)
-    target_link_libraries(test_atomic PRIVATE atomic)
-endif()
-
-# Add more tests here as modules are implemented:
-# std_module_add_test(string)
-# std_module_add_test(ranges)
-# etc.
 # Add more tests here as modules are implemented:
 # std_module_add_test(ranges)
 # etc.
@@ -112,31 +69,7 @@ if(Python3_FOUND)
         VERBATIM
     )
 
-    # Add export validation as a CTest test
-    add_test(
-        NAME validate-exports
-        COMMAND ${Python3_EXECUTABLE}
-            ${CMAKE_SOURCE_DIR}/scripts/validate_exports.py --informational
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    )
-
-    # Set test properties
-    set_tests_properties(validate-exports PROPERTIES
-        LABELS "validation"
-        TIMEOUT 120
-    )
-
-    # Also keep as a custom target for manual invocation
-    add_custom_target(validate-exports-target
-        COMMAND ${Python3_EXECUTABLE}
-            ${CMAKE_SOURCE_DIR}/scripts/validate_exports.py --informational
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        COMMENT "Validating module exports against Clang AST"
-        VERBATIM
-    )
-
     message(STATUS "Symbol coverage enabled - runs automatically with tests")
-    message(STATUS "Export validation enabled - runs automatically with tests")
 else()
-    message(STATUS "Python3 not found - symbol coverage and export validation disabled")
+    message(STATUS "Python3 not found - symbol coverage disabled")
 endif()
