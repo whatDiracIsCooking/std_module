@@ -19,6 +19,23 @@ if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_FORMAT)
     message(STATUS "Configured test: test_format")
 endif()
 
+# Test for string_view module
+if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_STRING_VIEW)
+    add_executable(test_string_view test_string_view.cpp)
+
+    target_link_libraries(test_string_view
+        PRIVATE
+            std_module::string_view
+    )
+
+    target_compile_features(test_string_view PRIVATE cxx_std_20)
+
+    # Register as a CTest test
+    add_test(NAME test_string_view COMMAND test_string_view)
+
+    message(STATUS "Configured test: test_string_view")
+endif()
+
 # ==============================================================================
 # Add more tests here as modules are implemented
 # ==============================================================================
