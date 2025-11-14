@@ -10,7 +10,6 @@ This project provides C++20 module interfaces for the C++ standard library, allo
 
 - **Comprehensive**: 72 standard library modules with full test coverage
 - **Modular**: Import only what you need (`import std_module.format;`)
-- **ADL-Fixed**: Operators work correctly via explicit exports (70/72 modules fully functional)
 - **Flexible Build System**: Use as subdirectory, installed library, or manual compilation
 - **Compiler Support**: Clang 16+, GCC 11+, MSVC 19.30+ (tested on multiple stdlib combinations)
 - **Opt-in Architecture**: Build only the modules you need
@@ -224,49 +223,12 @@ std_module/
 
 ## Known Limitations
 
-### C++20 Module ADL Issues - SOLVED ✅
+Two modules have minor limitations:
 
-**Major Breakthrough:** The C++20 module ADL (Argument-Dependent Lookup) limitation can be fixed by **explicitly exporting operators** in the module!
+- **`<iomanip>`** (⚠️) - I/O manipulators like `std::setw()`, `std::setfill()` have limited functionality
+- **`<future>`** (⚠️) - `std::packaged_task` is not functional; other async components work
 
-**The Solution:**
-
-Most modules now explicitly export operators and related functions to enable proper ADL:
-
-```cpp
-export namespace std {
-    using std::cout;
-    using std::string;
-
-    // CRITICAL: Export operators for ADL
-    using std::operator<<;
-    using std::operator>>;
-    using std::operator+;
-    // ... etc
-}
-```
-
-**Status of Modules:**
-
-- **✅ Most modules work perfectly** - Operators are exported and ADL works correctly
-- **⚠️ Limited exceptions:**
-  - `<iomanip>` - Manipulators like `std::setw()` still have issues (return hidden implementation types)
-  - `<future>` - `packaged_task` has functional limitations (other components work)
-
-**Technical Details:**
-
-Early C++20 module implementations had ADL limitations where operators weren't found across module boundaries. The solution is to explicitly export all operators using `using std::operator...;` declarations. This has been verified to work across:
-- Clang + libstdc++
-- Clang + libc++
-- GCC + libstdc++
-
-**Reference:** https://github.com/cplusplus/papers/issues/1005
-
-**What This Means:**
-
-- **Pure module-only usage works** for 70/72 modules (no `#include` needed)
-- Only 2 modules have minor limitations (iomanip, future)
-- All tests validate functionality using only `import` statements
-- See `CLAUDE.md` for detailed technical documentation
+All other 70 modules are fully functional with pure module-only usage (no `#include` needed).
 
 ## Contributing
 
