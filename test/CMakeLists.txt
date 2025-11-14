@@ -42,6 +42,7 @@ std_module_add_test(numeric)
 std_module_add_test(queue)
 std_module_add_test(barrier)
 std_module_add_test(charconv)
+std_module_add_test(codecvt)
 std_module_add_test(concepts)
 std_module_add_test(filesystem)
 std_module_add_test(latch)
@@ -61,6 +62,10 @@ std_module_add_test(typeindex)
 std_module_add_test(variant)
 std_module_add_test(vector)
 
+# Add more tests here as modules are implemented:
+# std_module_add_test(string)
+# std_module_add_test(ranges)
+# etc.
 # Add more tests here as modules are implemented:
 # std_module_add_test(string)
 # std_module_add_test(ranges)

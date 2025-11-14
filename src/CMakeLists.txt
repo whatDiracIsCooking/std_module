@@ -46,6 +46,7 @@ std_module_add_module(numeric)
 std_module_add_module(queue)
 std_module_add_module(barrier)
 std_module_add_module(charconv)
+std_module_add_module(codecvt)
 std_module_add_module(concepts)
 std_module_add_module(filesystem)
 std_module_add_module(latch)
@@ -67,6 +68,8 @@ std_module_add_module(vector)
 
 # Add more modules here as they are implemented:
 # std_module_add_module(string)
+# std_module_add_module(ranges)
+# etc.
 # std_module_add_module(ranges)
 # etc.
 
@@ -112,6 +115,7 @@ std_module_add_to_aggregate(numeric)
 std_module_add_to_aggregate(queue)
 std_module_add_to_aggregate(barrier)
 std_module_add_to_aggregate(charconv)
+std_module_add_to_aggregate(codecvt)
 std_module_add_to_aggregate(concepts)
 std_module_add_to_aggregate(filesystem)
 std_module_add_to_aggregate(latch)
@@ -132,6 +136,9 @@ std_module_add_to_aggregate(variant)
 std_module_add_to_aggregate(vector)
 
 # Add more module dependencies here as they are implemented:
+# std_module_add_to_aggregate(string)
+# std_module_add_to_aggregate(ranges)
+# etc.
 # std_module_add_to_aggregate(string)
 # std_module_add_to_aggregate(ranges)
 # etc.
