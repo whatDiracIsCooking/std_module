@@ -34,6 +34,8 @@ std_module_add_module(iterator)
 std_module_add_module(limits)
 std_module_add_module(list)
 std_module_add_module(locale)
+std_module_add_module(queue)
+std_module_add_module(streambuf)
 std_module_add_module(string)
 
 # Add more modules here as they are implemented:
@@ -70,6 +72,8 @@ std_module_add_to_aggregate(iterator)
 std_module_add_to_aggregate(limits)
 std_module_add_to_aggregate(list)
 std_module_add_to_aggregate(locale)
+std_module_add_to_aggregate(queue)
+std_module_add_to_aggregate(streambuf)
 std_module_add_to_aggregate(string)
 
 # Add more module dependencies here as they are implemented:
