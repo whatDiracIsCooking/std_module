@@ -136,7 +136,7 @@ target_link_libraries(myapp PRIVATE std_module::all)
 
 ## Available Modules
 
-Currently wrapped standard library headers (51 modules):
+Currently wrapped standard library headers (54 modules):
 
 | Header | Module | Status | Notes |
 |--------|--------|--------|-------|
@@ -182,6 +182,7 @@ Currently wrapped standard library headers (51 modules):
 | `<queue>` | `std_module.queue` | ✅ | |
 | `<random>` | `std_module.random` | ✅ | |
 | `<ranges>` | `std_module.ranges` | ✅ | |
+| `<regex>` | `std_module.regex` | ✅ | |
 | `<semaphore>` | `std_module.semaphore` | ✅ | |
 | `<source_location>` | `std_module.source_location` | ✅ | |
 | `<span>` | `std_module.span` | ✅ | |
@@ -189,6 +190,8 @@ Currently wrapped standard library headers (51 modules):
 | `<syncstream>` | `std_module.syncstream` | ✅ | |
 | `<system_error>` | `std_module.system_error` | ✅ | |
 | `<typeindex>` | `std_module.typeindex` | ✅ | |
+| `<tuple>` | `std_module.tuple` | ✅ | |
+| `<unordered_set>` | `std_module.unordered_set` | ✅ | |
 | `<variant>` | `std_module.variant` | ✅ | |
 | `<vector>` | `std_module.vector` | ✅ | |
 
