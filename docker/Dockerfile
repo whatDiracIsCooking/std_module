@@ -3,22 +3,25 @@
 
 FROM ubuntu:24.04
 
+# Clang version to install (can be overridden at build time)
+ARG CLANG_VERSION=18
+
 # Prevent interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
-    clang-18 \
-    clang-tools-18 \
+    clang-${CLANG_VERSION} \
+    clang-tools-${CLANG_VERSION} \
     cmake \
     ninja-build \
     python3 \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Set Clang 18 as the default C++ compiler
-ENV CXX=clang++-18
-ENV CC=clang-18
+# Set Clang as the default C++ compiler
+ENV CXX=clang++-${CLANG_VERSION}
+ENV CC=clang-${CLANG_VERSION}
 
 # Create working directory
 WORKDIR /workspace
@@ -28,7 +31,7 @@ COPY . .
 
 # Configure the build with Ninja generator and Clang
 RUN cmake -B build -G Ninja \
-    -DCMAKE_CXX_COMPILER=clang++-18 \
+    -DCMAKE_CXX_COMPILER=clang++-${CLANG_VERSION} \
     -DCMAKE_BUILD_TYPE=Release \
     -DSTD_MODULE_BUILD_TESTS=ON \
     -DSTD_MODULE_BUILD_ALL_MODULES=ON
@@ -43,8 +46,12 @@ RUN ctest --test-dir build --output-on-failure
 CMD ["ctest", "--test-dir", "build", "--output-on-failure", "--parallel"]
 
 # Usage:
-# Build the image:
+# Build the image (default Clang 18):
 #   docker build -t std_module -f docker/Dockerfile .
+#
+# Build with a different Clang version:
+#   docker build -t std_module --build-arg CLANG_VERSION=16 -f docker/Dockerfile .
+#   docker build -t std_module --build-arg CLANG_VERSION=17 -f docker/Dockerfile .
 #
 # Run tests:
 #   docker run --rm std_module
