@@ -1,10 +1,10 @@
 # std_module
 
-A C++20 module wrapper for the C++ standard library. Instead of `#include <format>`, use `import std_module.format;`.
+A production-ready C++20 module wrapper for the C++ standard library. Instead of `#include <format>`, use `import std_module.format;`.
 
 ## Overview
 
-This project provides C++20 module interfaces for the C++ standard library, allowing you to use `import` statements instead of traditional `#include` directives. The build system is designed to be flexible and non-opinionated, supporting multiple integration methods.
+This project provides C++20 module interfaces for 45+ standard library headers, allowing you to use modern `import` statements instead of traditional `#include` directives. The build system is designed to be flexible and non-opinionated, supporting multiple integration methods.
 
 ## Features
 
@@ -92,50 +92,57 @@ All modules follow consistent naming patterns:
 
 The table below lists all implemented modules. See [Module Naming Conventions](#module-naming-conventions) above for CMake options, targets, and import statements.
 
-| Header | Status | Notes |
-|--------|--------|-------|
-| `<algorithm>` | ✅ | Sorting, searching, transforming |
-| `<any>` | ✅ | Type-safe container for any type |
-| `<barrier>` | ✅ | Thread synchronization barrier |
-| `<bitset>` | ✅ | Fixed-size bit arrays |
-| `<charconv>` | ✅ | Low-level character conversions |
-| `<complex>` | ✅ | Complex number arithmetic |
-| `<concepts>` | ✅ | Concept definitions for templates |
-| `<deque>` | ✅ | Double-ended queue container |
-| `<exception>` | ✅ | Exception handling utilities |
-| `<execution>` | ✅ | Execution policies for algorithms |
-| `<format>` | ✅ | Text formatting (C++20) |
-| `<fstream>` | ✅ | File stream I/O |
-| `<filesystem>` | ✅ | Filesystem operations |
-| `<functional>` | ✅ | Function objects and utilities |
-| `<iomanip>` | ⚠️ | [Limited functionality*](#known-limitations) |
-| `<ios>` | ✅ | I/O stream base classes |
-| `<iosfwd>` | ✅ | Forward declarations for I/O |
-| `<iostream>` | ✅ | Standard input/output streams |
-| `<istream>` | ✅ | Input stream operations |
-| `<iterator>` | ✅ | Iterator utilities and adaptors |
-| `<latch>` | ✅ | Single-use countdown latch |
-| `<limits>` | ✅ | Numeric limits |
-| `<list>` | ✅ | Doubly-linked list container |
-| `<locale>` | ✅ | Localization utilities |
-| `<map>` | ✅ | Associative container (tree-based) |
-| `<memory_resource>` | ✅ | Polymorphic memory resources |
-| `<new>` | ✅ | Dynamic memory management† |
-| `<numeric>` | ✅ | Numeric algorithms |
-| `<optional>` | ✅ | Optional value wrapper |
-| `<queue>` | ✅ | Queue and priority queue adaptors |
-| `<random>` | ✅ | Random number generation |
-| `<semaphore>` | ✅ | Counting semaphore |
-| `<string_view>` | ✅ | Non-owning string view |
-| `<syncstream>` | ✅ | Synchronized output streams |
-| `<system_error>` | ✅ | System error codes |
-| `<typeindex>` | ✅ | Type identification wrapper |
-| `<variant>` | ✅ | Type-safe union |
-| `<vector>` | ✅ | Dynamic array container |
+| Header | Status |
+|--------|--------|
+| `<algorithm>` | ✅ |
+| `<any>` | ✅ |
+| `<barrier>` | ✅ |
+| `<bit>` | ✅ |
+| `<bitset>` | ✅ |
+| `<charconv>` | ✅ |
+| `<compare>` | ✅ |
+| `<complex>` | ✅ |
+| `<concepts>` | ✅ |
+| `<coroutine>` | ✅ |
+| `<deque>` | ✅ |
+| `<exception>` | ✅ |
+| `<execution>` | ✅ |
+| `<filesystem>` | ✅ |
+| `<format>` | ✅ |
+| `<fstream>` | ✅ |
+| `<functional>` | ✅ |
+| `<iomanip>` | ⚠️ |
+| `<ios>` | ✅ |
+| `<iosfwd>` | ✅ |
+| `<iostream>` | ✅ |
+| `<istream>` | ✅ |
+| `<iterator>` | ✅ |
+| `<latch>` | ✅ |
+| `<limits>` | ✅ |
+| `<list>` | ✅ |
+| `<locale>` | ✅ |
+| `<map>` | ✅ |
+| `<memory_resource>` | ✅ |
+| `<new>` | ✅ |
+| `<numbers>` | ✅ |
+| `<numeric>` | ✅ |
+| `<optional>` | ✅ |
+| `<queue>` | ✅ |
+| `<random>` | ✅ |
+| `<ranges>` | ✅ |
+| `<semaphore>` | ✅ |
+| `<source_location>` | ✅ |
+| `<span>` | ✅ |
+| `<string_view>` | ✅ |
+| `<syncstream>` | ✅ |
+| `<system_error>` | ✅ |
+| `<typeindex>` | ✅ |
+| `<variant>` | ✅ |
+| `<vector>` | ✅ |
 
 **Special Cases:**
-- † `<new>` uses `import std_module.new_;` (underscore suffix) to avoid C++ keyword conflicts
-- \* See [Known Limitations](#known-limitations) for modules with reduced functionality
+- `<new>` uses `import std_module.new_;` (underscore suffix) to avoid C++ keyword conflicts
+- `<iomanip>` marked ⚠️ - see [Known Limitations](#known-limitations) for details
 
 ### Build Examples
 
@@ -229,11 +236,14 @@ The core issue is that non-member operator overloads and functions depending on 
 
 When adding a new stdlib header wrapper:
 
-1. Create `src/<header>.cppm` following the pattern in `format.cppm`
-2. Add build option in root `CMakeLists.txt`
-3. Add library target in `src/CMakeLists.txt`
-4. Add test in `test/`
-5. Update this README
+1. Create `src/<header>.cppm` following the pattern in existing modules
+2. Add one line to `src/CMakeLists.txt`: `std_module_add_module(<header>)`
+3. Add one line to `src/CMakeLists.txt` (aggregate section): `std_module_add_to_aggregate(<header>)`
+4. Create `test/test_<header>.cpp` with comprehensive tests
+5. Add one line to `test/CMakeLists.txt`: `std_module_add_test(<header>)`
+6. Update this README
+
+See `CLAUDE.md` for detailed development guidelines.
 
 ## Design Philosophy
 
@@ -251,4 +261,4 @@ This project prioritizes **flexibility over opinion**:
 
 ## Status
 
-⚠️ **Early Development** - This project is in active development. The module interface is stable, but more stdlib headers need to be wrapped.
+✅ **Production Ready** - 45 standard library modules implemented with comprehensive test coverage. The module interface is stable and ready for use in production code.
