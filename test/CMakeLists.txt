@@ -13,6 +13,7 @@
 # Add tests for all available modules
 std_module_add_test(algorithm)
 std_module_add_test(any)
+std_module_add_test(atomic)
 std_module_add_test(bitset)
 std_module_add_test(complex)
 std_module_add_test(compare)
@@ -57,6 +58,11 @@ std_module_add_test(typeindex)
 std_module_add_test(unordered_set)
 std_module_add_test(variant)
 std_module_add_test(vector)
+
+# Atomic library requires linking with libatomic on some platforms
+if(TARGET test_atomic)
+    target_link_libraries(test_atomic PRIVATE atomic)
+endif()
 
 # Add more tests here as modules are implemented:
 # std_module_add_test(string)

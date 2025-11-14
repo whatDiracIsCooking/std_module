@@ -17,6 +17,7 @@
 # Add all available modules
 std_module_add_module(algorithm)
 std_module_add_module(any)
+std_module_add_module(atomic)
 std_module_add_module(bitset)
 std_module_add_module(complex)
 std_module_add_module(compare)
@@ -82,6 +83,7 @@ add_library(std_module::all ALIAS std_module_all)
 # Add dependencies to all built modules using the helper macro
 std_module_add_to_aggregate(algorithm)
 std_module_add_to_aggregate(any)
+std_module_add_to_aggregate(atomic)
 std_module_add_to_aggregate(bitset)
 std_module_add_to_aggregate(complex)
 std_module_add_to_aggregate(compare)
