@@ -136,12 +136,13 @@ target_link_libraries(myapp PRIVATE std_module::all)
 
 ## Available Modules
 
-Currently wrapped standard library headers (57 modules):
+Currently wrapped standard library headers (58 modules):
 
 | Header | Module | Status | Notes |
 |--------|--------|--------|-------|
 | `<algorithm>` | `std_module.algorithm` | ✅ | |
 | `<any>` | `std_module.any` | ✅ | |
+| `<atomic>` | `std_module.atomic` | ✅ | |
 | `<barrier>` | `std_module.barrier` | ✅ | |
 | `<bit>` | `std_module.bit` | ✅ | |
 | `<bitset>` | `std_module.bitset` | ✅ | |
