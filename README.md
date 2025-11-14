@@ -78,11 +78,13 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | | | `STD_MODULE_INSTALL=ON` | | Generate install targets |
 | `<algorithm>` | ✅ | `STD_MODULE_BUILD_ALGORITHM=ON` | `std_module::algorithm` | `import std_module.algorithm;` |
 | `<bitset>` | ✅ | `STD_MODULE_BUILD_BITSET=ON` | `std_module::bitset` | `import std_module.bitset;` |
+| `<charconv>` | ✅ | `STD_MODULE_BUILD_CHARCONV=ON` | `std_module::charconv` | `import std_module.charconv;` |
 | `<complex>` | ✅ | `STD_MODULE_BUILD_COMPLEX=ON` | `std_module::complex` | `import std_module.complex;` |
 | `<deque>` | ✅ | `STD_MODULE_BUILD_DEQUE=ON` | `std_module::deque` | `import std_module.deque;` |
 | `<exception>` | ✅ | `STD_MODULE_BUILD_EXCEPTION=ON` | `std_module::exception` | `import std_module.exception;` |
 | `<format>` | ✅ | `STD_MODULE_BUILD_FORMAT=ON` | `std_module::format` | `import std_module.format;` |
 | `<fstream>` | ✅ | `STD_MODULE_BUILD_FSTREAM=ON` | `std_module::fstream` | `import std_module.fstream;` |
+| `<filesystem>` | ✅ | `STD_MODULE_BUILD_FILESYSTEM=ON` | `std_module::filesystem` | `import std_module.filesystem;` |
 | `<functional>` | ✅ | `STD_MODULE_BUILD_FUNCTIONAL=ON` | `std_module::functional` | `import std_module.functional;` |
 | `<iomanip>` | ⚠️ | `STD_MODULE_BUILD_IOMANIP=ON` | `std_module::iomanip` | `import std_module.iomanip;` [*](#known-limitations) |
 | `<ios>` | ✅ | `STD_MODULE_BUILD_IOS=ON` | `std_module::ios` | `import std_module.ios;` |
@@ -96,11 +98,13 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | `<map>` | ✅ | `STD_MODULE_BUILD_MAP=ON` | `std_module::map` | `import std_module.map;` |
 | `<new>` | ✅ | `STD_MODULE_BUILD_NEW=ON` | `std_module::new` | `import std_module.new_;` [†](#notes) |
 | `<numeric>` | ✅ | `STD_MODULE_BUILD_NUMERIC=ON` | `std_module::numeric` | `import std_module.numeric;` |
+| `<optional>` | ✅ | `STD_MODULE_BUILD_OPTIONAL=ON` | `std_module::optional` | `import std_module.optional;` |
 | `<queue>` | ✅ | `STD_MODULE_BUILD_QUEUE=ON` | `std_module::queue` | `import std_module.queue;` |
 | `<random>` | ✅ | `STD_MODULE_BUILD_RANDOM=ON` | `std_module::random` | `import std_module.random;` |
 | `<string_view>` | ✅ | `STD_MODULE_BUILD_STRING_VIEW=ON` | `std_module::string_view` | `import std_module.string_view;` |
 | `<system_error>` | ✅ | `STD_MODULE_BUILD_SYSTEM_ERROR=ON` | `std_module::system_error` | `import std_module.system_error;` |
 | `<typeindex>` | ✅ | `STD_MODULE_BUILD_TYPEINDEX=ON` | `std_module::typeindex` | `import std_module.typeindex;` |
+| `<variant>` | ✅ | `STD_MODULE_BUILD_VARIANT=ON` | `std_module::variant` | `import std_module.variant;` |
 | `<vector>` | ✅ | `STD_MODULE_BUILD_VECTOR=ON` | `std_module::vector` | `import std_module.vector;` |
 | *(Convenience)* | | | `std_module::all` | All modules combined |
 

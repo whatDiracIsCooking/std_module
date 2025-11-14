@@ -34,9 +34,13 @@ std_module_add_test(map)
 std_module_add_test(new)
 std_module_add_test(numeric)
 std_module_add_test(queue)
+std_module_add_test(charconv)
+std_module_add_test(filesystem)
+std_module_add_test(optional)
 std_module_add_test(random)
 std_module_add_test(system_error)
 std_module_add_test(typeindex)
+std_module_add_test(variant)
 
 # Add more tests here as modules are implemented:
 # std_module_add_test(string)
