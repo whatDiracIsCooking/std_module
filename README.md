@@ -88,6 +88,7 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_DEQUE` | ON | Build std_module.deque |
 | `STD_MODULE_BUILD_FSTREAM` | ON | Build std_module.fstream |
 | `STD_MODULE_BUILD_FUNCTIONAL` | ON | Build std_module.functional |
+| `STD_MODULE_BUILD_IOMANIP` | ON | Build std_module.iomanip |
 | `STD_MODULE_BUILD_IOS` | ON | Build std_module.ios |
 | `STD_MODULE_BUILD_IOSTREAM` | ON | Build std_module.iostream |
 
@@ -114,6 +115,7 @@ Currently wrapped standard library headers:
 - ✅ `<deque>` → `import std_module.deque;`
 - ✅ `<fstream>` → `import std_module.fstream;`
 - ✅ `<functional>` → `import std_module.functional;`
+- ⚠️ `<iomanip>` → `import std_module.iomanip;` **(non-functional - see [limitations](#known-limitations))**
 - ✅ `<ios>` → `import std_module.ios;`
 - ✅ `<iostream>` → `import std_module.iostream;`
 
@@ -147,6 +149,7 @@ The build system provides these CMake targets:
 - `std_module::deque` - Just the deque module
 - `std_module::fstream` - Just the fstream module
 - `std_module::functional` - Just the functional module
+- `std_module::iomanip` - Just the iomanip module
 - `std_module::ios` - Just the ios module
 - `std_module::iostream` - Just the iostream module
 - `std_module::all` - All available modules (convenience target)
@@ -181,6 +184,7 @@ std_module/
 │   ├── deque.cppm          # <deque> wrapper
 │   ├── fstream.cppm        # <fstream> wrapper
 │   ├── functional.cppm     # <functional> wrapper
+│   ├── iomanip.cppm        # <iomanip> wrapper
 │   ├── ios.cppm            # <ios> wrapper
 │   ├── iostream.cppm       # <iostream> wrapper
 │   └── std.cppm           # Aggregate module (WIP)
@@ -196,11 +200,44 @@ std_module/
 │   ├── test_deque.cpp
 │   ├── test_fstream.cpp
 │   ├── test_functional.cpp
+│   ├── test_iomanip.cpp
 │   ├── test_ios.cpp
 │   ├── test_iostream.cpp
 │   └── build_manual.sh    # Manual build demo
 └── cmake/                  # CMake configuration files
 ```
+
+## Known Limitations
+
+### C++20 Module ADL Issues
+
+Some standard library modules are affected by **Argument-Dependent Lookup (ADL) limitations** in current C++20 module implementations. This is a language/compiler issue, not a bug in this library.
+
+**Affected Modules:**
+
+- **`<iomanip>`** - ⚠️ **Non-functional**
+  - **Problem:** I/O manipulators like `std::setw()`, `std::setfill()`, etc. return hidden implementation types
+  - **Impact:** The `operator<<` overloads for these types are not found through module boundaries
+  - **Status:** All manipulators are unusable when using `import std_module.iomanip;` alone
+  - **Workaround:** Must `#include <iomanip>` in addition to `import` (defeats the purpose)
+
+- **`<complex>`** - ⚠️ **Partially functional**
+  - **Problem:** Arithmetic operators (`operator+`, `operator-`, etc.) not found via ADL
+  - **Impact:** Cannot perform arithmetic on `std::complex` values using modules alone
+  - **Status:** Construction, member functions work; operators don't
+
+**Technical Details:**
+
+The core issue is that non-member operator overloads and functions depending on ADL are not properly exported/found when using C++20 modules. Even when using-declarations export these symbols, the compiler's ADL mechanism doesn't find them across module boundaries.
+
+**Reference:** https://github.com/cplusplus/papers/issues/1005
+
+**What This Means:**
+
+- Modules marked ⚠️ have limited functionality when using `import` alone
+- Users can work around by combining `import std_module.header;` with `#include <header>`
+- Module implementations are kept complete for when compiler/standard fixes arrive
+- See `CLAUDE.md` for complete technical documentation
 
 ## Contributing
 
