@@ -1,272 +1,123 @@
 /**
  * @file test_compare.cpp
- * @brief Comprehensive tests for std_module.compare
+ * @brief Tests for std_module.compare
  *
- * Tests all comparison category types, comparison functions, and helper utilities
- * from the C++20 <compare> header.
+ * Verifies module integration - NOT standard library correctness.
+ * Tests that symbols are accessible and callable through the module.
  */
 
 import std_module.compare;
-#include <cassert>
-#include <cstdio>
-#include <type_traits>
+import std_module.test_framework;
 
-// Test partial_ordering
-void test_partial_ordering()
-{
-    puts("\n=== Testing partial_ordering ===");
-
-    auto less = std::partial_ordering::less;
-    auto equivalent = std::partial_ordering::equivalent;
-    auto greater = std::partial_ordering::greater;
-    auto unordered = std::partial_ordering::unordered;
-
-    // Test comparisons
-    assert(less < 0);
-    assert(equivalent == 0);
-    assert(greater > 0);
-    puts("  ✓ Partial ordering basic comparisons");
-
-    // Test is_* functions
-    assert(std::is_lt(less));
-    assert(std::is_eq(equivalent));
-    assert(std::is_gt(greater));
-    assert(std::is_neq(less));
-    assert(std::is_lteq(less));
-    assert(std::is_lteq(equivalent));
-    assert(std::is_gteq(greater));
-    assert(std::is_gteq(equivalent));
-    puts("  ✓ Partial ordering is_* helper functions");
-}
-
-// Test weak_ordering
-void test_weak_ordering()
-{
-    puts( "\n=== Testing weak_ordering ===");
-
-    auto less = std::weak_ordering::less;
-    auto equivalent = std::weak_ordering::equivalent;
-    auto greater = std::weak_ordering::greater;
-
-    assert(less < 0);
-    assert(equivalent == 0);
-    assert(greater > 0);
-    puts( "  ✓ Weak ordering basic comparisons");
-
-    // Conversion to partial_ordering
-    std::partial_ordering p = less;
-    assert(std::is_lt(p));
-    puts( "  ✓ Weak ordering converts to partial ordering");
-}
-
-// Test strong_ordering
-void test_strong_ordering()
-{
-    puts( "\n=== Testing strong_ordering ===");
-
-    auto less = std::strong_ordering::less;
-    auto equal = std::strong_ordering::equal;
-    auto equivalent = std::strong_ordering::equivalent;
-    auto greater = std::strong_ordering::greater;
-
-    assert(less < 0);
-    assert(equal == 0);
-    assert(equivalent == 0);
-    assert(equal == equivalent);
-    assert(greater > 0);
-    puts( "  ✓ Strong ordering basic comparisons");
-
-    // Conversion to weak_ordering
-    std::weak_ordering w = less;
-    assert(std::is_lt(w));
-
-    // Conversion to partial_ordering
-    std::partial_ordering p = less;
-    assert(std::is_lt(p));
-    puts( "  ✓ Strong ordering converts to weak and partial ordering");
-}
-
-// Test common_comparison_category
-void test_common_comparison_category()
-{
-    puts( "\n=== Testing common_comparison_category ===");
-
-    // Single type
-    using cat1 = std::common_comparison_category_t<std::strong_ordering>;
-    static_assert(std::is_same_v<cat1, std::strong_ordering>);
-    puts( "  ✓ common_comparison_category for single strong_ordering");
-
-    // Multiple strong types
-    using cat2 = std::common_comparison_category_t<std::strong_ordering, std::strong_ordering>;
-    static_assert(std::is_same_v<cat2, std::strong_ordering>);
-    puts( "  ✓ common_comparison_category for multiple strong_ordering");
-
-    // Mixed strong and weak
-    using cat3 = std::common_comparison_category_t<std::strong_ordering, std::weak_ordering>;
-    static_assert(std::is_same_v<cat3, std::weak_ordering>);
-    puts( "  ✓ common_comparison_category for mixed strong/weak");
-
-    // Mixed with partial
-    using cat4 = std::common_comparison_category_t<std::strong_ordering, std::partial_ordering>;
-    static_assert(std::is_same_v<cat4, std::partial_ordering>);
-    puts( "  ✓ common_comparison_category for mixed with partial");
-}
+#include <type_traits>  // TEMP: For is_same_v
 
 // Test type with three-way comparison
 struct Point {
     int x, y;
-
     auto operator<=>(const Point&) const = default;
 };
 
-void test_three_way_comparable()
-{
-    puts( "\n=== Testing three_way_comparable ===");
+int main() {
+    test::test_header("std_module.compare");
 
+    test::section("Testing comparison categories");
+
+    // Test that comparison category types are accessible
+    [[maybe_unused]] auto less_p = std::partial_ordering::less;
+    [[maybe_unused]] auto equiv_p = std::partial_ordering::equivalent;
+    [[maybe_unused]] auto greater_p = std::partial_ordering::greater;
+    [[maybe_unused]] auto unordered_p = std::partial_ordering::unordered;
+
+    [[maybe_unused]] auto less_w = std::weak_ordering::less;
+    [[maybe_unused]] auto equiv_w = std::weak_ordering::equivalent;
+    [[maybe_unused]] auto greater_w = std::weak_ordering::greater;
+
+    [[maybe_unused]] auto less_s = std::strong_ordering::less;
+    [[maybe_unused]] auto equal_s = std::strong_ordering::equal;
+    [[maybe_unused]] auto equiv_s = std::strong_ordering::equivalent;
+    [[maybe_unused]] auto greater_s = std::strong_ordering::greater;
+    test::success("comparison category types accessible");
+
+    test::section("Testing comparison helper functions");
+
+    // Test that is_* helper functions are callable
+    test::assert_true(std::is_lt(less_p), "is_lt");
+    test::assert_true(std::is_eq(equal_s), "is_eq");
+    test::assert_true(std::is_gt(greater_p), "is_gt");
+    test::assert_true(std::is_neq(less_p), "is_neq");
+    test::assert_true(std::is_lteq(less_p), "is_lteq");
+    test::assert_true(std::is_gteq(greater_p), "is_gteq");
+
+    test::section("Testing comparison category conversions");
+
+    // Test conversions are callable
+    std::partial_ordering p = less_w;
+    std::weak_ordering w = less_s;
+    test::success("comparison category conversions");
+
+    test::section("Testing common_comparison_category");
+
+    // Test trait is accessible (compile-time check)
+    using cat1 = std::common_comparison_category_t<std::strong_ordering>;
+    using cat2 = std::common_comparison_category_t<std::strong_ordering, std::weak_ordering>;
+    using cat3 = std::common_comparison_category_t<std::strong_ordering, std::partial_ordering>;
+    static_assert(std::is_same_v<cat1, std::strong_ordering>);
+    static_assert(std::is_same_v<cat2, std::weak_ordering>);
+    static_assert(std::is_same_v<cat3, std::partial_ordering>);
+    test::success("common_comparison_category trait");
+
+    test::section("Testing three_way_comparable concept");
+
+    // Test concept is accessible (compile-time check)
     static_assert(std::three_way_comparable<int>);
     static_assert(std::three_way_comparable<double>);
     static_assert(std::three_way_comparable<Point>);
-    puts( "  ✓ three_way_comparable concept");
-
     static_assert(std::three_way_comparable_with<int, int>);
     static_assert(std::three_way_comparable_with<int, long>);
-    puts( "  ✓ three_way_comparable_with concept");
-}
+    test::success("three_way_comparable concept");
 
-// Test compare_three_way
-void test_compare_three_way()
-{
-    puts( "\n=== Testing compare_three_way ===");
+    test::section("Testing compare_three_way");
 
+    // Test compare_three_way is constructible and callable
     std::compare_three_way cmp;
-
     auto r1 = cmp(1, 2);
-    assert(std::is_lt(r1));
-
     auto r2 = cmp(5, 5);
-    assert(std::is_eq(r2));
-
-    auto r3 = cmp(10, 3);
-    assert(std::is_gt(r3));
-
-    puts( "  ✓ compare_three_way function object");
-
-    // Test with custom type
     Point p1{1, 2};
     Point p2{1, 3};
-    auto r4 = cmp(p1, p2);
-    assert(std::is_lt(r4));
-    puts( "  ✓ compare_three_way with custom type");
-}
+    auto r3 = cmp(p1, p2);
+    test::assert_true(std::is_lt(r1), "compare_three_way");
 
-// Test compare_three_way_result
-void test_compare_three_way_result()
-{
-    puts( "\n=== Testing compare_three_way_result ===");
+    test::section("Testing compare_three_way_result");
 
+    // Test trait is accessible (compile-time check)
     using result_int = std::compare_three_way_result_t<int>;
-    static_assert(std::is_same_v<result_int, std::strong_ordering>);
-    puts( "  ✓ compare_three_way_result_t for int");
-
     using result_double = std::compare_three_way_result_t<double>;
-    static_assert(std::is_same_v<result_double, std::partial_ordering>);
-    puts( "  ✓ compare_three_way_result_t for double");
-
     using result_point = std::compare_three_way_result_t<Point>;
+    static_assert(std::is_same_v<result_int, std::strong_ordering>);
+    static_assert(std::is_same_v<result_double, std::partial_ordering>);
     static_assert(std::is_same_v<result_point, std::strong_ordering>);
-    puts( "  ✓ compare_three_way_result_t for custom type");
-}
+    test::success("compare_three_way_result trait");
 
-// Test strong_order
-void test_strong_order()
-{
-    puts( "\n=== Testing strong_order ===");
+    test::section("Testing comparison order functions");
 
-    auto r1 = std::strong_order(1, 2);
-    assert(std::is_lt(r1));
+    // Test that strong_order, weak_order, partial_order are callable
+    auto so = std::strong_order(1, 2);
+    auto wo = std::weak_order(1, 2);
+    auto po = std::partial_order(1.0, 2.0);
+    test::assert_true(std::is_lt(so), "strong_order");
+    test::assert_true(std::is_lt(wo), "weak_order");
+    test::assert_true(std::is_lt(po), "partial_order");
 
-    auto r2 = std::strong_order(5, 5);
-    assert(std::is_eq(r2));
+    test::section("Testing comparison fallback functions");
 
-    auto r3 = std::strong_order(10, 3);
-    assert(std::is_gt(r3));
+    // Test that fallback functions are callable
+    auto sof = std::compare_strong_order_fallback(1, 2);
+    auto wof = std::compare_weak_order_fallback(1, 2);
+    auto pof = std::compare_partial_order_fallback(1.0, 2.0);
+    test::assert_true(std::is_lt(sof), "compare_strong_order_fallback");
+    test::assert_true(std::is_lt(wof), "compare_weak_order_fallback");
+    test::assert_true(std::is_lt(pof), "compare_partial_order_fallback");
 
-    puts( "  ✓ strong_order function");
-
-    Point p1{1, 2};
-    Point p2{1, 3};
-    auto r4 = std::strong_order(p1, p2);
-    assert(std::is_lt(r4));
-    puts( "  ✓ strong_order with custom type");
-}
-
-// Test weak_order
-void test_weak_order()
-{
-    puts( "\n=== Testing weak_order ===");
-
-    auto r1 = std::weak_order(1, 2);
-    assert(std::is_lt(r1));
-
-    auto r2 = std::weak_order(5, 5);
-    assert(std::is_eq(r2));
-
-    auto r3 = std::weak_order(10, 3);
-    assert(std::is_gt(r3));
-
-    puts( "  ✓ weak_order function");
-}
-
-// Test partial_order
-void test_partial_order()
-{
-    puts( "\n=== Testing partial_order ===");
-
-    auto r1 = std::partial_order(1.0, 2.0);
-    assert(std::is_lt(r1));
-
-    auto r2 = std::partial_order(5.0, 5.0);
-    assert(std::is_eq(r2));
-
-    auto r3 = std::partial_order(10.0, 3.0);
-    assert(std::is_gt(r3));
-
-    puts( "  ✓ partial_order function");
-}
-
-// Test comparison fallbacks
-void test_comparison_fallbacks()
-{
-    puts( "\n=== Testing comparison fallbacks ===");
-
-    auto r1 = std::compare_strong_order_fallback(1, 2);
-    assert(std::is_lt(r1));
-
-    auto r2 = std::compare_weak_order_fallback(5, 5);
-    assert(std::is_eq(r2));
-
-    auto r3 = std::compare_partial_order_fallback(10.0, 3.0);
-    assert(std::is_gt(r3));
-
-    puts( "  ✓ compare_*_order_fallback functions");
-}
-
-int main()
-{
-    puts( "Testing std_module.compare...");
-
-    test_partial_ordering();
-    test_weak_ordering();
-    test_strong_ordering();
-    test_common_comparison_category();
-    test_three_way_comparable();
-    test_compare_three_way();
-    test_compare_three_way_result();
-    test_strong_order();
-    test_weak_order();
-    test_partial_order();
-    test_comparison_fallbacks();
-
-    puts( "\n✓ All tests passed!");
+    test::test_footer();
     return 0;
 }

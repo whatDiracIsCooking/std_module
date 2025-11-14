@@ -128,6 +128,11 @@ std_module_link_test_framework(barrier)
 std_module_link_test_framework(bit)
 std_module_link_test_framework(bitset)
 std_module_link_test_framework(charconv)
+std_module_link_test_framework(chrono)
+std_module_link_test_framework(codecvt)
+std_module_link_test_framework(compare)
+std_module_link_test_framework(complex)
+std_module_link_test_framework(concepts)
 
 # test_atomic needs libatomic for lock-free atomic operations on some platforms
 if(TARGET test_atomic)
