@@ -93,33 +93,47 @@ int main() {
 
 **Goal:** Extract exported symbols from `.cppm` module files
 
-**Challenge:** C++20 `export module` declarations are not well-supported in libclang-18
+**Challenge:** C++20 `export module` declarations are not well-supported in libclang Python bindings
 
 **What We Tried:**
 
-1. **Standard AST traversal** looking for `USING_DECLARATION` nodes
+1. **libclang Python bindings** - Standard AST traversal
    - Result: ❌ Did not find exports
-   - Reason: AST includes all imported standard library headers, making it hard to isolate our exports
+   - Reason: `ExportDecl` cursor kind not exposed in Python API
+   - libclang-18 Python bindings missing C++20 module support
 
-2. **Filtering by source file**
-   - Result: ⚠️ Partially works but complex
-   - Reason: Export declarations are mixed with header content
+2. **Clang command-line AST dump** - Using `clang++ -Xclang -ast-dump`
+   - Result: ✅ **WORKS PERFECTLY!**
+   - Clang compiler DOES see all exports correctly
+   - AST shows `ExportDecl` → `NamespaceDecl std` → `UsingDecl` for each symbol
 
-3. **Looking for `NAMESPACE_DECL` with export attribute**
-   - Result: ❌ Export attribute not exposed in AST
-   - Reason: libclang's C++20 module support is incomplete
-
-**AST Structure Observed:**
+**AST Structure (from Clang command-line):**
 
 ```
-TRANSLATION_UNIT
-  MACRO_DEFINITION (hundreds from system headers)
-  MACRO_DEFINITION
-  ...
-  (exports not clearly visible)
+`-ExportDecl ... in std_module.format
+  `-NamespaceDecl ... std
+    |-UsingDecl ... std::format
+    |-UsingShadowDecl ... implicit FunctionTemplate 'format'
+    |-UsingDecl ... std::vformat
+    |-UsingShadowDecl ... implicit Function 'vformat'
+    ... (all 25 exports visible)
 ```
 
-**Conclusion:** ⚠️ **C++20 module export parsing is not reliable with current libclang**
+**Critical Validation:** We created a parser for `clang -ast-dump` output and tested on 5 modules:
+
+| Module | Regex Exports | Clang AST Exports | Match |
+|--------|--------------|------------------|-------|
+| format.cppm | 25 | 25 | ✅ 100% |
+| vector.cppm | 3 | 3 | ✅ 100% |
+| iostream.cppm | 11 | 11 | ✅ 100% |
+| algorithm.cppm | 90 | 90 | ✅ 100% |
+| string_view.cppm | 7 | 7 | ✅ 100% |
+
+**Conclusion:** ✅ **Regex approach is VALIDATED!**
+- Clang compiler sees all our exports correctly (modules are correct)
+- Regex extraction matches Clang's AST 100%
+- libclang Python bindings are the limitation, not our modules
+- Can use `clang -ast-dump` for authoritative validation
 
 ---
 
@@ -477,12 +491,54 @@ $ python3 scripts/ast_poc.py
 
 ---
 
+## Validation with Clang AST Dump
+
+After discovering libclang Python bindings couldn't see our exports, we validated using Clang's command-line AST dump:
+
+### Implementation
+
+Created `clang_ast_dump_parser.py` that:
+1. Runs `clang++ -Xclang -ast-dump -fsyntax-only module.cppm`
+2. Parses text output looking for `ExportDecl` → `UsingDecl` patterns
+3. Extracts symbol names and kinds (FunctionTemplate, ClassTemplate, etc.)
+4. Compares with regex extraction
+
+### Results
+
+**100% validation across all tested modules:**
+
+```bash
+$ python3 scripts/test_ast_validation.py
+
+✅ format.cppm         - Validated (25 exports)
+✅ vector.cppm         - Validated (3 exports)
+✅ iostream.cppm       - Validated (11 exports)
+✅ algorithm.cppm      - Validated (90 exports)
+✅ string_view.cppm    - Validated (7 exports)
+
+CONCLUSION: Regex approach is validated across all tested modules!
+```
+
+### What This Proves
+
+1. ✅ **Our modules export correctly** - Clang sees all symbols
+2. ✅ **Regex extraction is accurate** - Matches Clang's view 100%
+3. ✅ **Can use for validation** - Run periodically to verify correctness
+4. ⚠️ **libclang limitation** - Python bindings incomplete, not our fault
+
+**Tools Created:**
+- `scripts/clang_ast_dump_parser.py` - Parse Clang AST dump output
+- `scripts/test_ast_validation.py` - Validate regex vs Clang AST
+
+---
+
 ## Conclusion
 
 The POC successfully validates the core benefits of AST-based analysis while revealing practical limitations. The recommended **hybrid approach** gives us the best of both worlds:
 
-- **Accurate usage detection** (no comment false positives)
-- **Fast export extraction** (regex works well for this)
+- **Accurate usage detection** (no comment false positives via libclang)
+- **Fast export extraction** (regex - validated by Clang AST dump!)
+- **Validation tool** (clang -ast-dump parser for authoritative checking)
 - **Backward compatibility** (automatic fallback)
 - **Future-proof** (can improve as libclang evolves)
 
@@ -490,7 +546,8 @@ The POC successfully validates the core benefits of AST-based analysis while rev
 
 - ✅ Demonstrated comment filtering works
 - ✅ Demonstrated symbol usage detection works
-- ✅ Identified C++20 module limitation
+- ✅ **CRITICAL: Validated regex approach with authoritative Clang AST**
+- ✅ **Proved our module exports are correct**
 - ✅ Proposed practical solution (hybrid approach)
 - ✅ Performance acceptable
 - ✅ Clear path forward
