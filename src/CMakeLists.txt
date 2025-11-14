@@ -20,6 +20,7 @@ std_module_add_module(algorithm)
 std_module_add_module(bitset)
 std_module_add_module(string_view)
 std_module_add_module(vector)
+std_module_add_module(exception)
 
 # Add more modules here as they are implemented:
 # std_module_add_module(string)
@@ -42,6 +43,7 @@ std_module_add_to_aggregate(algorithm)
 std_module_add_to_aggregate(bitset)
 std_module_add_to_aggregate(string_view)
 std_module_add_to_aggregate(vector)
+std_module_add_to_aggregate(exception)
 
 # Add more module dependencies here as they are implemented:
 # std_module_add_to_aggregate(string)
