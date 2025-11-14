@@ -50,6 +50,7 @@ option(STD_MODULE_BUILD_RATIO "Build std_module.ratio" ON)
 option(STD_MODULE_BUILD_SCOPED_ALLOCATOR "Build std_module.scoped_allocator" ON)
 option(STD_MODULE_BUILD_SPAN "Build std_module.span" ON)
 option(STD_MODULE_BUILD_STRING_VIEW "Build std_module.string_view" ON)
+option(STD_MODULE_BUILD_STRING "Build std_module.string" ON)
 option(STD_MODULE_BUILD_VALARRAY "Build std_module.valarray" ON)
 option(STD_MODULE_BUILD_VECTOR "Build std_module.vector" ON)
 option(STD_MODULE_BUILD_ANY "Build std_module.any" ON)
@@ -83,7 +84,6 @@ option(STD_MODULE_BUILD_UNORDERED_MAP "Build std_module.unordered_map" ON)
 option(STD_MODULE_BUILD_UNORDERED_SET "Build std_module.unordered_set" ON)
 option(STD_MODULE_BUILD_VARIANT "Build std_module.variant" ON)
 # More options will be added as we wrap more headers:
-# option(STD_MODULE_BUILD_STRING "Build std_module.string" ON)
 # etc.
 
 # ==============================================================================
@@ -240,6 +240,7 @@ message(STATUS "  semaphore:              ${STD_MODULE_BUILD_SEMAPHORE}")
 message(STATUS "  source_location:        ${STD_MODULE_BUILD_SOURCE_LOCATION}")
 message(STATUS "  span:                   ${STD_MODULE_BUILD_SPAN}")
 message(STATUS "  string_view:            ${STD_MODULE_BUILD_STRING_VIEW}")
+message(STATUS "  string:                 ${STD_MODULE_BUILD_STRING}")
 message(STATUS "  syncstream:             ${STD_MODULE_BUILD_SYNCSTREAM}")
 message(STATUS "  system_error:           ${STD_MODULE_BUILD_SYSTEM_ERROR}")
 message(STATUS "  thread:                 ${STD_MODULE_BUILD_THREAD}")

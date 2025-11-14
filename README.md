@@ -192,6 +192,7 @@ Currently wrapped standard library headers (63 modules):
 | `<source_location>` | `std_module.source_location` | ✅ | |
 | `<span>` | `std_module.span` | ✅ | |
 | `<string_view>` | `std_module.string_view` | ✅ | |
+| `<string>` | `std_module.string` | ✅ | |
 | `<syncstream>` | `std_module.syncstream` | ✅ | |
 | `<system_error>` | `std_module.system_error` | ✅ | |
 | `<thread>` | `std_module.thread` | ✅ | |

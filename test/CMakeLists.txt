@@ -52,6 +52,7 @@ std_module_add_test(semaphore)
 std_module_add_test(source_location)
 std_module_add_test(span)
 std_module_add_test(string_view)
+std_module_add_test(string)
 std_module_add_test(syncstream)
 std_module_add_test(system_error)
 std_module_add_test(thread)
@@ -74,7 +75,6 @@ endif()
 # std_module_add_test(ranges)
 # etc.
 # Add more tests here as modules are implemented:
-# std_module_add_test(string)
 # std_module_add_test(ranges)
 # etc.
 
