@@ -136,7 +136,7 @@ target_link_libraries(myapp PRIVATE std_module::all)
 
 ## Available Modules
 
-Currently wrapped standard library headers (58 modules):
+Currently wrapped standard library headers (61 modules):
 
 | Header | Module | Status | Notes |
 |--------|--------|--------|-------|
@@ -184,6 +184,7 @@ Currently wrapped standard library headers (58 modules):
 | `<queue>` | `std_module.queue` | ✅ | |
 | `<random>` | `std_module.random` | ✅ | |
 | `<ranges>` | `std_module.ranges` | ✅ | |
+| `<ratio>` | `std_module.ratio` | ✅ | |
 | `<regex>` | `std_module.regex` | ✅ | |
 | `<scoped_allocator>` | `std_module.scoped_allocator` | ✅ | |
 | `<semaphore>` | `std_module.semaphore` | ✅ | |
@@ -192,9 +193,11 @@ Currently wrapped standard library headers (58 modules):
 | `<string_view>` | `std_module.string_view` | ✅ | |
 | `<syncstream>` | `std_module.syncstream` | ✅ | |
 | `<system_error>` | `std_module.system_error` | ✅ | |
+| `<thread>` | `std_module.thread` | ✅ | |
 | `<tuple>` | `std_module.tuple` | ✅ | |
 | `<type_traits>` | `std_module.type_traits` | ✅ | |
 | `<typeindex>` | `std_module.typeindex` | ✅ | |
+| `<unordered_map>` | `std_module.unordered_map` | ✅ | |
 | `<unordered_set>` | `std_module.unordered_set` | ✅ | |
 | `<variant>` | `std_module.variant` | ✅ | |
 | `<vector>` | `std_module.vector` | ✅ | |
