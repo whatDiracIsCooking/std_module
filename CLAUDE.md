@@ -9,7 +9,7 @@ This document provides comprehensive guidance for AI assistants working with the
 - **Language:** C++20 with modules
 - **Version:** 0.1.0
 - **Build System:** CMake 3.28+ with Ninja (required)
-- **Status:** Early development - format module complete, more stdlib headers planned
+- **Status:** Production-ready - 25 standard library modules implemented with comprehensive tests
 
 ### Core Philosophy
 
@@ -23,29 +23,39 @@ The project prioritizes **flexibility over opinion**:
 
 ```
 /home/user/std_module/
-├── CMakeLists.txt              # Root build config (130 lines)
+├── CMakeLists.txt              # Root build config
 ├── README.md                   # User-facing documentation
-├── src/                        # Module implementations
-│   ├── CMakeLists.txt         # Module build targets (93 lines)
-│   ├── format.cppm            # <format> wrapper (47 lines)
-│   └── std.cppm               # Aggregate module WIP (10 lines)
-├── test/                       # Test suite
-│   ├── CMakeLists.txt         # Test build config (33 lines)
+├── src/                        # Module implementations (25 .cppm files)
+│   ├── CMakeLists.txt         # Module build targets (uses macros)
+│   ├── format.cppm            # Example: <format> wrapper
+│   ├── vector.cppm            # Example: <vector> wrapper
+│   ├── algorithm.cppm         # Example: <algorithm> wrapper
+│   └── ... 22 more modules
+├── test/                       # Test suite (25 test files)
+│   ├── CMakeLists.txt         # Test build config (uses macros)
 │   ├── README.md              # Test documentation
 │   ├── build_manual.sh        # Manual build demo script
-│   └── test_format.cpp        # Comprehensive format tests (273 lines)
-└── cmake/                      # CMake package config
-    └── std_module-config.cmake.in
+│   ├── test_format.cpp        # Example: comprehensive format tests
+│   └── ... 24 more test files
+├── cmake/                      # CMake infrastructure
+│   ├── StdModuleMacros.cmake  # Helper macros for adding modules
+│   └── std_module-config.cmake.in
+└── scripts/                    # Automation scripts
+    └── symbol_coverage.py     # Symbol coverage analysis tool
 ```
 
-### Key Files by Purpose
+### Implemented Modules (25 Total)
 
-| File | Lines | Purpose |
-|------|-------|---------|
-| `src/format.cppm` | 47 | C++20 module wrapping `<format>` header |
-| `test/test_format.cpp` | 273 | Comprehensive tests for all format APIs |
-| `CMakeLists.txt` (root) | 130 | Build options, compiler detection, installation |
-| `src/CMakeLists.txt` | 93 | Module library targets and exports |
+| Category | Modules |
+|----------|---------|
+| **Algorithms** | algorithm, functional, iterator |
+| **Containers** | bitset, deque, list, map, queue, vector |
+| **I/O** | fstream, ios, iosfwd, iostream, istream, iomanip (⚠️) |
+| **Text** | format, locale, string_view |
+| **Utilities** | exception, limits, new, random, system_error, typeindex |
+| **Numeric** | complex |
+
+**Note:** See README.md for complete module details with CMake options and import statements.
 
 ## Critical C++20 Module Concepts
 
@@ -84,14 +94,24 @@ export namespace std {           // Export namespace
 
 ### CMake Build Options
 
-Configure in `CMakeLists.txt:12-21`:
+**Global Options:**
 
 | Option | Default | Description |
 |--------|---------|-------------|
 | `STD_MODULE_BUILD_TESTS` | ON | Build test executables |
 | `STD_MODULE_BUILD_ALL_MODULES` | ON | Build all available modules |
 | `STD_MODULE_INSTALL` | ON | Generate installation targets |
-| `STD_MODULE_BUILD_FORMAT` | ON | Build format module |
+
+**Per-Module Options:**
+
+Each module has a dedicated option: `STD_MODULE_BUILD_<NAME>` (default: ON)
+
+Examples:
+- `STD_MODULE_BUILD_FORMAT=ON` - Build format module
+- `STD_MODULE_BUILD_VECTOR=ON` - Build vector module
+- `STD_MODULE_BUILD_ALGORITHM=ON` - Build algorithm module
+
+See README.md for the complete list of all 25 module options.
 
 ### Standard Build Workflow
 
@@ -111,27 +131,225 @@ cmake --install build --prefix /usr/local
 
 ### Module Target Pattern
 
-Each module follows this CMake pattern (`src/CMakeLists.txt:1-93`):
+**Modern Approach (Macro-Based):**
+
+The project uses CMake macros to reduce boilerplate. Adding a new module is a one-liner:
 
 ```cmake
-# 1. Create library target
-add_library(std_module_<name>)
+# In src/CMakeLists.txt
+std_module_add_module(format)
+std_module_add_module(vector)
+```
 
-# 2. Add module source using FILE_SET
+This macro (defined in `cmake/StdModuleMacros.cmake`) automatically:
+1. Creates library target `std_module_<name>`
+2. Adds `<name>.cppm` using `FILE_SET CXX_MODULES`
+3. Sets C++20 requirement
+4. Creates namespaced alias `std_module::<name>`
+5. Configures installation if enabled
+
+**Traditional Approach (What the Macro Does):**
+
+```cmake
+# Manual pattern (now abstracted by std_module_add_module)
+add_library(std_module_<name>)
 target_sources(std_module_<name>
     PUBLIC FILE_SET CXX_MODULES FILES <name>.cppm)
-
-# 3. Require C++20
 target_compile_features(std_module_<name> PUBLIC cxx_std_20)
-
-# 4. Create namespaced alias
 add_library(std_module::<name> ALIAS std_module_<name>)
-
-# 5. Export for installation
 install(TARGETS std_module_<name> EXPORT std_module-targets)
 ```
 
 **Critical:** Use `FILE_SET CXX_MODULES` for module files, NOT regular `target_sources()`!
+
+**Testing Macro:**
+
+Similarly, adding tests is streamlined:
+
+```cmake
+# In test/CMakeLists.txt
+std_module_add_test(format)
+std_module_add_test(vector)
+```
+
+This creates the test executable, links it to the module, and registers with CTest.
+
+## Infrastructure Patterns
+
+### Overview of CMake Macro System
+
+The project uses a sophisticated macro-based build system to minimize boilerplate and ensure consistency across all 25 modules. This is a **key pattern** to understand and follow.
+
+**Location:** `cmake/StdModuleMacros.cmake`
+
+**Three Core Macros:**
+
+1. **`std_module_add_module(name)`** - Adds a module library
+2. **`std_module_add_test(name)`** - Adds a test executable
+3. **`std_module_add_to_aggregate(name)`** - Adds module to `std_module::all` target
+
+### The "Three-Line Addition" Pattern
+
+When adding a new standard library module, you touch **three CMake files** with **one line each**:
+
+```cmake
+# 1. src/CMakeLists.txt - Add the module
+std_module_add_module(newmodule)
+
+# 2. test/CMakeLists.txt - Add the test
+std_module_add_test(newmodule)
+
+# 3. src/CMakeLists.txt (aggregate section) - Add to "all" target
+std_module_add_to_aggregate(newmodule)
+```
+
+**Why This Matters:**
+- Consistency: All 25 modules follow identical patterns
+- Maintainability: Changes to build logic happen in one place (the macro)
+- Simplicity: Adding a module doesn't require understanding complex CMake
+
+### File Naming Conventions
+
+The project enforces strict naming conventions for automatic discovery:
+
+| File Type | Pattern | Example |
+|-----------|---------|---------|
+| Module source | `src/{name}.cppm` | `src/format.cppm` |
+| Test source | `test/test_{name}.cpp` | `test/test_format.cpp` |
+| CMake target | `std_module_{name}` | `std_module_format` |
+| CMake alias | `std_module::{name}` | `std_module::format` |
+| CMake option | `STD_MODULE_BUILD_{NAME}` | `STD_MODULE_BUILD_FORMAT` |
+| Module name | `std_module.{name}` | `std_module.format` |
+| Import statement | `import std_module.{name};` | `import std_module.format;` |
+
+**Special Case:** The `<new>` header becomes `new_.cppm` and `import std_module.new_;` because `new` is a C++ keyword.
+
+### Symbol Coverage Analysis
+
+**Location:** `scripts/symbol_coverage.py`
+
+The project includes an automated symbol coverage analyzer that:
+- Parses `.cppm` files to extract exported symbols
+- Parses test files to find used symbols
+- Reports which exported symbols are tested vs. untested
+- Runs automatically as part of `ctest`
+
+**Usage:**
+
+```bash
+# Manual run for specific module
+python3 scripts/symbol_coverage.py format
+
+# Check all modules
+python3 scripts/symbol_coverage.py --all
+
+# Runs automatically with tests
+ctest --test-dir build
+```
+
+**Integration:** The coverage test is registered in `test/CMakeLists.txt` and runs alongside module tests.
+
+### Manual Build Script Pattern
+
+**Location:** `test/build_manual.sh`
+
+This script demonstrates the **low-level module compilation process** without CMake:
+
+```bash
+# 5-step manual build process
+clang++ -std=c++20 -x c++-module ../src/format.cppm --precompile -o format.pcm  # 1. Precompile
+clang++ -std=c++20 -c format.pcm -o format.o                                     # 2. Compile module
+clang++ -std=c++20 -fmodule-file=std_module.format=format.pcm \
+        -c test_format.cpp -o test_format.o                                      # 3. Compile test
+clang++ -std=c++20 format.o test_format.o -o test_format                         # 4. Link
+./test_format                                                                     # 5. Run
+```
+
+**Use Cases:**
+- Understanding C++20 module compilation mechanics
+- Debugging build issues
+- Educational purposes (understanding what CMake does)
+- Testing compiler behavior
+
+### Aggregate Target Pattern
+
+**Location:** `src/CMakeLists.txt` (bottom section)
+
+The `std_module::all` target is an **INTERFACE library** that depends on all enabled modules:
+
+```cmake
+add_library(std_module_all INTERFACE)
+add_library(std_module::all ALIAS std_module_all)
+
+std_module_add_to_aggregate(format)
+std_module_add_to_aggregate(vector)
+# ... all 25 modules
+```
+
+**Usage by consumers:**
+
+```cmake
+# Link everything at once
+target_link_libraries(myapp PRIVATE std_module::all)
+```
+
+### Option Checking Pattern
+
+All macros check **two conditions** before building a module:
+
+```cmake
+if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_${MODULE_NAME_UPPER})
+    # Build the module
+endif()
+```
+
+This enables both:
+- Global control: `STD_MODULE_BUILD_ALL_MODULES=OFF` disables everything
+- Granular control: `STD_MODULE_BUILD_FORMAT=ON` enables specific modules
+
+**Common Build Patterns:**
+
+```bash
+# Build everything (default)
+cmake -B build -G Ninja
+
+# Build only format and vector
+cmake -B build -G Ninja \
+  -DSTD_MODULE_BUILD_ALL_MODULES=OFF \
+  -DSTD_MODULE_BUILD_FORMAT=ON \
+  -DSTD_MODULE_BUILD_VECTOR=ON
+
+# Build everything except iomanip
+cmake -B build -G Ninja \
+  -DSTD_MODULE_BUILD_IOMANIP=OFF
+```
+
+### Testing Infrastructure Pattern
+
+**Location:** `test/CMakeLists.txt`
+
+The test infrastructure follows a consistent pattern:
+
+```cmake
+# 1. Enable testing
+enable_testing()
+
+# 2. Add module tests (one line per module)
+std_module_add_test(format)
+std_module_add_test(vector)
+# ... etc.
+
+# 3. Add symbol coverage as a test
+add_test(NAME symbol-coverage
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/scripts/symbol_coverage.py --all
+)
+```
+
+**Key Points:**
+- Each module test is independent (can run in parallel)
+- Tests are automatically registered with CTest
+- Symbol coverage runs as part of the test suite
+- All tests use the pattern: `import std_module.X;` then test functionality
 
 ## Development Workflows
 
@@ -158,42 +376,28 @@ export namespace std {
 
 **Location:** `src/{header}.cppm`
 
-#### 2. Update Root CMakeLists.txt
+#### 2. Add Module to Build System (3 Lines)
 
-Add build option around line 17-21:
+Add one line to each of these files:
 
+**File 1:** `src/CMakeLists.txt` (in the module list section ~line 18-42):
 ```cmake
-option(STD_MODULE_BUILD_HEADER "Build std_module.header" ON)
+std_module_add_module(header)
 ```
 
-Update summary section around line 129 to display the new option.
-
-**Location:** `CMakeLists.txt:17-21, 129`
-
-#### 3. Add Module Target
-
-Add to `src/CMakeLists.txt` following the pattern starting at line 20:
-
+**File 2:** `src/CMakeLists.txt` (in the aggregate section ~line 60-84):
 ```cmake
-# Build std_module.header
-if(STD_MODULE_BUILD_HEADER OR STD_MODULE_BUILD_ALL_MODULES)
-    add_library(std_module_header)
-    target_sources(std_module_header
-        PUBLIC FILE_SET CXX_MODULES FILES header.cppm)
-    target_compile_features(std_module_header PUBLIC cxx_std_20)
-    add_library(std_module::header ALIAS std_module_header)
-
-    list(APPEND ALL_MODULE_TARGETS std_module_header)
-
-    if(STD_MODULE_INSTALL)
-        install(TARGETS std_module_header EXPORT std_module-targets)
-    endif()
-endif()
+std_module_add_to_aggregate(header)
 ```
 
-**Location:** `src/CMakeLists.txt:20-93`
+**File 3:** `test/CMakeLists.txt` (in the test list section ~line 14-38):
+```cmake
+std_module_add_test(header)
+```
 
-#### 4. Create Comprehensive Test
+**Note:** The CMake option `STD_MODULE_BUILD_HEADER` is auto-generated by the macro system.
+
+#### 3. Create Comprehensive Test
 
 Create `test/test_{header}.cpp` following `test/test_format.cpp:1-273`:
 
@@ -212,31 +416,13 @@ Create `test/test_{header}.cpp` following `test/test_format.cpp:1-273`:
 - Error conditions (lines 120-152)
 - Type variations (lines 200-223)
 
-#### 5. Update Test CMakeLists.txt
+#### 4. Update Documentation
 
-Add to `test/CMakeLists.txt` around line 15-25:
+Update `README.md` section "Available Modules" table (around line 75-104):
 
-```cmake
-if(STD_MODULE_BUILD_HEADER OR STD_MODULE_BUILD_ALL_MODULES)
-    add_executable(test_header test_header.cpp)
-    target_link_libraries(test_header PRIVATE std_module::header)
-    add_test(NAME test_header COMMAND test_header)
-endif()
-```
+Add a new row with the module information following the existing pattern.
 
-**Location:** `test/CMakeLists.txt:15-32`
-
-#### 6. Update Documentation
-
-Update `README.md` section "Available Modules" (line 94-98):
-
-```markdown
-- ✅ `<header>` → `import std_module.header;`
-```
-
-Add to library targets section if needed (line 118).
-
-#### 7. Test the Implementation
+#### 5. Test the Implementation
 
 ```bash
 # Clean build
@@ -253,7 +439,7 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-#### 8. Handle C++20 Module ADL Limitations (If Applicable)
+#### 6. Handle C++20 Module ADL Limitations (If Applicable)
 
 **CRITICAL:** If your module fails to compile with operator-related errors, you've likely
 encountered the C++20 module ADL limitation. This is a **known, unfixable limitation** in
@@ -391,8 +577,6 @@ From `test/test_format.cpp:1-273`:
 
 ### Git Workflow and Commit Conventions
 
-**Current branch:** `claude/claude-md-mhyb6sx50vx0x652-01GvWb1xstPoWREcHQGWk2oB`
-
 #### Commit Message Style
 
 Based on git history:
@@ -422,15 +606,22 @@ ca8696e - Add flexible CMake build system for C++20 modules
 
 #### Push Requirements
 
-**CRITICAL:** When pushing, always use:
+**CRITICAL:** When pushing, always use the correct branch format:
 
 ```bash
-git push -u origin claude/claude-md-mhyb6sx50vx0x652-01GvWb1xstPoWREcHQGWk2oB
+git push -u origin claude/{description}-{session-id}
 ```
 
-- Branch MUST start with `claude/` and end with matching session ID
-- Use `-u` flag for tracking
+**Requirements:**
+- Branch MUST start with `claude/`
+- Branch MUST end with the matching session ID provided by the system
+- Use `-u` flag for upstream tracking
 - Retry on network errors (up to 4 times with exponential backoff: 2s, 4s, 8s, 16s)
+
+**Example:**
+```bash
+git push -u origin claude/add-chrono-module-01H9G7pceQwCzk5zrUd8c8M1
+```
 
 ## Common Pitfalls and Important Notes
 
@@ -716,18 +907,39 @@ This is a wrapper library that re-exports standard library symbols:
 
 ## Future Expansion Roadmap
 
-Based on project structure, planned modules likely include:
+**Status:** 25 of 90+ standard library headers wrapped
 
-- `std_module.vector` - `<vector>` wrapper
-- `std_module.string` - `<string>` wrapper
-- `std_module.algorithm` - `<algorithm>` wrapper
-- `std_module.ranges` - `<ranges>` wrapper
-- Many more stdlib headers...
+**High-Priority Candidates:**
 
-**Aggregate module:** `src/std.cppm` (WIP) will re-export all submodules for convenience:
+| Header | Complexity | Notes |
+|--------|------------|-------|
+| `<string>` | Medium | Core text processing |
+| `<array>` | Low | Simple container |
+| `<unordered_map>` | Medium | Hash map container |
+| `<set>` / `<unordered_set>` | Medium | Set containers |
+| `<memory>` | High | Smart pointers, allocators |
+| `<chrono>` | High | May have ADL issues with operators |
+| `<filesystem>` | High | May have ADL issues with stream operators |
+| `<thread>` / `<mutex>` | Medium | Concurrency primitives |
+| `<regex>` | Medium | Regular expressions |
+| `<ranges>` | Very High | Modern ranges library |
+| `<span>` | Low | Non-owning view |
+| `<optional>` / `<variant>` / `<any>` | Medium | Sum types |
+
+**Aggregate Module:**
+
+`src/std.cppm` (currently minimal) will eventually re-export all submodules for convenience:
 ```cpp
 import std_module;  // Gets everything
 ```
+
+**ADL Limitation Tracking:**
+
+Continue to document modules affected by C++20 ADL issues. Currently known:
+- `<iomanip>` - Non-functional (manipulator operators)
+- `<complex>` - Partially functional (arithmetic operators broken)
+
+Likely affected: `<chrono>`, `<filesystem>`, `<valarray>`, and potentially others with operator-heavy APIs.
 
 ## Troubleshooting Guide
 
@@ -757,15 +969,35 @@ import std_module;  // Gets everything
 
 ## Version History
 
-- **0.1.0** (Current) - Initial release with format module
-  - Flexible CMake build system
-  - std_module.format complete with comprehensive tests
-  - Multiple integration methods
-  - Full installation support
+- **0.1.0** (Current) - Production-ready release with 25 modules
+  - **Module System:**
+    - 25 standard library modules with comprehensive tests
+    - Macro-based CMake infrastructure for easy module addition
+    - Symbol coverage analysis tool
+    - Manual build script for educational purposes
+  - **Build System:**
+    - Flexible CMake 3.28+ build system with Ninja generator
+    - Per-module build options
+    - Aggregate `std_module::all` target
+    - Full installation support
+  - **Integration:**
+    - Multiple integration methods (subdirectory, installed, manual)
+    - Package config for find_package() support
+  - **Testing:**
+    - Comprehensive test suite for all modules
+    - Automated symbol coverage analysis
+    - CTest integration
+  - **Documentation:**
+    - Comprehensive CLAUDE.md for AI assistants
+    - User-facing README with module table
+    - C++20 module ADL limitation documentation
+
+**Implemented Modules (25):**
+algorithm, bitset, complex, deque, exception, format, fstream, functional, iomanip, ios, iosfwd, iostream, istream, iterator, limits, list, locale, map, new, queue, random, string_view, system_error, typeindex, vector
 
 ---
 
 **Last Updated:** 2025-11-14
 **Repository:** /home/user/std_module
 **Primary Maintainer:** AI Assistant
-**Documentation Version:** 1.0
+**Documentation Version:** 2.0
