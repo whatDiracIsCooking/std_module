@@ -29,6 +29,7 @@ std_module_add_module(iomanip)
 std_module_add_module(ios)
 std_module_add_module(iosfwd)
 std_module_add_module(iostream)
+std_module_add_module(istream)
 
 # Add more modules here as they are implemented:
 # std_module_add_module(string)
@@ -60,6 +61,7 @@ std_module_add_to_aggregate(iomanip)
 std_module_add_to_aggregate(ios)
 std_module_add_to_aggregate(iosfwd)
 std_module_add_to_aggregate(iostream)
+std_module_add_to_aggregate(istream)
 
 # Add more module dependencies here as they are implemented:
 # std_module_add_to_aggregate(string)

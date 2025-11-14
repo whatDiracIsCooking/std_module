@@ -25,6 +25,7 @@ std_module_add_test(iomanip)
 std_module_add_test(ios)
 std_module_add_test(iosfwd)
 std_module_add_test(iostream)
+std_module_add_test(istream)
 
 # Add more tests here as modules are implemented:
 # std_module_add_test(string)
