@@ -95,6 +95,7 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_ISTREAM` | ON | Build std_module.istream |
 | `STD_MODULE_BUILD_ITERATOR` | ON | Build std_module.iterator |
 | `STD_MODULE_BUILD_LIMITS` | ON | Build std_module.limits |
+| `STD_MODULE_BUILD_LOCALE` | ON | Build std_module.locale |
 
 Example:
 
@@ -126,6 +127,7 @@ Currently wrapped standard library headers:
 - ✅ `<istream>` → `import std_module.istream;`
 - ✅ `<iterator>` → `import std_module.iterator;`
 - ✅ `<limits>` → `import std_module.limits;`
+- ✅ `<locale>` → `import std_module.locale;`
 
 *More modules coming soon!*
 
