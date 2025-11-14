@@ -1,0 +1,30 @@
+@PACKAGE_INIT@
+
+# std_module CMake configuration file
+# This file allows other projects to find std_module using find_package()
+
+include(CMakeFindDependencyMacro)
+
+# Include the targets file
+include("${CMAKE_CURRENT_LIST_DIR}/std_module-targets.cmake")
+
+# Check that requested components are available
+set(std_module_FOUND TRUE)
+
+if(std_module_FIND_COMPONENTS)
+    foreach(component ${std_module_FIND_COMPONENTS})
+        if(NOT TARGET std_module::${component})
+            set(std_module_FOUND FALSE)
+            if(std_module_FIND_REQUIRED_${component})
+                message(FATAL_ERROR "std_module component '${component}' not found")
+            endif()
+        endif()
+    endforeach()
+else()
+    # If no components specified, check that at least the 'all' target exists
+    if(NOT TARGET std_module::all)
+        set(std_module_FOUND FALSE)
+    endif()
+endif()
+
+check_required_components(std_module)
