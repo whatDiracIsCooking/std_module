@@ -94,6 +94,7 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | `<list>` | ✅ | `STD_MODULE_BUILD_LIST=ON` | `std_module::list` | `import std_module.list;` |
 | `<locale>` | ✅ | `STD_MODULE_BUILD_LOCALE=ON` | `std_module::locale` | `import std_module.locale;` |
 | `<queue>` | ✅ | `STD_MODULE_BUILD_QUEUE=ON` | `std_module::queue` | `import std_module.queue;` |
+| `<set>` | ✅ | `STD_MODULE_BUILD_SET=ON` | `std_module::set` | `import std_module.set;` |
 | `<stack>` | ✅ | `STD_MODULE_BUILD_STACK=ON` | `std_module::stack` | `import std_module.stack;` |
 | `<stdexcept>` | ✅ | `STD_MODULE_BUILD_STDEXCEPT=ON` | `std_module::stdexcept` | `import std_module.stdexcept;` |
 | `<streambuf>` | ✅ | `STD_MODULE_BUILD_STREAMBUF=ON` | `std_module::streambuf` | `import std_module.streambuf;` |
@@ -157,6 +158,7 @@ std_module/
 │   ├── list.cppm
 │   ├── locale.cppm
 │   ├── queue.cppm
+│   ├── set.cppm
 │   ├── stack.cppm
 │   ├── stdexcept.cppm
 │   ├── streambuf.cppm
@@ -184,6 +186,7 @@ std_module/
 │   ├── test_list.cpp
 │   ├── test_locale.cpp
 │   ├── test_queue.cpp
+│   ├── test_set.cpp
 │   ├── test_stack.cpp
 │   ├── test_stdexcept.cpp
 │   ├── test_streambuf.cpp
