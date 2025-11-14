@@ -4,7 +4,7 @@ A C++20 module wrapper for the C++ standard library. Use `import std_module.form
 
 ## Status
 
-✅ **Production Ready** - 49 standard library modules implemented with comprehensive test coverage.
+✅ **Production Ready** - 57 standard library modules implemented with comprehensive test coverage.
 
 ## Requirements
 
@@ -136,7 +136,7 @@ target_link_libraries(myapp PRIVATE std_module::all)
 
 ## Available Modules
 
-Currently wrapped standard library headers (54 modules):
+Currently wrapped standard library headers (57 modules):
 
 | Header | Module | Status | Notes |
 |--------|--------|--------|-------|
@@ -175,6 +175,7 @@ Currently wrapped standard library headers (54 modules):
 | `<locale>` | `std_module.locale` | ✅ | |
 | `<map>` | `std_module.map` | ✅ | |
 | `<memory_resource>` | `std_module.memory_resource` | ✅ | |
+| `<mutex>` | `std_module.mutex` | ✅ | |
 | `<new>` | `std_module.new_` | ✅ | Note: underscore suffix to avoid keyword conflict |
 | `<numbers>` | `std_module.numbers` | ✅ | |
 | `<numeric>` | `std_module.numeric` | ✅ | |
@@ -183,18 +184,19 @@ Currently wrapped standard library headers (54 modules):
 | `<random>` | `std_module.random` | ✅ | |
 | `<ranges>` | `std_module.ranges` | ✅ | |
 | `<regex>` | `std_module.regex` | ✅ | |
+| `<scoped_allocator>` | `std_module.scoped_allocator` | ✅ | |
 | `<semaphore>` | `std_module.semaphore` | ✅ | |
 | `<source_location>` | `std_module.source_location` | ✅ | |
 | `<span>` | `std_module.span` | ✅ | |
 | `<string_view>` | `std_module.string_view` | ✅ | |
 | `<syncstream>` | `std_module.syncstream` | ✅ | |
 | `<system_error>` | `std_module.system_error` | ✅ | |
-| `<typeindex>` | `std_module.typeindex` | ✅ | |
 | `<tuple>` | `std_module.tuple` | ✅ | |
+| `<type_traits>` | `std_module.type_traits` | ✅ | |
+| `<typeindex>` | `std_module.typeindex` | ✅ | |
 | `<unordered_set>` | `std_module.unordered_set` | ✅ | |
 | `<variant>` | `std_module.variant` | ✅ | |
 | `<vector>` | `std_module.vector` | ✅ | |
-
 ## Project Structure
 
 ```
