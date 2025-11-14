@@ -148,7 +148,6 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | `<string_view>` | ✅ |
 | `<syncstream>` | ✅ |
 | `<system_error>` | ✅ |
-| **`test_framework`** | ✅ ⚙️ |
 | `<thread>` | ✅ |
 | `<tuple>` | ✅ |
 | `<type_traits>` | ✅ |
@@ -162,7 +161,7 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 
 **Special Targets:**
 - `std_module::all` - Convenience target that links all modules
-- ⚙️ `std_module::test_framework` - Testing utility module (provides assert, I/O, and formatting helpers for pure module-only tests)
+- ⚙️ `std_module::test_framework` - Testing utility module (located in `test/`, only built when `STD_MODULE_BUILD_TESTS=ON`)
 
 **Build examples:**
 
