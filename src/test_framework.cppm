@@ -11,6 +11,7 @@
 module;
 #include <iostream>
 #include <sstream>
+#include <iomanip>
 #include <string>
 #include <cstdlib>  // for std::abort
 
@@ -23,6 +24,14 @@ export namespace std {
     using std::cerr;
     using std::endl;
     using std::flush;
+
+    // I/O manipulators
+    using std::hex;
+    using std::dec;
+    using std::oct;
+    using std::setw;
+    using std::setfill;
+    using std::setprecision;
 
     // String streams
     using std::ostringstream;
@@ -43,6 +52,12 @@ export namespace test {
     using std::cerr;
     using std::endl;
     using std::flush;
+    using std::hex;
+    using std::dec;
+    using std::oct;
+    using std::setw;
+    using std::setfill;
+    using std::setprecision;
     using std::ostringstream;
     using std::istringstream;
     using std::stringstream;

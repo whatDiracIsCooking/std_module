@@ -27,6 +27,12 @@ std_module_add_test(array)
 # std_module_add_test(atomic)  # TODO: Fix linking with libatomic
 std_module_add_test(barrier)
 std_module_add_test(bit)
+
+# test_bit uses test_framework for cleaner testing
+if(TARGET test_bit)
+    target_link_libraries(test_bit PRIVATE std_module::test_framework)
+endif()
+
 std_module_add_test(bitset)
 std_module_add_test(charconv)
 std_module_add_test(chrono)
