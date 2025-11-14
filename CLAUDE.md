@@ -31,7 +31,6 @@ The project prioritizes **flexibility over opinion**:
 │   ├── format.cppm            # Example: <format> wrapper
 │   ├── vector.cppm            # Example: <vector> wrapper
 │   ⋮
-│   └── std.cppm               # Aggregate module (WIP)
 ├── test/                       # Test suite (49 test files)
 │   ├── CMakeLists.txt         # Test build config (uses macros)
 │   ├── README.md              # Manual build documentation
@@ -85,7 +84,7 @@ The project prioritizes **flexibility over opinion**:
    - Focus on: module name, import statement, build options, known limitations
 
 4. **Use vertical ellipses in file trees**
-   - Example: `├── format.cppm`, `├── vector.cppm`, `⋮`, `└── std.cppm`
+   - Example: `├── format.cppm`, `├── vector.cppm`, `⋮`
    - Saves space while conveying "many files here"
 
 5. **Be concise everywhere except "Available Modules"**
@@ -1077,11 +1076,11 @@ This is a wrapper library that re-exports standard library symbols:
 | `<span>` | Low | Non-owning view |
 | `<optional>` / `<variant>` / `<any>` | Medium | Sum types |
 
-**Aggregate Module:**
+**Aggregate Target:**
 
-`src/std.cppm` (currently minimal) will eventually re-export all submodules for convenience:
-```cpp
-import std_module;  // Gets everything
+The `std_module::all` CMake target already provides a way to link all modules at once:
+```cmake
+target_link_libraries(myapp PRIVATE std_module::all)
 ```
 
 **ADL Limitation Tracking:**

@@ -205,7 +205,6 @@ std_module/
 │   ├── format.cppm
 │   ├── vector.cppm
 │   ⋮                           # ... 69 more modules
-│   └── std.cppm
 ├── test/                       # Test suite (71 test files)
 │   ├── CMakeLists.txt
 │   ├── test_algorithm.cpp
