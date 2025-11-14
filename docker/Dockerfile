@@ -9,14 +9,18 @@ ARG CLANG_VERSION=18
 # Prevent interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install build dependencies
+# Install base build dependencies (cached layer for faster clang version changes)
 RUN apt-get update && apt-get install -y \
-    clang-${CLANG_VERSION} \
-    clang-tools-${CLANG_VERSION} \
     cmake \
     ninja-build \
     python3 \
     git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install clang packages (separate layer allows fast rebuilds when testing different versions)
+RUN apt-get update && apt-get install -y \
+    clang-${CLANG_VERSION} \
+    clang-tools-${CLANG_VERSION} \
     && rm -rf /var/lib/apt/lists/*
 
 # Set Clang as the default C++ compiler
@@ -30,20 +34,20 @@ WORKDIR /workspace
 COPY . .
 
 # Configure the build with Ninja generator and Clang
-RUN cmake -B build -G Ninja \
+RUN cmake -B build-clang-${CLANG_VERSION} -G Ninja \
     -DCMAKE_CXX_COMPILER=clang++-${CLANG_VERSION} \
     -DCMAKE_BUILD_TYPE=Release \
     -DSTD_MODULE_BUILD_TESTS=ON \
     -DSTD_MODULE_BUILD_ALL_MODULES=ON
 
 # Build all modules and tests
-RUN cmake --build build --parallel
+RUN cmake --build build-clang-${CLANG_VERSION} --parallel
 
 # Run tests during build (ensures build fails if tests fail)
-RUN ctest --test-dir build --output-on-failure
+RUN ctest --test-dir build-clang-${CLANG_VERSION} --output-on-failure
 
 # Run tests by default when container starts (optional - can be overridden)
-CMD ["ctest", "--test-dir", "build", "--output-on-failure", "--parallel"]
+CMD ["sh", "-c", "ctest --test-dir build-clang-${CLANG_VERSION} --output-on-failure --parallel"]
 
 # Usage:
 # Build the image (default Clang 18):
@@ -59,5 +63,5 @@ CMD ["ctest", "--test-dir", "build", "--output-on-failure", "--parallel"]
 # Interactive shell:
 #   docker run --rm -it std_module /bin/bash
 #
-# Run specific test:
-#   docker run --rm std_module ctest --test-dir build -R test_format --output-on-failure
+# Run specific test (build dir is build-clang-<version>):
+#   docker run --rm std_module sh -c "ctest --test-dir build-clang-18 -R test_format --output-on-failure"
