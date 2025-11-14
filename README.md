@@ -95,6 +95,7 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_ISTREAM` | ON | Build std_module.istream |
 | `STD_MODULE_BUILD_ITERATOR` | ON | Build std_module.iterator |
 | `STD_MODULE_BUILD_LIMITS` | ON | Build std_module.limits |
+| `STD_MODULE_BUILD_LIST` | ON | Build std_module.list |
 | `STD_MODULE_BUILD_LOCALE` | ON | Build std_module.locale |
 
 Example:
@@ -127,6 +128,7 @@ Currently wrapped standard library headers:
 - ✅ `<istream>` → `import std_module.istream;`
 - ✅ `<iterator>` → `import std_module.iterator;`
 - ✅ `<limits>` → `import std_module.limits;`
+- ✅ `<list>` → `import std_module.list;`
 - ✅ `<locale>` → `import std_module.locale;`
 
 *More modules coming soon!*
@@ -166,6 +168,8 @@ The build system provides these CMake targets:
 - `std_module::istream` - Just the istream module
 - `std_module::iterator` - Just the iterator module
 - `std_module::limits` - Just the limits module
+- `std_module::list` - Just the list module
+- `std_module::locale` - Just the locale module
 - `std_module::all` - All available modules (convenience target)
 
 Link only what you need:
@@ -205,6 +209,8 @@ std_module/
 │   ├── istream.cppm        # <istream> wrapper
 │   ├── iterator.cppm       # <iterator> wrapper
 │   ├── limits.cppm         # <limits> wrapper
+│   ├── list.cppm           # <list> wrapper
+│   ├── locale.cppm         # <locale> wrapper
 │   └── std.cppm           # Aggregate module (WIP)
 ├── test/                   # Tests and examples
 │   ├── CMakeLists.txt
@@ -225,6 +231,8 @@ std_module/
 │   ├── test_istream.cpp
 │   ├── test_iterator.cpp
 │   ├── test_limits.cpp
+│   ├── test_list.cpp
+│   ├── test_locale.cpp
 │   └── build_manual.sh    # Manual build demo
 └── cmake/                  # CMake configuration files
 ```
