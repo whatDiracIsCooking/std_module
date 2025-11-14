@@ -84,6 +84,7 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_BITSET` | ON | Build std_module.bitset |
 | `STD_MODULE_BUILD_STRING_VIEW` | ON | Build std_module.string_view |
 | `STD_MODULE_BUILD_DEQUE` | ON | Build std_module.deque |
+| `STD_MODULE_BUILD_FSTREAM` | ON | Build std_module.fstream |
 
 Example:
 
@@ -104,6 +105,7 @@ Currently wrapped standard library headers:
 - ✅ `<bitset>` → `import std_module.bitset;`
 - ✅ `<string_view>` → `import std_module.string_view;`
 - ✅ `<deque>` → `import std_module.deque;`
+- ✅ `<fstream>` → `import std_module.fstream;`
 
 *More modules coming soon!*
 
@@ -130,6 +132,8 @@ The build system provides these CMake targets:
 - `std_module::algorithm` - Just the algorithm module
 - `std_module::bitset` - Just the bitset module
 - `std_module::string_view` - Just the string_view module
+- `std_module::deque` - Just the deque module
+- `std_module::fstream` - Just the fstream module
 - `std_module::all` - All available modules (convenience target)
 
 Link only what you need:
@@ -157,6 +161,8 @@ std_module/
 │   ├── algorithm.cppm      # <algorithm> wrapper
 │   ├── bitset.cppm         # <bitset> wrapper
 │   ├── string_view.cppm    # <string_view> wrapper
+│   ├── deque.cppm          # <deque> wrapper
+│   ├── fstream.cppm        # <fstream> wrapper
 │   └── std.cppm           # Aggregate module (WIP)
 ├── test/                   # Tests and examples
 │   ├── CMakeLists.txt
@@ -165,6 +171,8 @@ std_module/
 │   ├── test_algorithm.cpp
 │   ├── test_bitset.cpp
 │   ├── test_string_view.cpp
+│   ├── test_deque.cpp
+│   ├── test_fstream.cpp
 │   └── build_manual.sh    # Manual build demo
 └── cmake/                  # CMake configuration files
 ```
