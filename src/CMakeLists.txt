@@ -37,6 +37,9 @@ std_module_add_module(locale)
 std_module_add_module(map)
 std_module_add_module(new)
 std_module_add_module(queue)
+std_module_add_module(random)
+std_module_add_module(system_error)
+std_module_add_module(typeindex)
 
 # Add more modules here as they are implemented:
 # std_module_add_module(string)
@@ -76,6 +79,9 @@ std_module_add_to_aggregate(locale)
 std_module_add_to_aggregate(map)
 std_module_add_to_aggregate(new)
 std_module_add_to_aggregate(queue)
+std_module_add_to_aggregate(random)
+std_module_add_to_aggregate(system_error)
+std_module_add_to_aggregate(typeindex)
 
 # Add more module dependencies here as they are implemented:
 # std_module_add_to_aggregate(string)
