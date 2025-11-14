@@ -17,11 +17,7 @@ using std::bitset;
 
 // Hash support
 using std::hash;
-}  // namespace std
 
-// Export non-member operator templates
-export namespace std
-{
 // Bitwise operators (non-member functions)
 using std::operator&;
 using std::operator|;

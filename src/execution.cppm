@@ -14,10 +14,9 @@ export namespace std
 // Execution policy traits
 using std::is_execution_policy;
 using std::is_execution_policy_v;
-}  // namespace std
 
-// Export nested namespace separately
-export namespace std::execution
+// Execution policies namespace
+namespace execution
 {
 // Policy types
 using std::execution::sequenced_policy;
@@ -30,4 +29,5 @@ using std::execution::seq;
 using std::execution::par;
 using std::execution::par_unseq;
 using std::execution::unseq;
-}  // namespace std::execution
+}  // namespace execution
+}  // namespace std

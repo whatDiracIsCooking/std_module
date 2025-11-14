@@ -9,7 +9,9 @@ module;
 
 export module std_module.ranges;
 
-export namespace std::ranges
+export namespace std
+{
+namespace ranges
 {
 // Range access
 using std::ranges::begin;
@@ -82,9 +84,8 @@ using std::ranges::elements_view;
 using std::ranges::keys_view;
 using std::ranges::values_view;
 
-}  // namespace std::ranges
-
-export namespace std::ranges::views
+// views namespace
+namespace views
 {
 using std::ranges::views::all;
 using std::ranges::views::all_t;
@@ -107,4 +108,7 @@ using std::ranges::views::empty;
 using std::ranges::views::single;
 using std::ranges::views::iota;
 using std::ranges::views::istream;
-}  // namespace std::ranges::views
+}  // namespace views
+
+}  // namespace ranges
+}  // namespace std

@@ -24,13 +24,13 @@ using std::stop_source;
 using std::stop_callback;
 using std::nostopstate;
 using std::nostopstate_t;
-}  // namespace std
 
-// Export this_thread namespace
-export namespace std::this_thread
+// this_thread namespace
+namespace this_thread
 {
 using std::this_thread::get_id;
 using std::this_thread::yield;
 using std::this_thread::sleep_for;
 using std::this_thread::sleep_until;
-}  // namespace std::this_thread
+}  // namespace this_thread
+}  // namespace std
