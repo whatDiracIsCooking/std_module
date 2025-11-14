@@ -37,6 +37,37 @@ if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_FORMAT)
 endif()
 
 # ------------------------------------------------------------------------------
+# std_module.algorithm
+# ------------------------------------------------------------------------------
+
+if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_ALGORITHM)
+    add_library(std_module_algorithm)
+
+    target_sources(std_module_algorithm
+        PUBLIC
+            FILE_SET CXX_MODULES FILES
+                algorithm.cppm
+    )
+
+    target_compile_features(std_module_algorithm PUBLIC cxx_std_20)
+
+    # Alias for consistent namespacing
+    add_library(std_module::algorithm ALIAS std_module_algorithm)
+
+    # Installation
+    if(STD_MODULE_INSTALL)
+        install(TARGETS std_module_algorithm
+            EXPORT std_module-targets
+            FILE_SET CXX_MODULES DESTINATION ${CMAKE_INSTALL_LIBDIR}/std_module
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        )
+    endif()
+
+    message(STATUS "Configured module: std_module::algorithm")
+endif()
+
+# ------------------------------------------------------------------------------
 # Add more modules here as they are implemented
 # ------------------------------------------------------------------------------
 
@@ -77,6 +108,10 @@ add_library(std_module::all ALIAS std_module_all)
 # Add dependencies to all built modules
 if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_FORMAT)
     target_link_libraries(std_module_all INTERFACE std_module::format)
+endif()
+
+if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_ALGORITHM)
+    target_link_libraries(std_module_all INTERFACE std_module::algorithm)
 endif()
 
 # Add more module dependencies here as they are implemented
