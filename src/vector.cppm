@@ -17,10 +17,10 @@ using std::vector;
 // Helper functions (erase-remove idiom C++20)
 using std::erase;
 using std::erase_if;
-}  // namespace std
 
-// Export PMR types in their own namespace
-export namespace std::pmr
+// PMR types
+namespace pmr
 {
 using std::pmr::vector;
-}  // namespace std::pmr
+}  // namespace pmr
+}  // namespace std

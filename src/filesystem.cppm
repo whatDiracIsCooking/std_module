@@ -9,7 +9,14 @@ module;
 
 export module std_module.filesystem;
 
-export namespace std::filesystem
+export namespace std
+{
+// Convenience exports in std namespace
+using std::filesystem::path;
+using std::filesystem::filesystem_error;
+
+// filesystem namespace
+namespace filesystem
 {
 // Main types
 using std::filesystem::path;
@@ -79,11 +86,6 @@ using std::filesystem::hash_value;
 // Iterator support for range-based for loops
 using std::filesystem::begin;
 using std::filesystem::end;
-}  // namespace std::filesystem
+}  // namespace filesystem
 
-// Also export in std namespace for convenience
-export namespace std
-{
-using std::filesystem::path;
-using std::filesystem::filesystem_error;
 }  // namespace std

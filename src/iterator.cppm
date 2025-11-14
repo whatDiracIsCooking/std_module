@@ -98,11 +98,11 @@ using std::iter_value_t;
 using std::iter_reference_t;
 using std::iter_rvalue_reference_t;
 
-}  // namespace std
-
-// Export ranges namespace for C++20 iterator utilities
-export namespace std::ranges
+// ranges namespace for C++20 iterator utilities
+namespace ranges
 {
 using std::ranges::iter_move;
 using std::ranges::iter_swap;
-}  // namespace std::ranges
+}  // namespace ranges
+
+}  // namespace std

@@ -26,10 +26,10 @@ using std::operator<=>;  // C++20 three-way comparison
 // Helper functions (erase-remove idiom C++20)
 using std::erase;
 using std::erase_if;
-}  // namespace std
 
-// Export PMR types in their own namespace
-export namespace std::pmr
+// PMR types
+namespace pmr
 {
 using std::pmr::deque;
-}  // namespace std::pmr
+}  // namespace pmr
+}  // namespace std
