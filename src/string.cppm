@@ -42,6 +42,10 @@ using std::getline;
 // Hash support
 using std::hash;
 
+// C++20 erase/erase_if
+using std::erase;
+using std::erase_if;
+
 // String literals namespace
 namespace literals
 {
