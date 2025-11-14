@@ -97,6 +97,7 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_LIMITS` | ON | Build std_module.limits |
 | `STD_MODULE_BUILD_LIST` | ON | Build std_module.list |
 | `STD_MODULE_BUILD_LOCALE` | ON | Build std_module.locale |
+| `STD_MODULE_BUILD_CHRONO` | ON | Build std_module.chrono |
 
 Example:
 
@@ -130,6 +131,7 @@ Currently wrapped standard library headers:
 - ✅ `<limits>` → `import std_module.limits;`
 - ✅ `<list>` → `import std_module.list;`
 - ✅ `<locale>` → `import std_module.locale;`
+- ⚠️ `<chrono>` → `import std_module.chrono;` **(operators/literals unavailable - see [limitations](#known-limitations))**
 
 *More modules coming soon!*
 
@@ -170,6 +172,7 @@ The build system provides these CMake targets:
 - `std_module::limits` - Just the limits module
 - `std_module::list` - Just the list module
 - `std_module::locale` - Just the locale module
+- `std_module::chrono` - Just the chrono module
 - `std_module::all` - All available modules (convenience target)
 
 Link only what you need:
@@ -211,6 +214,7 @@ std_module/
 │   ├── limits.cppm         # <limits> wrapper
 │   ├── list.cppm           # <list> wrapper
 │   ├── locale.cppm         # <locale> wrapper
+│   ├── chrono.cppm         # <chrono> wrapper
 │   └── std.cppm           # Aggregate module (WIP)
 ├── test/                   # Tests and examples
 │   ├── CMakeLists.txt
@@ -233,6 +237,7 @@ std_module/
 │   ├── test_limits.cpp
 │   ├── test_list.cpp
 │   ├── test_locale.cpp
+│   ├── test_chrono.cpp
 │   └── build_manual.sh    # Manual build demo
 └── cmake/                  # CMake configuration files
 ```
@@ -255,6 +260,13 @@ Some standard library modules are affected by **Argument-Dependent Lookup (ADL) 
   - **Problem:** Arithmetic operators (`operator+`, `operator-`, etc.) not found via ADL
   - **Impact:** Cannot perform arithmetic on `std::complex` values using modules alone
   - **Status:** Construction, member functions work; operators don't
+
+- **`<chrono>`** - ⚠️ **Partially functional**
+  - **Problem:** Duration/time_point arithmetic operators and comparison operators not found via ADL
+  - **Additionally:** Duration literals (`1h`, `30min`, `45s`, etc.) are not found
+  - **Impact:** Cannot use `+`, `-`, `==`, `/` operators or literals with chrono types
+  - **What works:** Type construction, `.count()`, conversions, clocks, time zones, calendar types
+  - **Status:** ~70% functional - member functions work, operators don't
 
 **Technical Details:**
 

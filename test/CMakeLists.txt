@@ -30,6 +30,7 @@ std_module_add_test(iterator)
 std_module_add_test(limits)
 std_module_add_test(list)
 std_module_add_test(locale)
+std_module_add_test(chrono)
 
 # Add more tests here as modules are implemented:
 # std_module_add_test(string)
