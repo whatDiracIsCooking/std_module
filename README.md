@@ -161,6 +161,7 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 
 **Special Targets:**
 - `std_module::all` - Convenience target that links all modules
+- ⚙️ `std_module::test_framework` - Testing utility module (located in `test/`, only built when `STD_MODULE_BUILD_TESTS=ON`)
 
 **Build examples:**
 
