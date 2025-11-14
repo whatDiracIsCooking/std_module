@@ -94,6 +94,7 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | `<list>` | ✅ | `STD_MODULE_BUILD_LIST=ON` | `std_module::list` | `import std_module.list;` |
 | `<locale>` | ✅ | `STD_MODULE_BUILD_LOCALE=ON` | `std_module::locale` | `import std_module.locale;` |
 | `<map>` | ✅ | `STD_MODULE_BUILD_MAP=ON` | `std_module::map` | `import std_module.map;` |
+| `<memory>` | ✅ | `STD_MODULE_BUILD_MEMORY=ON` | `std_module::memory` | `import std_module.memory;` |
 | `<new>` | ✅ | `STD_MODULE_BUILD_NEW=ON` | `std_module::new` | `import std_module.new_;` [†](#notes) |
 | `<numeric>` | ✅ | `STD_MODULE_BUILD_NUMERIC=ON` | `std_module::numeric` | `import std_module.numeric;` |
 | `<optional>` | ✅ | `STD_MODULE_BUILD_OPTIONAL=ON` | `std_module::optional` | `import std_module.optional;` |
@@ -163,6 +164,7 @@ std_module/
 │   ├── list.cppm
 │   ├── locale.cppm
 │   ├── map.cppm
+│   ├── memory.cppm
 │   ├── new.cppm
 │   ├── numeric.cppm
 │   ├── optional.cppm
@@ -196,6 +198,7 @@ std_module/
 │   ├── test_list.cpp
 │   ├── test_locale.cpp
 │   ├── test_map.cpp
+│   ├── test_memory.cpp
 │   ├── test_new.cpp
 │   ├── test_numeric.cpp
 │   ├── test_optional.cpp
