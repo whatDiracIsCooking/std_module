@@ -878,22 +878,34 @@ git push -u origin claude/add-chrono-module-01H9G7pceQwCzk5zrUd8c8M1
    4. **Mark as known limitation:** Update module documentation to note which features don't work
    5. **Track affected modules:** Maintain a list of partially functional modules
 
-   **Affected Modules List (UPDATED 2025-11-14):**
+   **Affected Modules List:**
 
    **✅ FIXED (operator exports work):**
    - ✅ `<iostream>` - **FIXED** by exporting `operator<<`, `operator>>`, `endl`, `flush`
      - Reference: `src/iostream.cppm`, `test/test_iostream.cpp`
      - Works on Clang + libstdc++, Clang + libc++, GCC + libstdc++
 
+   - ✅ `<chrono>` - **FIXED** by exporting arithmetic, comparison, and literal operators
+     - Exported operators: `+`, `-`, `*`, `/`, `%`, `==`, `<`, `<=`, `>`, `>=`, `<=>`
+     - Exported literals: `operator""h`, `operator""min`, `operator""s`, etc. in inline namespace
+     - Calendar operators (operator/) work via re-export in std namespace
+     - Stream operators (`operator<<`, `operator>>`) exported
+     - **Outstanding issue:** `std::exception` not available from chrono module alone
+       - Workaround: `#include <exception>` in test file
+       - This is expected - exception types from `<chrono>` should import from std_module.exception
+     - Reference: `src/chrono.cppm`, `test/test_chrono.cpp`
+     - Works on Clang + libstdc++, Clang + libc++, GCC + libstdc++
+
    **⚠️ TODO (not yet tested with operator exports):**
    - ⚠️ `<iomanip>` - May be fixable by exporting manipulator operators
    - ⚠️ `<complex>` - Should be fixable by exporting arithmetic operators
-   - ⚠️ Potentially fixable: `<valarray>`, `<chrono>`, `<filesystem>`, `<thread>`, etc.
+   - ⚠️ Potentially fixable: `<valarray>`, `<filesystem>`, `<thread>`, etc.
 
-   **SOLUTION FOUND (2025-11-14):**
+   **SOLUTION PATTERN:**
    - ✅ Export operators explicitly: `using std::operator<<;`
-   - ✅ Export manipulators explicitly: `using std::endl;`
-   - ✅ Test with NO `#include` directives
+   - ✅ Export manipulators/literals explicitly: `using std::endl;`
+   - ✅ Export literals in inline namespace for proper accessibility
+   - ✅ Test with NO `#include` directives (except for required workarounds)
    - ✅ Works across all practical compiler/stdlib combinations
 
 4. **Test all exported symbols** - Easy to miss symbols in export list

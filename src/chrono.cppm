@@ -179,12 +179,9 @@ using std::chrono_literals::operator""y;
 
 }  // namespace std::chrono
 
-// Stream operators and chrono_literals accessibility from std namespace
 export namespace std {
 using std::operator<<;
 using std::operator>>;
-
-// Re-export chrono_literals for "using namespace std::chrono_literals;" accessibility
 inline namespace chrono_literals {
 using std::chrono_literals::operator""h;
 using std::chrono_literals::operator""min;

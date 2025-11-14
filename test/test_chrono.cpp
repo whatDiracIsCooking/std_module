@@ -2,11 +2,11 @@
  * @file test_chrono.cpp
  * @brief Comprehensive test for std_module.chrono (C++20)
  *
- * UPDATED 2025-11-14: C++20 module ADL issues FIXED by exporting operators!
- * - Duration/time_point arithmetic operators now work
- * - Duration literals now work
- * - Comparison operators now work
- * - Calendar operators (operator/) now work
+ * C++20 module ADL issues FIXED by exporting operators!
+ * - Duration/time_point arithmetic operators work
+ * - Duration literals work
+ * - Comparison operators work
+ * - Calendar operators (operator/) work
  *
  * Solution: Explicitly export operators in src/chrono.cppm
  * Reference: https://github.com/cplusplus/papers/issues/1005
@@ -422,7 +422,7 @@ void test_duration_traits() {
 
 int main() {
     std::cout << "=== Testing std_module.chrono ===\n";
-    std::cout << "UPDATED 2025-11-14: All operators now work via explicit exports!\n";
+    std::cout << "All operators work via explicit exports!\n";
     std::cout << "(literals, arithmetic operators, comparison operators, calendar operators)\n\n";
 
     try {
