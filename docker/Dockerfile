@@ -9,6 +9,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
     clang-18 \
+    clang-tools-18 \
     cmake \
     ninja-build \
     python3 \
