@@ -26,11 +26,27 @@ std_module_add_test(vector)
 # Symbol Coverage Analysis
 # ==============================================================================
 
-# Add custom target to run symbol usage coverage analysis
+# Add symbol coverage analysis as part of the test suite
 find_package(Python3 COMPONENTS Interpreter)
 
 if(Python3_FOUND)
-    add_custom_target(symbol-coverage
+    # Add as a CTest test - runs automatically with 'ctest' or 'cmake --build build --target test'
+    add_test(
+        NAME symbol-coverage
+        COMMAND ${Python3_EXECUTABLE}
+            ${CMAKE_SOURCE_DIR}/scripts/symbol_coverage.py
+            --all
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+
+    # Set test properties
+    set_tests_properties(symbol-coverage PROPERTIES
+        LABELS "coverage"
+        TIMEOUT 30
+    )
+
+    # Also keep as a custom target for manual invocation
+    add_custom_target(symbol-coverage-target
         COMMAND ${Python3_EXECUTABLE}
             ${CMAKE_SOURCE_DIR}/scripts/symbol_coverage.py
             --all
@@ -39,17 +55,7 @@ if(Python3_FOUND)
         VERBATIM
     )
 
-    # Add help message
-    add_custom_target(symbol-coverage-help
-        COMMAND ${CMAKE_COMMAND} -E echo ""
-        COMMAND ${CMAKE_COMMAND} -E echo "Symbol Coverage Targets:"
-        COMMAND ${CMAKE_COMMAND} -E echo "  symbol-coverage        - Analyze all modules"
-        COMMAND ${CMAKE_COMMAND} -E echo ""
-        COMMAND ${CMAKE_COMMAND} -E echo "Or run directly:"
-        COMMAND ${CMAKE_COMMAND} -E echo "  ./scripts/symbol_coverage.py --all"
-        COMMAND ${CMAKE_COMMAND} -E echo "  ./scripts/symbol_coverage.py src/format.cppm test/test_format.cpp"
-        VERBATIM
-    )
+    message(STATUS "Symbol coverage enabled - runs automatically with tests")
 else()
-    message(STATUS "Python3 not found - symbol coverage target disabled")
+    message(STATUS "Python3 not found - symbol coverage disabled")
 endif()

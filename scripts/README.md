@@ -19,24 +19,34 @@ Traditional code coverage tools (gcov/lcov) measure **executed lines**, but in t
 
 ### Usage
 
-#### Via CMake (Recommended)
+Symbol coverage runs **automatically** with the test suite:
 
 ```bash
-# Analyze all modules
-cmake --build build --target symbol-coverage
-
-# View help
-cmake --build build --target symbol-coverage-help
+# Build and run all tests (includes symbol coverage)
+cmake --build build
+ctest --test-dir build --output-on-failure
 ```
 
-#### Direct Execution
+#### Skipping Symbol Coverage
+
+To run tests without symbol coverage:
 
 ```bash
-# Analyze all modules
+# Exclude symbol coverage from test run
+ctest --test-dir build --exclude-regex symbol-coverage
+```
+
+#### Manual Invocation
+
+```bash
+# Run symbol coverage directly (bypasses CTest)
 ./scripts/symbol_coverage.py --all
 
 # Analyze specific module
 ./scripts/symbol_coverage.py src/format.cppm test/test_format.cpp
+
+# Via CMake custom target
+cmake --build build --target symbol-coverage-target
 ```
 
 ### Example Output
@@ -82,16 +92,28 @@ This is a **text-based** analysis tool:
 
 ### CI Integration
 
-The script exits with:
+Symbol coverage runs automatically as part of the test suite. The test exits with:
 - **Code 0**: All symbols covered (100%)
 - **Code 1**: Some symbols untested (< 100%)
 
-This allows CI enforcement:
+In CI, symbol coverage will run with your regular tests:
 
 ```yaml
 # .github/workflows/ci.yml
-- name: Check symbol coverage
-  run: cmake --build build --target symbol-coverage
+- name: Build and test
+  run: |
+    cmake -B build -G Ninja
+    cmake --build build
+    ctest --test-dir build --output-on-failure
+    # Symbol coverage runs automatically as test #6
+```
+
+To make CI pass despite incomplete coverage, exclude the test:
+
+```yaml
+# If you want CI to pass with <100% coverage
+- name: Run tests (skip coverage check)
+  run: ctest --test-dir build --exclude-regex symbol-coverage
 ```
 
 ### Current Coverage (as of last check)
