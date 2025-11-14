@@ -30,6 +30,7 @@ std_module_add_module(ios)
 std_module_add_module(iosfwd)
 std_module_add_module(iostream)
 std_module_add_module(istream)
+std_module_add_module(limits)
 
 # Add more modules here as they are implemented:
 # std_module_add_module(string)
@@ -62,6 +63,7 @@ std_module_add_to_aggregate(ios)
 std_module_add_to_aggregate(iosfwd)
 std_module_add_to_aggregate(iostream)
 std_module_add_to_aggregate(istream)
+std_module_add_to_aggregate(limits)
 
 # Add more module dependencies here as they are implemented:
 # std_module_add_to_aggregate(string)

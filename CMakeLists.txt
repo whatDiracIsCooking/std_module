@@ -29,6 +29,7 @@ option(STD_MODULE_BUILD_IOS "Build std_module.ios" ON)
 option(STD_MODULE_BUILD_IOSFWD "Build std_module.iosfwd" ON)
 option(STD_MODULE_BUILD_IOSTREAM "Build std_module.iostream" ON)
 option(STD_MODULE_BUILD_ISTREAM "Build std_module.istream" ON)
+option(STD_MODULE_BUILD_LIMITS "Build std_module.limits" ON)
 # More options will be added as we wrap more headers:
 # option(STD_MODULE_BUILD_STRING "Build std_module.string" ON)
 # etc.
@@ -161,4 +162,5 @@ message(STATUS "  ios:                    ${STD_MODULE_BUILD_IOS}")
 message(STATUS "  iosfwd:                 ${STD_MODULE_BUILD_IOSFWD}")
 message(STATUS "  iostream:               ${STD_MODULE_BUILD_IOSTREAM}")
 message(STATUS "  istream:                ${STD_MODULE_BUILD_ISTREAM}")
+message(STATUS "  limits:                 ${STD_MODULE_BUILD_LIMITS}")
 message(STATUS "")

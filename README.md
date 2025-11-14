@@ -93,6 +93,7 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_IOSFWD` | ON | Build std_module.iosfwd |
 | `STD_MODULE_BUILD_IOSTREAM` | ON | Build std_module.iostream |
 | `STD_MODULE_BUILD_ISTREAM` | ON | Build std_module.istream |
+| `STD_MODULE_BUILD_LIMITS` | ON | Build std_module.limits |
 
 Example:
 
@@ -122,6 +123,7 @@ Currently wrapped standard library headers:
 - ✅ `<iosfwd>` → `import std_module.iosfwd;`
 - ✅ `<iostream>` → `import std_module.iostream;`
 - ✅ `<istream>` → `import std_module.istream;`
+- ✅ `<limits>` → `import std_module.limits;`
 
 *More modules coming soon!*
 
@@ -158,6 +160,7 @@ The build system provides these CMake targets:
 - `std_module::iosfwd` - Just the iosfwd module
 - `std_module::iostream` - Just the iostream module
 - `std_module::istream` - Just the istream module
+- `std_module::limits` - Just the limits module
 - `std_module::all` - All available modules (convenience target)
 
 Link only what you need:
@@ -195,6 +198,7 @@ std_module/
 │   ├── iosfwd.cppm         # <iosfwd> wrapper
 │   ├── iostream.cppm       # <iostream> wrapper
 │   ├── istream.cppm        # <istream> wrapper
+│   ├── limits.cppm         # <limits> wrapper
 │   └── std.cppm           # Aggregate module (WIP)
 ├── test/                   # Tests and examples
 │   ├── CMakeLists.txt
@@ -213,6 +217,7 @@ std_module/
 │   ├── test_iosfwd.cpp
 │   ├── test_iostream.cpp
 │   ├── test_istream.cpp
+│   ├── test_limits.cpp
 │   └── build_manual.sh    # Manual build demo
 └── cmake/                  # CMake configuration files
 ```
