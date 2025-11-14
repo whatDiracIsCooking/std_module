@@ -202,8 +202,8 @@ def analyze_all_modules(repo_root: Path) -> bool:
     src_dir = repo_root / "src"
     test_dir = repo_root / "test"
 
-    # Find all .cppm files except std.cppm (aggregate module)
-    module_files = [f for f in src_dir.glob("*.cppm") if f.stem != "std"]
+    # Find all .cppm files
+    module_files = [f for f in src_dir.glob("*.cppm")]
 
     if not module_files:
         print(f"{Colors.RED}Error: No module files found in {src_dir}{Colors.RESET}")
