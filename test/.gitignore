@@ -1,0 +1,15 @@
+# Build artifacts
+*.pcm
+*.o
+*.obj
+test_format
+test_*
+!test_*.cpp
+!test_*.sh
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
