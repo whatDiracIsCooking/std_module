@@ -90,6 +90,7 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_FUNCTIONAL` | ON | Build std_module.functional |
 | `STD_MODULE_BUILD_IOMANIP` | ON | Build std_module.iomanip |
 | `STD_MODULE_BUILD_IOS` | ON | Build std_module.ios |
+| `STD_MODULE_BUILD_IOSFWD` | ON | Build std_module.iosfwd |
 | `STD_MODULE_BUILD_IOSTREAM` | ON | Build std_module.iostream |
 
 Example:
@@ -117,6 +118,7 @@ Currently wrapped standard library headers:
 - ✅ `<functional>` → `import std_module.functional;`
 - ⚠️ `<iomanip>` → `import std_module.iomanip;` **(non-functional - see [limitations](#known-limitations))**
 - ✅ `<ios>` → `import std_module.ios;`
+- ✅ `<iosfwd>` → `import std_module.iosfwd;`
 - ✅ `<iostream>` → `import std_module.iostream;`
 
 *More modules coming soon!*
@@ -151,6 +153,7 @@ The build system provides these CMake targets:
 - `std_module::functional` - Just the functional module
 - `std_module::iomanip` - Just the iomanip module
 - `std_module::ios` - Just the ios module
+- `std_module::iosfwd` - Just the iosfwd module
 - `std_module::iostream` - Just the iostream module
 - `std_module::all` - All available modules (convenience target)
 
@@ -186,6 +189,7 @@ std_module/
 │   ├── functional.cppm     # <functional> wrapper
 │   ├── iomanip.cppm        # <iomanip> wrapper
 │   ├── ios.cppm            # <ios> wrapper
+│   ├── iosfwd.cppm         # <iosfwd> wrapper
 │   ├── iostream.cppm       # <iostream> wrapper
 │   └── std.cppm           # Aggregate module (WIP)
 ├── test/                   # Tests and examples
@@ -202,6 +206,7 @@ std_module/
 │   ├── test_functional.cpp
 │   ├── test_iomanip.cpp
 │   ├── test_ios.cpp
+│   ├── test_iosfwd.cpp
 │   ├── test_iostream.cpp
 │   └── build_manual.sh    # Manual build demo
 └── cmake/                  # CMake configuration files
