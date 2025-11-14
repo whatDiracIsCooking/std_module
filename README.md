@@ -69,28 +69,51 @@ target_link_libraries(myapp PRIVATE std_module::format)
 
 See [`test/README.md`](test/README.md) for manual build instructions.
 
-## Module Naming Conventions
+## CMake Options
 
-All modules follow consistent naming patterns:
+Configure the build with these options:
 
-**CMake Options:**
-- Global options: `STD_MODULE_BUILD_TESTS`, `STD_MODULE_BUILD_ALL_MODULES`, `STD_MODULE_INSTALL`
-- Per-module options: `STD_MODULE_BUILD_<UPPERCASE_NAME>=ON`
-  - Example: `STD_MODULE_BUILD_FORMAT=ON`, `STD_MODULE_BUILD_VECTOR=ON`
+| Option | Default | Description |
+|--------|---------|-------------|
+| `STD_MODULE_BUILD_TESTS` | ON | Build test executables |
+| `STD_MODULE_BUILD_ALL_MODULES` | ON | Build all available modules |
+| `STD_MODULE_INSTALL` | ON | Generate installation targets |
+| `STD_MODULE_BUILD_FORMAT` | ON | Build std_module.format |
+| `STD_MODULE_BUILD_VECTOR` | ON | Build std_module.vector |
+| `STD_MODULE_BUILD_ALGORITHM` | ON | Build std_module.algorithm |
+| `STD_MODULE_BUILD_BITSET` | ON | Build std_module.bitset |
+| `STD_MODULE_BUILD_STRING_VIEW` | ON | Build std_module.string_view |
+| `STD_MODULE_BUILD_EXCEPTION` | ON | Build std_module.exception |
+| `STD_MODULE_BUILD_COMPLEX` | ON | Build std_module.complex |
+| `STD_MODULE_BUILD_CONDITION_VARIABLE` | ON | Build std_module.condition_variable |
+| `STD_MODULE_BUILD_DEQUE` | ON | Build std_module.deque |
+| `STD_MODULE_BUILD_FORWARD_LIST` | ON | Build std_module.forward_list |
+| `STD_MODULE_BUILD_FSTREAM` | ON | Build std_module.fstream |
+| `STD_MODULE_BUILD_FUNCTIONAL` | ON | Build std_module.functional |
+| `STD_MODULE_BUILD_FUTURE` | ON | Build std_module.future |
+| `STD_MODULE_BUILD_IOMANIP` | ON | Build std_module.iomanip |
+| `STD_MODULE_BUILD_IOS` | ON | Build std_module.ios |
+| `STD_MODULE_BUILD_IOSFWD` | ON | Build std_module.iosfwd |
+| `STD_MODULE_BUILD_IOSTREAM` | ON | Build std_module.iostream |
+| `STD_MODULE_BUILD_ISTREAM` | ON | Build std_module.istream |
+| `STD_MODULE_BUILD_INITIALIZER_LIST` | ON | Build std_module.initializer_list |
+| `STD_MODULE_BUILD_ITERATOR` | ON | Build std_module.iterator |
+| `STD_MODULE_BUILD_LIMITS` | ON | Build std_module.limits |
+| `STD_MODULE_BUILD_LIST` | ON | Build std_module.list |
+| `STD_MODULE_BUILD_LOCALE` | ON | Build std_module.locale |
 
-**CMake Targets:**
-- Individual modules: `std_module::<lowercase_name>`
-  - Example: `std_module::format`, `std_module::vector`
-- All modules: `std_module::all` (convenience target)
+Example:
 
-**Import Statements:**
-- Pattern: `import std_module.<lowercase_name>;`
-  - Example: `import std_module.format;`, `import std_module.vector;`
-- Special case: `<new>` uses `import std_module.new_;` (underscore suffix to avoid C++ keyword conflicts)
+```bash
+cmake -B build \
+  -DSTD_MODULE_BUILD_TESTS=OFF \
+  -DSTD_MODULE_BUILD_ALL_MODULES=OFF \
+  -DSTD_MODULE_BUILD_FORMAT=ON
+```
 
 ## Available Modules
 
-The table below lists all implemented modules. See [Module Naming Conventions](#module-naming-conventions) above for CMake options, targets, and import statements.
+Currently wrapped standard library headers:
 
 | Header | Status |
 |--------|--------|
@@ -103,14 +126,18 @@ The table below lists all implemented modules. See [Module Naming Conventions](#
 | `<compare>` | ✅ |
 | `<complex>` | ✅ |
 | `<concepts>` | ✅ |
+| `<condition_variable>` | ✅ |
 | `<coroutine>` | ✅ |
 | `<deque>` | ✅ |
 | `<exception>` | ✅ |
 | `<execution>` | ✅ |
 | `<filesystem>` | ✅ |
 | `<format>` | ✅ |
+| `<forward_list>` | ✅ |
 | `<fstream>` | ✅ |
 | `<functional>` | ✅ |
+| `<future>` | ⚠️ |
+| `<initializer_list>` | ✅ |
 | `<iomanip>` | ⚠️ |
 | `<ios>` | ✅ |
 | `<iosfwd>` | ✅ |
@@ -142,6 +169,7 @@ The table below lists all implemented modules. See [Module Naming Conventions](#
 
 **Special Cases:**
 - `<new>` uses `import std_module.new_;` (underscore suffix) to avoid C++ keyword conflicts
+- `<future>` marked ⚠️ - `packaged_task` unusable due to C++20 module limitations
 - `<iomanip>` marked ⚠️ - see [Known Limitations](#known-limitations) for details
 
 ### Build Examples
@@ -176,28 +204,106 @@ int main() {
 }
 ```
 
+## Library Targets
+
+The build system provides these CMake targets:
+
+- `std_module::format` - Just the format module
+- `std_module::vector` - Just the vector module
+- `std_module::algorithm` - Just the algorithm module
+- `std_module::bitset` - Just the bitset module
+- `std_module::string_view` - Just the string_view module
+- `std_module::exception` - Just the exception module
+- `std_module::complex` - Just the complex module
+- `std_module::condition_variable` - Just the condition_variable module
+- `std_module::deque` - Just the deque module
+- `std_module::forward_list` - Just the forward_list module
+- `std_module::fstream` - Just the fstream module
+- `std_module::functional` - Just the functional module
+- `std_module::future` - Just the future module
+- `std_module::iomanip` - Just the iomanip module
+- `std_module::ios` - Just the ios module
+- `std_module::iosfwd` - Just the iosfwd module
+- `std_module::iostream` - Just the iostream module
+- `std_module::istream` - Just the istream module
+- `std_module::initializer_list` - Just the initializer_list module
+- `std_module::iterator` - Just the iterator module
+- `std_module::limits` - Just the limits module
+- `std_module::list` - Just the list module
+- `std_module::locale` - Just the locale module
+- `std_module::all` - All available modules (convenience target)
+
+Link only what you need:
+
+```cmake
+# Link specific modules
+target_link_libraries(myapp PRIVATE std_module::format)
+target_link_libraries(myapp PRIVATE std_module::vector)
+target_link_libraries(myapp PRIVATE std_module::algorithm)
+target_link_libraries(myapp PRIVATE std_module::string_view)
+
+# Or link everything
+target_link_libraries(myapp PRIVATE std_module::all)
+```
+
 ## Project Structure
 
 ```
 std_module/
-├── CMakeLists.txt
-├── src/
+├── CMakeLists.txt          # Root build configuration
+├── src/                    # Module implementations
 │   ├── CMakeLists.txt
-│   ├── algorithm.cppm
-│   ├── bitset.cppm
-│   ⋮
-│   ├── queue.cppm
-│   ├── vector.cppm
-│   └── std.cppm
-├── test/
+│   ├── format.cppm         # <format> wrapper
+│   ├── vector.cppm         # <vector> wrapper
+│   ├── algorithm.cppm      # <algorithm> wrapper
+│   ├── bitset.cppm         # <bitset> wrapper
+│   ├── string_view.cppm    # <string_view> wrapper
+│   ├── exception.cppm      # <exception> wrapper
+│   ├── complex.cppm        # <complex> wrapper
+│   ├── condition_variable.cppm  # <condition_variable> wrapper
+│   ├── deque.cppm          # <deque> wrapper
+│   ├── forward_list.cppm   # <forward_list> wrapper
+│   ├── fstream.cppm        # <fstream> wrapper
+│   ├── functional.cppm     # <functional> wrapper
+│   ├── future.cppm         # <future> wrapper
+│   ├── iomanip.cppm        # <iomanip> wrapper
+│   ├── ios.cppm            # <ios> wrapper
+│   ├── iosfwd.cppm         # <iosfwd> wrapper
+│   ├── iostream.cppm       # <iostream> wrapper
+│   ├── istream.cppm        # <istream> wrapper
+│   ├── initializer_list.cppm  # <initializer_list> wrapper
+│   ├── iterator.cppm       # <iterator> wrapper
+│   ├── limits.cppm         # <limits> wrapper
+│   ├── list.cppm           # <list> wrapper
+│   ├── locale.cppm         # <locale> wrapper
+│   └── std.cppm           # Aggregate module (WIP)
+├── test/                   # Tests and examples
 │   ├── CMakeLists.txt
+│   ├── test_format.cpp
+│   ├── test_vector.cpp
 │   ├── test_algorithm.cpp
 │   ├── test_bitset.cpp
-│   ⋮
-│   ├── test_queue.cpp
-│   ├── test_vector.cpp
-│   └── build_manual.sh
-└── cmake/
+│   ├── test_string_view.cpp
+│   ├── test_exception.cpp
+│   ├── test_complex.cpp
+│   ├── test_condition_variable.cpp
+│   ├── test_deque.cpp
+│   ├── test_forward_list.cpp
+│   ├── test_fstream.cpp
+│   ├── test_functional.cpp
+│   ├── test_future.cpp
+│   ├── test_iomanip.cpp
+│   ├── test_ios.cpp
+│   ├── test_iosfwd.cpp
+│   ├── test_iostream.cpp
+│   ├── test_istream.cpp
+│   ├── test_initializer_list.cpp
+│   ├── test_iterator.cpp
+│   ├── test_limits.cpp
+│   ├── test_list.cpp
+│   ├── test_locale.cpp
+│   └── build_manual.sh    # Manual build demo
+└── cmake/                  # CMake configuration files
 ```
 
 ## Known Limitations
@@ -218,6 +324,11 @@ Some standard library modules are affected by **Argument-Dependent Lookup (ADL) 
   - **Problem:** Arithmetic operators (`operator+`, `operator-`, etc.) not found via ADL
   - **Impact:** Cannot perform arithmetic on `std::complex` values using modules alone
   - **Status:** Construction, member functions work; operators don't
+
+- **`<future>`** - ⚠️ **Partially functional**
+  - **Problem:** `std::packaged_task` internal template machinery not properly exposed
+  - **Impact:** Cannot construct `std::packaged_task` objects using modules alone
+  - **Status:** `std::promise`, `std::future`, `std::shared_future`, and `std::async` work correctly; `std::packaged_task` doesn't
 
 **Technical Details:**
 
