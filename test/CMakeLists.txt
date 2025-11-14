@@ -41,6 +41,10 @@ std_module_add_test(random)
 std_module_add_test(system_error)
 std_module_add_test(typeindex)
 std_module_add_test(variant)
+std_module_add_test(bit)
+std_module_add_test(coroutine)
+std_module_add_test(numbers)
+std_module_add_test(source_location)
 
 # Add more tests here as modules are implemented:
 # std_module_add_test(string)

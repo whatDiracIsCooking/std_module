@@ -45,6 +45,10 @@ std_module_add_module(random)
 std_module_add_module(system_error)
 std_module_add_module(typeindex)
 std_module_add_module(variant)
+std_module_add_module(bit)
+std_module_add_module(coroutine)
+std_module_add_module(numbers)
+std_module_add_module(source_location)
 
 # Add more modules here as they are implemented:
 # std_module_add_module(string)
@@ -92,6 +96,10 @@ std_module_add_to_aggregate(random)
 std_module_add_to_aggregate(system_error)
 std_module_add_to_aggregate(typeindex)
 std_module_add_to_aggregate(variant)
+std_module_add_to_aggregate(bit)
+std_module_add_to_aggregate(coroutine)
+std_module_add_to_aggregate(numbers)
+std_module_add_to_aggregate(source_location)
 
 # Add more module dependencies here as they are implemented:
 # std_module_add_to_aggregate(string)
