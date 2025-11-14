@@ -95,6 +95,7 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | `<locale>` | ✅ | `STD_MODULE_BUILD_LOCALE=ON` | `std_module::locale` | `import std_module.locale;` |
 | `<map>` | ✅ | `STD_MODULE_BUILD_MAP=ON` | `std_module::map` | `import std_module.map;` |
 | `<new>` | ✅ | `STD_MODULE_BUILD_NEW=ON` | `std_module::new` | `import std_module.new_;` [†](#notes) |
+| `<numeric>` | ✅ | `STD_MODULE_BUILD_NUMERIC=ON` | `std_module::numeric` | `import std_module.numeric;` |
 | `<queue>` | ✅ | `STD_MODULE_BUILD_QUEUE=ON` | `std_module::queue` | `import std_module.queue;` |
 | `<string_view>` | ✅ | `STD_MODULE_BUILD_STRING_VIEW=ON` | `std_module::string_view` | `import std_module.string_view;` |
 | `<vector>` | ✅ | `STD_MODULE_BUILD_VECTOR=ON` | `std_module::vector` | `import std_module.vector;` |
