@@ -68,6 +68,37 @@ if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_BITSET)
 endif()
 
 # ------------------------------------------------------------------------------
+# std_module.string_view
+# ------------------------------------------------------------------------------
+
+if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_STRING_VIEW)
+    add_library(std_module_string_view)
+
+    target_sources(std_module_string_view
+        PUBLIC
+            FILE_SET CXX_MODULES FILES
+                string_view.cppm
+    )
+
+    target_compile_features(std_module_string_view PUBLIC cxx_std_20)
+
+    # Alias for consistent namespacing
+    add_library(std_module::string_view ALIAS std_module_string_view)
+
+    # Installation
+    if(STD_MODULE_INSTALL)
+        install(TARGETS std_module_string_view
+            EXPORT std_module-targets
+            FILE_SET CXX_MODULES DESTINATION ${CMAKE_INSTALL_LIBDIR}/std_module
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        )
+    endif()
+
+    message(STATUS "Configured module: std_module::string_view")
+endif()
+
+# ------------------------------------------------------------------------------
 # Add more modules here as they are implemented
 # ------------------------------------------------------------------------------
 
@@ -112,6 +143,10 @@ endif()
 
 if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_BITSET)
     target_link_libraries(std_module_all INTERFACE std_module::bitset)
+endif()
+
+if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_STRING_VIEW)
+    target_link_libraries(std_module_all INTERFACE std_module::string_view)
 endif()
 
 # Add more module dependencies here as they are implemented
