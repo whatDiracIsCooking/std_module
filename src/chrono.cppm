@@ -156,4 +156,44 @@ using std::chrono_literals::operator""ns;
 using std::chrono_literals::operator""d;
 using std::chrono_literals::operator""y;
 }  // namespace chrono_literals
+
+// CRITICAL: Export operators to fix C++20 module ADL limitation
+// Without these exports, operators are not found even though types are exported
+// Reference: https://github.com/cplusplus/papers/issues/1005
+
+// Arithmetic operators for durations
+using std::chrono::operator+;
+using std::chrono::operator-;
+using std::chrono::operator*;
+using std::chrono::operator/;
+using std::chrono::operator%;
+
+// Comparison operators (C++20 uses operator<=> + operator==)
+// Note: operator!= is auto-generated from operator== in C++20
+using std::chrono::operator==;
+using std::chrono::operator<;
+using std::chrono::operator<=;
+using std::chrono::operator>;
+using std::chrono::operator>=;
+using std::chrono::operator<=>;
+
 }  // namespace std::chrono
+
+// Stream operators for chrono types (if available)
+export namespace std {
+using std::operator<<;
+using std::operator>>;
+
+// Export chrono_literals in std namespace (inline namespace accessibility)
+// This makes "using namespace std::chrono_literals;" work in user code
+inline namespace chrono_literals {
+using std::chrono_literals::operator""h;
+using std::chrono_literals::operator""min;
+using std::chrono_literals::operator""s;
+using std::chrono_literals::operator""ms;
+using std::chrono_literals::operator""us;
+using std::chrono_literals::operator""ns;
+using std::chrono_literals::operator""d;
+using std::chrono_literals::operator""y;
+}
+}
