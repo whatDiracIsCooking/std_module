@@ -69,63 +69,86 @@ target_link_libraries(myapp PRIVATE std_module::format)
 
 See [`test/README.md`](test/README.md) for manual build instructions.
 
+## Module Naming Conventions
+
+All modules follow consistent naming patterns:
+
+**CMake Options:**
+- Global options: `STD_MODULE_BUILD_TESTS`, `STD_MODULE_BUILD_ALL_MODULES`, `STD_MODULE_INSTALL`
+- Per-module options: `STD_MODULE_BUILD_<UPPERCASE_NAME>=ON`
+  - Example: `STD_MODULE_BUILD_FORMAT=ON`, `STD_MODULE_BUILD_VECTOR=ON`
+
+**CMake Targets:**
+- Individual modules: `std_module::<lowercase_name>`
+  - Example: `std_module::format`, `std_module::vector`
+- All modules: `std_module::all` (convenience target)
+
+**Import Statements:**
+- Pattern: `import std_module.<lowercase_name>;`
+  - Example: `import std_module.format;`, `import std_module.vector;`
+- Special case: `<new>` uses `import std_module.new_;` (underscore suffix to avoid C++ keyword conflicts)
+
 ## Available Modules
 
-| Header | Status | CMake Option | CMake Target | Import Statement |
-|--------|--------|--------------|--------------|------------------|
-| *(General options)* | | `STD_MODULE_BUILD_TESTS=ON` | | Build test executables |
-| | | `STD_MODULE_BUILD_ALL_MODULES=ON` | | Build all modules |
-| | | `STD_MODULE_INSTALL=ON` | | Generate install targets |
-| `<algorithm>` | ✅ | `STD_MODULE_BUILD_ALGORITHM=ON` | `std_module::algorithm` | `import std_module.algorithm;` |
-| `<any>` | ✅ | `STD_MODULE_BUILD_ANY=ON` | `std_module::any` | `import std_module.any;` |
-| `<barrier>` | ✅ | `STD_MODULE_BUILD_BARRIER=ON` | `std_module::barrier` | `import std_module.barrier;` |
-| `<bitset>` | ✅ | `STD_MODULE_BUILD_BITSET=ON` | `std_module::bitset` | `import std_module.bitset;` |
-| `<charconv>` | ✅ | `STD_MODULE_BUILD_CHARCONV=ON` | `std_module::charconv` | `import std_module.charconv;` |
-| `<complex>` | ✅ | `STD_MODULE_BUILD_COMPLEX=ON` | `std_module::complex` | `import std_module.complex;` |
-| `<concepts>` | ✅ | `STD_MODULE_BUILD_CONCEPTS=ON` | `std_module::concepts` | `import std_module.concepts;` |
-| `<deque>` | ✅ | `STD_MODULE_BUILD_DEQUE=ON` | `std_module::deque` | `import std_module.deque;` |
-| `<exception>` | ✅ | `STD_MODULE_BUILD_EXCEPTION=ON` | `std_module::exception` | `import std_module.exception;` |
-| `<execution>` | ✅ | `STD_MODULE_BUILD_EXECUTION=ON` | `std_module::execution` | `import std_module.execution;` |
-| `<format>` | ✅ | `STD_MODULE_BUILD_FORMAT=ON` | `std_module::format` | `import std_module.format;` |
-| `<fstream>` | ✅ | `STD_MODULE_BUILD_FSTREAM=ON` | `std_module::fstream` | `import std_module.fstream;` |
-| `<filesystem>` | ✅ | `STD_MODULE_BUILD_FILESYSTEM=ON` | `std_module::filesystem` | `import std_module.filesystem;` |
-| `<functional>` | ✅ | `STD_MODULE_BUILD_FUNCTIONAL=ON` | `std_module::functional` | `import std_module.functional;` |
-| `<iomanip>` | ⚠️ | `STD_MODULE_BUILD_IOMANIP=ON` | `std_module::iomanip` | `import std_module.iomanip;` [*](#known-limitations) |
-| `<ios>` | ✅ | `STD_MODULE_BUILD_IOS=ON` | `std_module::ios` | `import std_module.ios;` |
-| `<iosfwd>` | ✅ | `STD_MODULE_BUILD_IOSFWD=ON` | `std_module::iosfwd` | `import std_module.iosfwd;` |
-| `<iostream>` | ✅ | `STD_MODULE_BUILD_IOSTREAM=ON` | `std_module::iostream` | `import std_module.iostream;` |
-| `<istream>` | ✅ | `STD_MODULE_BUILD_ISTREAM=ON` | `std_module::istream` | `import std_module.istream;` |
-| `<iterator>` | ✅ | `STD_MODULE_BUILD_ITERATOR=ON` | `std_module::iterator` | `import std_module.iterator;` |
-| `<limits>` | ✅ | `STD_MODULE_BUILD_LIMITS=ON` | `std_module::limits` | `import std_module.limits;` |
-| `<list>` | ✅ | `STD_MODULE_BUILD_LIST=ON` | `std_module::list` | `import std_module.list;` |
-| `<latch>` | ✅ | `STD_MODULE_BUILD_LATCH=ON` | `std_module::latch` | `import std_module.latch;` |
-| `<locale>` | ✅ | `STD_MODULE_BUILD_LOCALE=ON` | `std_module::locale` | `import std_module.locale;` |
-| `<map>` | ✅ | `STD_MODULE_BUILD_MAP=ON` | `std_module::map` | `import std_module.map;` |
-| `<memory_resource>` | ✅ | `STD_MODULE_BUILD_MEMORY_RESOURCE=ON` | `std_module::memory_resource` | `import std_module.memory_resource;` |
-| `<new>` | ✅ | `STD_MODULE_BUILD_NEW=ON` | `std_module::new` | `import std_module.new_;` [†](#notes) |
-| `<numeric>` | ✅ | `STD_MODULE_BUILD_NUMERIC=ON` | `std_module::numeric` | `import std_module.numeric;` |
-| `<optional>` | ✅ | `STD_MODULE_BUILD_OPTIONAL=ON` | `std_module::optional` | `import std_module.optional;` |
-| `<queue>` | ✅ | `STD_MODULE_BUILD_QUEUE=ON` | `std_module::queue` | `import std_module.queue;` |
-| `<random>` | ✅ | `STD_MODULE_BUILD_RANDOM=ON` | `std_module::random` | `import std_module.random;` |
-| `<semaphore>` | ✅ | `STD_MODULE_BUILD_SEMAPHORE=ON` | `std_module::semaphore` | `import std_module.semaphore;` |
-| `<string_view>` | ✅ | `STD_MODULE_BUILD_STRING_VIEW=ON` | `std_module::string_view` | `import std_module.string_view;` |
-| `<syncstream>` | ✅ | `STD_MODULE_BUILD_SYNCSTREAM=ON` | `std_module::syncstream` | `import std_module.syncstream;` |
-| `<system_error>` | ✅ | `STD_MODULE_BUILD_SYSTEM_ERROR=ON` | `std_module::system_error` | `import std_module.system_error;` |
-| `<typeindex>` | ✅ | `STD_MODULE_BUILD_TYPEINDEX=ON` | `std_module::typeindex` | `import std_module.typeindex;` |
-| `<variant>` | ✅ | `STD_MODULE_BUILD_VARIANT=ON` | `std_module::variant` | `import std_module.variant;` |
-| `<vector>` | ✅ | `STD_MODULE_BUILD_VECTOR=ON` | `std_module::vector` | `import std_module.vector;` |
-| *(Convenience)* | | | `std_module::all` | All modules combined |
+The table below lists all implemented modules. See [Module Naming Conventions](#module-naming-conventions) above for CMake options, targets, and import statements.
 
-**Build examples:**
+| Header | Status | Notes |
+|--------|--------|-------|
+| `<algorithm>` | ✅ | Sorting, searching, transforming |
+| `<any>` | ✅ | Type-safe container for any type |
+| `<barrier>` | ✅ | Thread synchronization barrier |
+| `<bitset>` | ✅ | Fixed-size bit arrays |
+| `<charconv>` | ✅ | Low-level character conversions |
+| `<complex>` | ✅ | Complex number arithmetic |
+| `<concepts>` | ✅ | Concept definitions for templates |
+| `<deque>` | ✅ | Double-ended queue container |
+| `<exception>` | ✅ | Exception handling utilities |
+| `<execution>` | ✅ | Execution policies for algorithms |
+| `<format>` | ✅ | Text formatting (C++20) |
+| `<fstream>` | ✅ | File stream I/O |
+| `<filesystem>` | ✅ | Filesystem operations |
+| `<functional>` | ✅ | Function objects and utilities |
+| `<iomanip>` | ⚠️ | [Limited functionality*](#known-limitations) |
+| `<ios>` | ✅ | I/O stream base classes |
+| `<iosfwd>` | ✅ | Forward declarations for I/O |
+| `<iostream>` | ✅ | Standard input/output streams |
+| `<istream>` | ✅ | Input stream operations |
+| `<iterator>` | ✅ | Iterator utilities and adaptors |
+| `<latch>` | ✅ | Single-use countdown latch |
+| `<limits>` | ✅ | Numeric limits |
+| `<list>` | ✅ | Doubly-linked list container |
+| `<locale>` | ✅ | Localization utilities |
+| `<map>` | ✅ | Associative container (tree-based) |
+| `<memory_resource>` | ✅ | Polymorphic memory resources |
+| `<new>` | ✅ | Dynamic memory management† |
+| `<numeric>` | ✅ | Numeric algorithms |
+| `<optional>` | ✅ | Optional value wrapper |
+| `<queue>` | ✅ | Queue and priority queue adaptors |
+| `<random>` | ✅ | Random number generation |
+| `<semaphore>` | ✅ | Counting semaphore |
+| `<string_view>` | ✅ | Non-owning string view |
+| `<syncstream>` | ✅ | Synchronized output streams |
+| `<system_error>` | ✅ | System error codes |
+| `<typeindex>` | ✅ | Type identification wrapper |
+| `<variant>` | ✅ | Type-safe union |
+| `<vector>` | ✅ | Dynamic array container |
+
+**Special Cases:**
+- † `<new>` uses `import std_module.new_;` (underscore suffix) to avoid C++ keyword conflicts
+- \* See [Known Limitations](#known-limitations) for modules with reduced functionality
+
+### Build Examples
+
+Using the [naming conventions](#module-naming-conventions) above, here are common build patterns:
 
 ```bash
-# Build only specific modules
+# Build only specific modules (using STD_MODULE_BUILD_<NAME> options)
 cmake -B build -G Ninja \
   -DSTD_MODULE_BUILD_ALL_MODULES=OFF \
   -DSTD_MODULE_BUILD_FORMAT=ON \
   -DSTD_MODULE_BUILD_VECTOR=ON
 
-# Link specific modules
+# Link specific modules (using std_module::<name> targets)
 target_link_libraries(myapp PRIVATE std_module::format std_module::vector)
 
 # Or link everything
@@ -201,10 +224,6 @@ The core issue is that non-member operator overloads and functions depending on 
 - Users can work around by combining `import std_module.header;` with `#include <header>`
 - Module implementations are kept complete for when compiler/standard fixes arrive
 - See `CLAUDE.md` for complete technical documentation
-
-## Notes
-
-**†** The `<new>` module uses `std_module.new_` (with underscore suffix) to avoid C++ keyword conflicts with `new`.
 
 ## Contributing
 
