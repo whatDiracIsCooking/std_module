@@ -102,6 +102,7 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | `<queue>` | ✅ | `STD_MODULE_BUILD_QUEUE=ON` | `std_module::queue` | `import std_module.queue;` |
 | `<random>` | ✅ | `STD_MODULE_BUILD_RANDOM=ON` | `std_module::random` | `import std_module.random;` |
 | `<string_view>` | ✅ | `STD_MODULE_BUILD_STRING_VIEW=ON` | `std_module::string_view` | `import std_module.string_view;` |
+| `<syncstream>` | ✅ | `STD_MODULE_BUILD_SYNCSTREAM=ON` | `std_module::syncstream` | `import std_module.syncstream;` |
 | `<system_error>` | ✅ | `STD_MODULE_BUILD_SYSTEM_ERROR=ON` | `std_module::system_error` | `import std_module.system_error;` |
 | `<typeindex>` | ✅ | `STD_MODULE_BUILD_TYPEINDEX=ON` | `std_module::typeindex` | `import std_module.typeindex;` |
 | `<variant>` | ✅ | `STD_MODULE_BUILD_VARIANT=ON` | `std_module::variant` | `import std_module.variant;` |
