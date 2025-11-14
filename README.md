@@ -79,6 +79,7 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_ALL_MODULES` | ON | Build all available modules |
 | `STD_MODULE_INSTALL` | ON | Generate installation targets |
 | `STD_MODULE_BUILD_FORMAT` | ON | Build std_module.format |
+| `STD_MODULE_BUILD_VECTOR` | ON | Build std_module.vector |
 | `STD_MODULE_BUILD_ALGORITHM` | ON | Build std_module.algorithm |
 | `STD_MODULE_BUILD_BITSET` | ON | Build std_module.bitset |
 | `STD_MODULE_BUILD_STRING_VIEW` | ON | Build std_module.string_view |
@@ -97,6 +98,7 @@ cmake -B build \
 Currently wrapped standard library headers:
 
 - ✅ `<format>` → `import std_module.format;`
+- ✅ `<vector>` → `import std_module.vector;`
 - ✅ `<algorithm>` → `import std_module.algorithm;`
 - ✅ `<bitset>` → `import std_module.bitset;`
 - ✅ `<string_view>` → `import std_module.string_view;`
@@ -122,6 +124,7 @@ int main() {
 The build system provides these CMake targets:
 
 - `std_module::format` - Just the format module
+- `std_module::vector` - Just the vector module
 - `std_module::algorithm` - Just the algorithm module
 - `std_module::bitset` - Just the bitset module
 - `std_module::string_view` - Just the string_view module
@@ -132,6 +135,9 @@ Link only what you need:
 ```cmake
 # Link specific modules
 target_link_libraries(myapp PRIVATE std_module::format)
+target_link_libraries(myapp PRIVATE std_module::vector)
+target_link_libraries(myapp PRIVATE std_module::algorithm)
+target_link_libraries(myapp PRIVATE std_module::string_view)
 
 # Or link everything
 target_link_libraries(myapp PRIVATE std_module::all)
@@ -145,6 +151,7 @@ std_module/
 ├── src/                    # Module implementations
 │   ├── CMakeLists.txt
 │   ├── format.cppm         # <format> wrapper
+│   ├── vector.cppm         # <vector> wrapper
 │   ├── algorithm.cppm      # <algorithm> wrapper
 │   ├── bitset.cppm         # <bitset> wrapper
 │   ├── string_view.cppm    # <string_view> wrapper
@@ -152,6 +159,7 @@ std_module/
 ├── test/                   # Tests and examples
 │   ├── CMakeLists.txt
 │   ├── test_format.cpp
+│   ├── test_vector.cpp
 │   ├── test_algorithm.cpp
 │   ├── test_bitset.cpp
 │   ├── test_string_view.cpp

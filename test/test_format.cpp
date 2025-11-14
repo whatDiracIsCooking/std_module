@@ -5,11 +5,13 @@
 
 import std_module.format;
 
-#include <iostream>
-#include <string>
-#include <vector>
-#include <iterator>
-#include <cassert>
+#include <iostream>  // FIXME: Should be import std_module.iostream when available
+#include <cassert>   // NOTE: Must be #include - assert is a macro, not exportable via modules
+#include <string>    // FIXME: Should be import std_module.string; (required for format tests)
+#include <iterator>  // FIXME: Should be import std_module.iterator; (required for back_inserter)
+
+// NOTE: std::format tests inherently require std::string support.
+// These tests will remain blocked until import std_module.string is available.
 
 // Custom type for testing custom formatter
 struct Point {
@@ -248,7 +250,9 @@ void test_alignment_and_fill() {
 
 int main()
 {
-    std::cout << "=== C++20 std::format Comprehensive Tests ===\n\n";
+    std::cout << "=== C++20 std::format Comprehensive Tests ===\n";
+    std::cout << "NOTE: Tests currently require #include <string> and <iterator>\n";
+    std::cout << "      These will be replaced with module imports when available\n\n";
 
     try {
         test_basic_format();
@@ -265,6 +269,7 @@ int main()
         test_alignment_and_fill();
 
         std::cout << "\n=== All tests passed! ===\n";
+        std::cout << "(Pending: module-pure implementation requires std_module.string and std_module.iterator)\n";
         return 0;
     } catch (const std::exception& e) {
         std::cerr << "\n!!! Test failed with exception: " << e.what() << "\n";
