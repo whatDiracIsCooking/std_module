@@ -136,7 +136,7 @@ target_link_libraries(myapp PRIVATE std_module::all)
 
 ## Available Modules
 
-Currently wrapped standard library headers (63 modules):
+Currently wrapped standard library headers (64 modules):
 
 | Header | Module | Status | Notes |
 |--------|--------|--------|-------|
@@ -199,6 +199,7 @@ Currently wrapped standard library headers (63 modules):
 | `<tuple>` | `std_module.tuple` | ✅ | |
 | `<type_traits>` | `std_module.type_traits` | ✅ | |
 | `<typeindex>` | `std_module.typeindex` | ✅ | |
+| `<typeinfo>` | `std_module.typeinfo` | ✅ | |
 | `<unordered_map>` | `std_module.unordered_map` | ✅ | |
 | `<unordered_set>` | `std_module.unordered_set` | ✅ | |
 | `<valarray>` | `std_module.valarray` | ⚠️ | Binary arithmetic/comparison operators unavailable due to C++20 module ADL limitations |
