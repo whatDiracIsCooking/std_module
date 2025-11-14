@@ -13,6 +13,7 @@
 # Add tests for all available modules
 std_module_add_test(algorithm)
 std_module_add_test(any)
+std_module_add_test(array)
 std_module_add_test(atomic)
 std_module_add_test(bitset)
 std_module_add_test(complex)
