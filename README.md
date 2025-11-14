@@ -79,6 +79,7 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_ALL_MODULES` | ON | Build all available modules |
 | `STD_MODULE_INSTALL` | ON | Generate installation targets |
 | `STD_MODULE_BUILD_FORMAT` | ON | Build std_module.format |
+| `STD_MODULE_BUILD_VECTOR` | ON | Build std_module.vector |
 
 Example:
 
@@ -94,6 +95,7 @@ cmake -B build \
 Currently wrapped standard library headers:
 
 - ✅ `<format>` → `import std_module.format;`
+- ✅ `<vector>` → `import std_module.vector;`
 
 *More modules coming soon!*
 
@@ -116,6 +118,7 @@ int main() {
 The build system provides these CMake targets:
 
 - `std_module::format` - Just the format module
+- `std_module::vector` - Just the vector module
 - `std_module::all` - All available modules (convenience target)
 
 Link only what you need:
@@ -123,6 +126,7 @@ Link only what you need:
 ```cmake
 # Link specific modules
 target_link_libraries(myapp PRIVATE std_module::format)
+target_link_libraries(myapp PRIVATE std_module::vector)
 
 # Or link everything
 target_link_libraries(myapp PRIVATE std_module::all)
@@ -136,10 +140,12 @@ std_module/
 ├── src/                    # Module implementations
 │   ├── CMakeLists.txt
 │   ├── format.cppm         # <format> wrapper
+│   ├── vector.cppm         # <vector> wrapper
 │   └── std.cppm           # Aggregate module (WIP)
 ├── test/                   # Tests and examples
 │   ├── CMakeLists.txt
 │   ├── test_format.cpp
+│   ├── test_vector.cpp
 │   └── build_manual.sh    # Manual build demo
 └── cmake/                  # CMake configuration files
 ```
