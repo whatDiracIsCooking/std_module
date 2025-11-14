@@ -4,13 +4,12 @@ Comprehensive test suite for the std_module C++20 module wrapper library.
 
 ## Overview
 
-This directory contains **25 test files** that validate all implemented standard library modules. Each test thoroughly exercises the exported APIs from its corresponding module to ensure correct functionality and comprehensive symbol coverage.
+This directory contains **72 test files** that validate all implemented standard library modules. Each test thoroughly exercises the exported APIs from its corresponding module to ensure correct functionality and comprehensive symbol coverage.
 
 **Test Infrastructure:**
 - CMake-based test system with CTest integration
 - Automated symbol coverage analysis
 - Macro-driven test registration (one line per test)
-- Manual build script for educational purposes
 
 ## Quick Start
 
@@ -38,38 +37,21 @@ ctest --test-dir build -N
 
 ## Test Files
 
-The test suite includes tests for all 25 implemented modules:
+The test suite includes tests for all 72 implemented modules. Each test file follows the pattern `test_{module}.cpp` and corresponds to a module in `src/{module}.cppm`.
 
-| Module | Test File | Description |
-|--------|-----------|-------------|
-| `algorithm` | `test_algorithm.cpp` | Sorting, searching, algorithms |
-| `bitset` | `test_bitset.cpp` | Fixed-size bit arrays |
-| `complex` | `test_complex.cpp` | Complex number arithmetic (⚠️ operators limited) |
-| `deque` | `test_deque.cpp` | Double-ended queue container |
-| `exception` | `test_exception.cpp` | Exception handling utilities |
-| `format` | `test_format.cpp` | Text formatting (comprehensive reference test) |
-| `fstream` | `test_fstream.cpp` | File I/O streams |
-| `functional` | `test_functional.cpp` | Function objects and utilities |
-| `iomanip` | `test_iomanip.cpp` | I/O manipulators (⚠️ limited by ADL) |
-| `ios` | `test_ios.cpp` | I/O stream base classes |
-| `iosfwd` | `test_iosfwd.cpp` | Forward declarations for I/O |
-| `iostream` | `test_iostream.cpp` | Standard I/O streams |
-| `istream` | `test_istream.cpp` | Input stream operations |
-| `iterator` | `test_iterator.cpp` | Iterator utilities and adapters |
-| `limits` | `test_limits.cpp` | Numeric limits |
-| `list` | `test_list.cpp` | Doubly-linked list container |
-| `locale` | `test_locale.cpp` | Localization facilities |
-| `map` | `test_map.cpp` | Associative array container |
-| `new` | `test_new.cpp` | Dynamic memory management |
-| `queue` | `test_queue.cpp` | FIFO queue adaptor |
-| `random` | `test_random.cpp` | Random number generation |
-| `string_view` | `test_string_view.cpp` | Non-owning string view |
-| `system_error` | `test_system_error.cpp` | System error reporting |
-| `typeindex` | `test_typeindex.cpp` | Type identification wrapper |
-| `vector` | `test_vector.cpp` | Dynamic array container |
+**Examples:**
+- `test_algorithm.cpp` - Sorting, searching, algorithms
+- `test_format.cpp` - Text formatting (comprehensive reference test)
+- `test_vector.cpp` - Dynamic array container
+- `test_iostream.cpp` - Standard I/O streams
+- ⋮ (68 more test files)
 
-**Legend:**
-- ⚠️ = Module has limitations due to C++20 module ADL issues (see CLAUDE.md)
+**To see all available tests:**
+```bash
+ls test/test_*.cpp
+# Or list tests registered with CTest
+ctest --test-dir build -N
+```
 
 ## Test Structure
 
@@ -230,43 +212,6 @@ cmake -B build -G Ninja \
 cmake -B build -G Ninja -DSTD_MODULE_BUILD_TESTS=OFF
 ```
 
-## Manual Build Process (Educational)
-
-The `build_manual.sh` script demonstrates low-level C++20 module compilation without CMake.
-
-### Usage
-
-```bash
-cd test
-./build_manual.sh
-```
-
-### What It Does
-
-```bash
-# 1. Precompile module interface (.cppm → .pcm)
-clang++ -std=c++20 -x c++-module ../src/format.cppm --precompile -o format.pcm
-
-# 2. Compile module to object file (.pcm → .o)
-clang++ -std=c++20 -c format.pcm -o format.o
-
-# 3. Compile test program (.cpp → .o)
-clang++ -std=c++20 -fmodule-file=std_module.format=format.pcm \
-        -c test_format.cpp -o test_format.o
-
-# 4. Link executable
-clang++ -std=c++20 format.o test_format.o -o test_format
-
-# 5. Run test
-./test_format
-```
-
-**Purpose:**
-- Understanding C++20 module compilation mechanics
-- Debugging build issues at a low level
-- Educational reference for module build process
-- Verifying compiler behavior without CMake
-
 ## Known Limitations
 
 ### C++20 Module ADL Issues
@@ -304,12 +249,6 @@ Some modules have limited functionality due to C++20 module Argument-Dependent L
 **Problem:** Python script can't find symbols
 - **Solution:** Ensure test file and module file follow naming conventions
 - **Check:** Python 3 is available: `python3 --version`
-
-### Manual Build Script Fails
-
-**Problem:** Compiler errors or missing files
-- **Solution:** Check compiler version (Clang 16+)
-- **Solution:** Run from `test/` directory: `cd test && ./build_manual.sh`
 
 ## Adding a New Test
 
@@ -385,5 +324,5 @@ Use this as a template when writing new tests.
 ---
 
 **Last Updated:** 2025-11-14
-**Test Count:** 25 modules
+**Test Count:** 72 modules
 **Test Coverage:** 100% of exported symbols (per symbol_coverage.py)

@@ -9,7 +9,7 @@ This document provides comprehensive guidance for AI assistants working with the
 - **Language:** C++20 with modules
 - **Version:** 0.1.0
 - **Build System:** CMake 3.28+ with Ninja (required)
-- **Status:** Production-ready - 49 standard library modules implemented with comprehensive tests
+- **Status:** Production-ready - 72 standard library modules implemented with comprehensive tests
 
 ### Core Philosophy
 
@@ -26,15 +26,14 @@ The project prioritizes **flexibility over opinion**:
 ├── CMakeLists.txt              # Root build config
 ├── README.md                   # User-facing documentation (lean, pattern-focused)
 ├── CLAUDE.md                   # This file - comprehensive AI guide
-├── src/                        # Module implementations (49 .cppm files)
+├── src/                        # Module implementations (72 .cppm files)
 │   ├── CMakeLists.txt         # Module build targets (uses macros)
 │   ├── format.cppm            # Example: <format> wrapper
 │   ├── vector.cppm            # Example: <vector> wrapper
 │   ⋮
-├── test/                       # Test suite (49 test files)
+├── test/                       # Test suite (72 test files)
 │   ├── CMakeLists.txt         # Test build config (uses macros)
-│   ├── README.md              # Manual build documentation
-│   ├── build_manual.sh        # Manual build demo script
+│   ├── README.md              # Test suite documentation
 │   ├── test_format.cpp        # Example: comprehensive format tests
 │   ⋮
 ├── cmake/                      # CMake infrastructure
@@ -45,9 +44,9 @@ The project prioritizes **flexibility over opinion**:
     └── symbol_coverage.py     # Symbol coverage analysis tool
 ```
 
-### Implemented Modules (49 Total)
+### Implemented Modules (72 Total)
 
-**Note:** README.md contains the canonical, exhaustive list of all 49 implemented modules in the "Available Modules" table. That table is the **single source of truth** for module availability, status, and special notes.
+**Note:** README.md contains the canonical, exhaustive list of all 72 implemented modules in the "Available Modules" table. That table is the **single source of truth** for module availability, status, and special notes.
 
 **Categories overview:**
 - **Algorithms & Iterators:** algorithm, functional, iterator, ranges
@@ -71,10 +70,10 @@ The project prioritizes **flexibility over opinion**:
 1. **Describe patterns, not exhaustive lists**
    - CMake options: Show the pattern `STD_MODULE_BUILD_<NAME>`, list the 3 special options, note defaults
    - Library targets: Show the pattern `std_module::<name>`, give 3-4 examples
-   - **Don't** create tables listing all 49 modules in multiple places
+   - **Don't** create tables listing all 72 modules in multiple places
 
 2. **Single source of truth**
-   - The "Available Modules" table is the **ONLY** place that exhaustively lists all 49 modules
+   - The "Available Modules" table is the **ONLY** place that exhaustively lists all 72 modules
    - Everything else refers to this table
    - When adding a module, update **only** this table in README.md
 
@@ -95,14 +94,14 @@ The project prioritizes **flexibility over opinion**:
 **What this means when updating README.md:**
 
 - ✅ Add new module to "Available Modules" table with status and notes
-- ✅ Keep examples to 3-4 items max (don't list all 49 modules)
+- ✅ Keep examples to 3-4 items max (don't list all 72 modules)
 - ✅ Use patterns instead of exhaustive enumerations
 - ❌ Don't add the module to CMake Options table (removed - uses pattern now)
 - ❌ Don't add the module to Library Targets table (removed - uses pattern now)
 - ❌ Don't describe what the standard library component does
 - ❌ Don't create new exhaustive lists
 
-**Rationale:** With 49 modules (and growing toward 90+), exhaustive tables become:
+**Rationale:** With 72 modules (and growing toward 90+), exhaustive tables become:
 - Hard to maintain (update in N places for each new module)
 - Noisy for users (too much scrolling)
 - Redundant (same information repeated multiple ways)
@@ -205,7 +204,7 @@ Examples:
 - `STD_MODULE_BUILD_VECTOR=ON` - Build vector module
 - `STD_MODULE_BUILD_ALGORITHM=ON` - Build algorithm module
 
-See README.md "Available Modules" table for the complete list of all 49 modules (each has a corresponding `STD_MODULE_BUILD_<NAME>` option).
+See README.md "Available Modules" table for the complete list of all 72 modules (each has a corresponding `STD_MODULE_BUILD_<NAME>` option).
 
 ### Standard Build Workflow
 
@@ -342,28 +341,6 @@ ctest --test-dir build
 ```
 
 **Integration:** The coverage test is registered in `test/CMakeLists.txt` and runs alongside module tests.
-
-### Manual Build Script Pattern
-
-**Location:** `test/build_manual.sh`
-
-This script demonstrates the **low-level module compilation process** without CMake:
-
-```bash
-# 5-step manual build process
-clang++ -std=c++20 -x c++-module ../src/format.cppm --precompile -o format.pcm  # 1. Precompile
-clang++ -std=c++20 -c format.pcm -o format.o                                     # 2. Compile module
-clang++ -std=c++20 -fmodule-file=std_module.format=format.pcm \
-        -c test_format.cpp -o test_format.o                                      # 3. Compile test
-clang++ -std=c++20 format.o test_format.o -o test_format                         # 4. Link
-./test_format                                                                     # 5. Run
-```
-
-**Use Cases:**
-- Understanding C++20 module compilation mechanics
-- Debugging build issues
-- Educational purposes (understanding what CMake does)
-- Testing compiler behavior
 
 ### Aggregate Target Pattern
 
@@ -664,24 +641,6 @@ ctest --test-dir build -R test_format --output-on-failure
 # Verbose output
 ctest --test-dir build --verbose
 ```
-
-#### Manual Testing (For Debugging)
-
-The `test/build_manual.sh` script demonstrates the low-level module compilation:
-
-```bash
-cd test
-./build_manual.sh
-```
-
-This 5-step process shows:
-1. Precompile standard headers
-2. Compile module interface (.cppm → .pcm)
-3. Compile test source (.cpp → .o)
-4. Link executable
-5. Run test
-
-**Use case:** Understanding module build mechanics, debugging compiler issues
 
 ### Testing Conventions
 
@@ -1119,12 +1078,11 @@ Likely affected: `<chrono>`, `<filesystem>`, `<valarray>`, and potentially other
 
 ## Version History
 
-- **0.1.0** (Current) - Production-ready release with 49 modules
+- **0.1.0** (Current) - Production-ready release with 72 modules
   - **Module System:**
-    - 49 standard library modules with comprehensive tests
+    - 72 standard library modules with comprehensive tests
     - Macro-based CMake infrastructure for easy module addition
     - Symbol coverage analysis tool
-    - Manual build script for educational purposes
   - **Build System:**
     - Flexible CMake 3.28+ build system with Ninja generator
     - Per-module build options (`STD_MODULE_BUILD_<NAME>`)
@@ -1140,11 +1098,11 @@ Likely affected: `<chrono>`, `<filesystem>`, `<valarray>`, and potentially other
   - **Documentation:**
     - Comprehensive CLAUDE.md for AI assistants (detailed, pattern-focused)
     - Lean, user-facing README with pattern-focused documentation
-    - Single source of truth: "Available Modules" table lists all 49 modules
+    - Single source of truth: "Available Modules" table lists all 72 modules
     - C++20 module ADL limitation documentation and solutions
 
-**Implemented Modules (49):**
-algorithm, any, barrier, bit, bitset, charconv, compare, complex, concepts, condition_variable, coroutine, deque, exception, execution, filesystem, format, forward_list, fstream, functional, future, initializer_list, iomanip, ios, iosfwd, iostream, istream, iterator, latch, limits, list, locale, map, memory_resource, new, numbers, numeric, optional, queue, random, ranges, semaphore, source_location, span, string_view, syncstream, system_error, typeindex, variant, vector
+**Implemented Modules (72):**
+algorithm, any, array, atomic, barrier, bit, bitset, charconv, chrono, codecvt, compare, complex, concepts, condition_variable, coroutine, deque, exception, execution, filesystem, format, forward_list, fstream, functional, future, initializer_list, iomanip, ios, iosfwd, iostream, istream, iterator, latch, limits, list, locale, map, memory, memory_resource, mutex, new, numbers, numeric, optional, ostream, queue, random, ranges, ratio, regex, scoped_allocator, semaphore, set, source_location, span, stack, stdexcept, stop_token, streambuf, string, string_view, syncstream, system_error, thread, tuple, type_traits, typeindex, typeinfo, unordered_map, unordered_set, valarray, variant, vector
 
 ---
 
