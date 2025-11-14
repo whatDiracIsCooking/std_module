@@ -22,6 +22,7 @@ std_module_add_test(deque)
 std_module_add_test(fstream)
 std_module_add_test(functional)
 std_module_add_test(ios)
+std_module_add_test(iostream)
 
 # Add more tests here as modules are implemented:
 # std_module_add_test(string)
