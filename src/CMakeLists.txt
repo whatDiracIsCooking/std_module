@@ -68,6 +68,37 @@ if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_ALGORITHM)
 endif()
 
 # ------------------------------------------------------------------------------
+# std_module.bitset
+# ------------------------------------------------------------------------------
+
+if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_BITSET)
+    add_library(std_module_bitset)
+
+    target_sources(std_module_bitset
+        PUBLIC
+            FILE_SET CXX_MODULES FILES
+                bitset.cppm
+    )
+
+    target_compile_features(std_module_bitset PUBLIC cxx_std_20)
+
+    # Alias for consistent namespacing
+    add_library(std_module::bitset ALIAS std_module_bitset)
+
+    # Installation
+    if(STD_MODULE_INSTALL)
+        install(TARGETS std_module_bitset
+            EXPORT std_module-targets
+            FILE_SET CXX_MODULES DESTINATION ${CMAKE_INSTALL_LIBDIR}/std_module
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        )
+    endif()
+
+    message(STATUS "Configured module: std_module::bitset")
+endif()
+
+# ------------------------------------------------------------------------------
 # std_module.string_view
 # ------------------------------------------------------------------------------
 
@@ -143,6 +174,10 @@ endif()
 
 if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_ALGORITHM)
     target_link_libraries(std_module_all INTERFACE std_module::algorithm)
+endif()
+
+if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_BITSET)
+    target_link_libraries(std_module_all INTERFACE std_module::bitset)
 endif()
 
 if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_STRING_VIEW)

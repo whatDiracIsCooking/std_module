@@ -36,6 +36,23 @@ if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_ALGORITHM)
     message(STATUS "Configured test: test_algorithm")
 endif()
 
+# Test for bitset module
+if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_BITSET)
+    add_executable(test_bitset test_bitset.cpp)
+
+    target_link_libraries(test_bitset
+        PRIVATE
+            std_module::bitset
+    )
+
+    target_compile_features(test_bitset PRIVATE cxx_std_20)
+
+    # Register as a CTest test
+    add_test(NAME test_bitset COMMAND test_bitset)
+
+    message(STATUS "Configured test: test_bitset")
+endif()
+
 # Test for string_view module
 if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_STRING_VIEW)
     add_executable(test_string_view test_string_view.cpp)
