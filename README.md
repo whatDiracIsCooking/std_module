@@ -94,8 +94,9 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | `<list>` | ✅ | `STD_MODULE_BUILD_LIST=ON` | `std_module::list` | `import std_module.list;` |
 | `<locale>` | ✅ | `STD_MODULE_BUILD_LOCALE=ON` | `std_module::locale` | `import std_module.locale;` |
 | `<queue>` | ✅ | `STD_MODULE_BUILD_QUEUE=ON` | `std_module::queue` | `import std_module.queue;` |
-| `<streambuf>` | ✅ | `STD_MODULE_BUILD_STREAMBUF=ON` | `std_module::streambuf` | `import std_module.streambuf;` |
+| `<stack>` | ✅ | `STD_MODULE_BUILD_STACK=ON` | `std_module::stack` | `import std_module.stack;` |
 | `<stdexcept>` | ✅ | `STD_MODULE_BUILD_STDEXCEPT=ON` | `std_module::stdexcept` | `import std_module.stdexcept;` |
+| `<streambuf>` | ✅ | `STD_MODULE_BUILD_STREAMBUF=ON` | `std_module::streambuf` | `import std_module.streambuf;` |
 | `<string>` | ✅ | `STD_MODULE_BUILD_STRING=ON` | `std_module::string` | `import std_module.string;` |
 | `<string_view>` | ✅ | `STD_MODULE_BUILD_STRING_VIEW=ON` | `std_module::string_view` | `import std_module.string_view;` |
 | `<vector>` | ✅ | `STD_MODULE_BUILD_VECTOR=ON` | `std_module::vector` | `import std_module.vector;` |
@@ -156,6 +157,7 @@ std_module/
 │   ├── list.cppm
 │   ├── locale.cppm
 │   ├── queue.cppm
+│   ├── stack.cppm
 │   ├── stdexcept.cppm
 │   ├── streambuf.cppm
 │   ├── string.cppm
@@ -182,6 +184,7 @@ std_module/
 │   ├── test_list.cpp
 │   ├── test_locale.cpp
 │   ├── test_queue.cpp
+│   ├── test_stack.cpp
 │   ├── test_stdexcept.cpp
 │   ├── test_streambuf.cpp
 │   ├── test_string.cpp
