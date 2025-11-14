@@ -21,6 +21,7 @@ std_module_add_test(exception)
 std_module_add_test(deque)
 std_module_add_test(fstream)
 std_module_add_test(functional)
+std_module_add_test(iomanip)
 std_module_add_test(ios)
 
 # Add more tests here as modules are implemented:
