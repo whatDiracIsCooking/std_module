@@ -88,6 +88,7 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_DEQUE` | ON | Build std_module.deque |
 | `STD_MODULE_BUILD_FSTREAM` | ON | Build std_module.fstream |
 | `STD_MODULE_BUILD_FUNCTIONAL` | ON | Build std_module.functional |
+| `STD_MODULE_BUILD_IOS` | ON | Build std_module.ios |
 
 Example:
 
@@ -112,6 +113,7 @@ Currently wrapped standard library headers:
 - ✅ `<deque>` → `import std_module.deque;`
 - ✅ `<fstream>` → `import std_module.fstream;`
 - ✅ `<functional>` → `import std_module.functional;`
+- ✅ `<ios>` → `import std_module.ios;`
 
 *More modules coming soon!*
 
@@ -143,6 +145,7 @@ The build system provides these CMake targets:
 - `std_module::deque` - Just the deque module
 - `std_module::fstream` - Just the fstream module
 - `std_module::functional` - Just the functional module
+- `std_module::ios` - Just the ios module
 - `std_module::all` - All available modules (convenience target)
 
 Link only what you need:
@@ -174,6 +177,8 @@ std_module/
 │   ├── complex.cppm        # <complex> wrapper
 │   ├── deque.cppm          # <deque> wrapper
 │   ├── fstream.cppm        # <fstream> wrapper
+│   ├── functional.cppm     # <functional> wrapper
+│   ├── ios.cppm            # <ios> wrapper
 │   └── std.cppm           # Aggregate module (WIP)
 ├── test/                   # Tests and examples
 │   ├── CMakeLists.txt
@@ -186,6 +191,8 @@ std_module/
 │   ├── test_complex.cpp
 │   ├── test_deque.cpp
 │   ├── test_fstream.cpp
+│   ├── test_functional.cpp
+│   ├── test_ios.cpp
 │   └── build_manual.sh    # Manual build demo
 └── cmake/                  # CMake configuration files
 ```
