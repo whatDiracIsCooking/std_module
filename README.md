@@ -83,6 +83,8 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_ALGORITHM` | ON | Build std_module.algorithm |
 | `STD_MODULE_BUILD_BITSET` | ON | Build std_module.bitset |
 | `STD_MODULE_BUILD_STRING_VIEW` | ON | Build std_module.string_view |
+| `STD_MODULE_BUILD_EXCEPTION` | ON | Build std_module.exception |
+| `STD_MODULE_BUILD_COMPLEX` | ON | Build std_module.complex |
 | `STD_MODULE_BUILD_DEQUE` | ON | Build std_module.deque |
 | `STD_MODULE_BUILD_FSTREAM` | ON | Build std_module.fstream |
 
@@ -104,6 +106,8 @@ Currently wrapped standard library headers:
 - ✅ `<algorithm>` → `import std_module.algorithm;`
 - ✅ `<bitset>` → `import std_module.bitset;`
 - ✅ `<string_view>` → `import std_module.string_view;`
+- ✅ `<exception>` → `import std_module.exception;`
+- ✅ `<complex>` → `import std_module.complex;`
 - ✅ `<deque>` → `import std_module.deque;`
 - ✅ `<fstream>` → `import std_module.fstream;`
 
@@ -132,6 +136,8 @@ The build system provides these CMake targets:
 - `std_module::algorithm` - Just the algorithm module
 - `std_module::bitset` - Just the bitset module
 - `std_module::string_view` - Just the string_view module
+- `std_module::exception` - Just the exception module
+- `std_module::complex` - Just the complex module
 - `std_module::deque` - Just the deque module
 - `std_module::fstream` - Just the fstream module
 - `std_module::all` - All available modules (convenience target)
@@ -161,6 +167,8 @@ std_module/
 │   ├── algorithm.cppm      # <algorithm> wrapper
 │   ├── bitset.cppm         # <bitset> wrapper
 │   ├── string_view.cppm    # <string_view> wrapper
+│   ├── exception.cppm      # <exception> wrapper
+│   ├── complex.cppm        # <complex> wrapper
 │   ├── deque.cppm          # <deque> wrapper
 │   ├── fstream.cppm        # <fstream> wrapper
 │   └── std.cppm           # Aggregate module (WIP)
@@ -171,6 +179,8 @@ std_module/
 │   ├── test_algorithm.cpp
 │   ├── test_bitset.cpp
 │   ├── test_string_view.cpp
+│   ├── test_exception.cpp
+│   ├── test_complex.cpp
 │   ├── test_deque.cpp
 │   ├── test_fstream.cpp
 │   └── build_manual.sh    # Manual build demo
