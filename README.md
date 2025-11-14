@@ -69,69 +69,49 @@ target_link_libraries(myapp PRIVATE std_module::format)
 
 See [`test/README.md`](test/README.md) for manual build instructions.
 
-## CMake Options
-
-Configure the build with these options:
-
-| Option | Default | Description |
-|--------|---------|-------------|
-| `STD_MODULE_BUILD_TESTS` | ON | Build test executables |
-| `STD_MODULE_BUILD_ALL_MODULES` | ON | Build all available modules |
-| `STD_MODULE_INSTALL` | ON | Generate installation targets |
-| `STD_MODULE_BUILD_FORMAT` | ON | Build std_module.format |
-| `STD_MODULE_BUILD_VECTOR` | ON | Build std_module.vector |
-| `STD_MODULE_BUILD_ALGORITHM` | ON | Build std_module.algorithm |
-| `STD_MODULE_BUILD_BITSET` | ON | Build std_module.bitset |
-| `STD_MODULE_BUILD_STRING_VIEW` | ON | Build std_module.string_view |
-| `STD_MODULE_BUILD_EXCEPTION` | ON | Build std_module.exception |
-| `STD_MODULE_BUILD_COMPLEX` | ON | Build std_module.complex |
-| `STD_MODULE_BUILD_DEQUE` | ON | Build std_module.deque |
-| `STD_MODULE_BUILD_FSTREAM` | ON | Build std_module.fstream |
-| `STD_MODULE_BUILD_FUNCTIONAL` | ON | Build std_module.functional |
-| `STD_MODULE_BUILD_IOMANIP` | ON | Build std_module.iomanip |
-| `STD_MODULE_BUILD_IOS` | ON | Build std_module.ios |
-| `STD_MODULE_BUILD_IOSFWD` | ON | Build std_module.iosfwd |
-| `STD_MODULE_BUILD_IOSTREAM` | ON | Build std_module.iostream |
-| `STD_MODULE_BUILD_ISTREAM` | ON | Build std_module.istream |
-| `STD_MODULE_BUILD_ITERATOR` | ON | Build std_module.iterator |
-| `STD_MODULE_BUILD_LIMITS` | ON | Build std_module.limits |
-| `STD_MODULE_BUILD_LIST` | ON | Build std_module.list |
-| `STD_MODULE_BUILD_LOCALE` | ON | Build std_module.locale |
-
-Example:
-
-```bash
-cmake -B build \
-  -DSTD_MODULE_BUILD_TESTS=OFF \
-  -DSTD_MODULE_BUILD_ALL_MODULES=OFF \
-  -DSTD_MODULE_BUILD_FORMAT=ON
-```
-
 ## Available Modules
 
-Currently wrapped standard library headers:
+| Header | Status | CMake Option | CMake Target | Import Statement |
+|--------|--------|--------------|--------------|------------------|
+| *(General options)* | | `STD_MODULE_BUILD_TESTS=ON` | | Build test executables |
+| | | `STD_MODULE_BUILD_ALL_MODULES=ON` | | Build all modules |
+| | | `STD_MODULE_INSTALL=ON` | | Generate install targets |
+| `<algorithm>` | ✅ | `STD_MODULE_BUILD_ALGORITHM=ON` | `std_module::algorithm` | `import std_module.algorithm;` |
+| `<bitset>` | ✅ | `STD_MODULE_BUILD_BITSET=ON` | `std_module::bitset` | `import std_module.bitset;` |
+| `<complex>` | ✅ | `STD_MODULE_BUILD_COMPLEX=ON` | `std_module::complex` | `import std_module.complex;` |
+| `<deque>` | ✅ | `STD_MODULE_BUILD_DEQUE=ON` | `std_module::deque` | `import std_module.deque;` |
+| `<exception>` | ✅ | `STD_MODULE_BUILD_EXCEPTION=ON` | `std_module::exception` | `import std_module.exception;` |
+| `<format>` | ✅ | `STD_MODULE_BUILD_FORMAT=ON` | `std_module::format` | `import std_module.format;` |
+| `<fstream>` | ✅ | `STD_MODULE_BUILD_FSTREAM=ON` | `std_module::fstream` | `import std_module.fstream;` |
+| `<functional>` | ✅ | `STD_MODULE_BUILD_FUNCTIONAL=ON` | `std_module::functional` | `import std_module.functional;` |
+| `<iomanip>` | ⚠️ | `STD_MODULE_BUILD_IOMANIP=ON` | `std_module::iomanip` | `import std_module.iomanip;` [*](#known-limitations) |
+| `<ios>` | ✅ | `STD_MODULE_BUILD_IOS=ON` | `std_module::ios` | `import std_module.ios;` |
+| `<iosfwd>` | ✅ | `STD_MODULE_BUILD_IOSFWD=ON` | `std_module::iosfwd` | `import std_module.iosfwd;` |
+| `<iostream>` | ✅ | `STD_MODULE_BUILD_IOSTREAM=ON` | `std_module::iostream` | `import std_module.iostream;` |
+| `<istream>` | ✅ | `STD_MODULE_BUILD_ISTREAM=ON` | `std_module::istream` | `import std_module.istream;` |
+| `<iterator>` | ✅ | `STD_MODULE_BUILD_ITERATOR=ON` | `std_module::iterator` | `import std_module.iterator;` |
+| `<limits>` | ✅ | `STD_MODULE_BUILD_LIMITS=ON` | `std_module::limits` | `import std_module.limits;` |
+| `<list>` | ✅ | `STD_MODULE_BUILD_LIST=ON` | `std_module::list` | `import std_module.list;` |
+| `<locale>` | ✅ | `STD_MODULE_BUILD_LOCALE=ON` | `std_module::locale` | `import std_module.locale;` |
+| `<string_view>` | ✅ | `STD_MODULE_BUILD_STRING_VIEW=ON` | `std_module::string_view` | `import std_module.string_view;` |
+| `<vector>` | ✅ | `STD_MODULE_BUILD_VECTOR=ON` | `std_module::vector` | `import std_module.vector;` |
+| *(Convenience)* | | | `std_module::all` | All modules combined |
 
-- ✅ `<format>` → `import std_module.format;`
-- ✅ `<vector>` → `import std_module.vector;`
-- ✅ `<algorithm>` → `import std_module.algorithm;`
-- ✅ `<bitset>` → `import std_module.bitset;`
-- ✅ `<string_view>` → `import std_module.string_view;`
-- ✅ `<exception>` → `import std_module.exception;`
-- ✅ `<complex>` → `import std_module.complex;`
-- ✅ `<deque>` → `import std_module.deque;`
-- ✅ `<fstream>` → `import std_module.fstream;`
-- ✅ `<functional>` → `import std_module.functional;`
-- ⚠️ `<iomanip>` → `import std_module.iomanip;` **(non-functional - see [limitations](#known-limitations))**
-- ✅ `<ios>` → `import std_module.ios;`
-- ✅ `<iosfwd>` → `import std_module.iosfwd;`
-- ✅ `<iostream>` → `import std_module.iostream;`
-- ✅ `<istream>` → `import std_module.istream;`
-- ✅ `<iterator>` → `import std_module.iterator;`
-- ✅ `<limits>` → `import std_module.limits;`
-- ✅ `<list>` → `import std_module.list;`
-- ✅ `<locale>` → `import std_module.locale;`
+**Build examples:**
 
-*More modules coming soon!*
+```bash
+# Build only specific modules
+cmake -B build -G Ninja \
+  -DSTD_MODULE_BUILD_ALL_MODULES=OFF \
+  -DSTD_MODULE_BUILD_FORMAT=ON \
+  -DSTD_MODULE_BUILD_VECTOR=ON
+
+# Link specific modules
+target_link_libraries(myapp PRIVATE std_module::format std_module::vector)
+
+# Or link everything
+target_link_libraries(myapp PRIVATE std_module::all)
+```
 
 ## Usage Example
 
@@ -147,94 +127,26 @@ int main() {
 }
 ```
 
-## Library Targets
-
-The build system provides these CMake targets:
-
-- `std_module::format` - Just the format module
-- `std_module::vector` - Just the vector module
-- `std_module::algorithm` - Just the algorithm module
-- `std_module::bitset` - Just the bitset module
-- `std_module::string_view` - Just the string_view module
-- `std_module::exception` - Just the exception module
-- `std_module::complex` - Just the complex module
-- `std_module::deque` - Just the deque module
-- `std_module::fstream` - Just the fstream module
-- `std_module::functional` - Just the functional module
-- `std_module::iomanip` - Just the iomanip module
-- `std_module::ios` - Just the ios module
-- `std_module::iosfwd` - Just the iosfwd module
-- `std_module::iostream` - Just the iostream module
-- `std_module::istream` - Just the istream module
-- `std_module::iterator` - Just the iterator module
-- `std_module::limits` - Just the limits module
-- `std_module::list` - Just the list module
-- `std_module::locale` - Just the locale module
-- `std_module::all` - All available modules (convenience target)
-
-Link only what you need:
-
-```cmake
-# Link specific modules
-target_link_libraries(myapp PRIVATE std_module::format)
-target_link_libraries(myapp PRIVATE std_module::vector)
-target_link_libraries(myapp PRIVATE std_module::algorithm)
-target_link_libraries(myapp PRIVATE std_module::string_view)
-
-# Or link everything
-target_link_libraries(myapp PRIVATE std_module::all)
-```
-
 ## Project Structure
 
 ```
 std_module/
-├── CMakeLists.txt          # Root build configuration
-├── src/                    # Module implementations
+├── CMakeLists.txt
+├── src/
 │   ├── CMakeLists.txt
-│   ├── format.cppm         # <format> wrapper
-│   ├── vector.cppm         # <vector> wrapper
-│   ├── algorithm.cppm      # <algorithm> wrapper
-│   ├── bitset.cppm         # <bitset> wrapper
-│   ├── string_view.cppm    # <string_view> wrapper
-│   ├── exception.cppm      # <exception> wrapper
-│   ├── complex.cppm        # <complex> wrapper
-│   ├── deque.cppm          # <deque> wrapper
-│   ├── fstream.cppm        # <fstream> wrapper
-│   ├── functional.cppm     # <functional> wrapper
-│   ├── iomanip.cppm        # <iomanip> wrapper
-│   ├── ios.cppm            # <ios> wrapper
-│   ├── iosfwd.cppm         # <iosfwd> wrapper
-│   ├── iostream.cppm       # <iostream> wrapper
-│   ├── istream.cppm        # <istream> wrapper
-│   ├── iterator.cppm       # <iterator> wrapper
-│   ├── limits.cppm         # <limits> wrapper
-│   ├── list.cppm           # <list> wrapper
-│   ├── locale.cppm         # <locale> wrapper
-│   └── std.cppm           # Aggregate module (WIP)
-├── test/                   # Tests and examples
+│   ├── algorithm.cppm
+│   ├── bitset.cppm
+│   ⋮
+│   ├── vector.cppm
+│   └── std.cppm
+├── test/
 │   ├── CMakeLists.txt
-│   ├── test_format.cpp
-│   ├── test_vector.cpp
 │   ├── test_algorithm.cpp
 │   ├── test_bitset.cpp
-│   ├── test_string_view.cpp
-│   ├── test_exception.cpp
-│   ├── test_complex.cpp
-│   ├── test_deque.cpp
-│   ├── test_fstream.cpp
-│   ├── test_functional.cpp
-│   ├── test_iomanip.cpp
-│   ├── test_ios.cpp
-│   ├── test_iosfwd.cpp
-│   ├── test_iostream.cpp
-│   ├── test_istream.cpp
-│   ├── test_iterator.cpp
-│   ├── test_limits.cpp
-│   ├── test_list.cpp
-│   ├── test_locale.cpp
-│   └── build_manual.sh    # Manual build demo
-└── cmake/                  # CMake configuration files
+│   ⋮
+│   ├── test_vector.cpp
+│   └── build_manual.sh
+└── cmake/
 ```
 
 ## Known Limitations
