@@ -42,3 +42,8 @@ test_*
 # Package managers
 conan.lock
 vcpkg_installed/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
