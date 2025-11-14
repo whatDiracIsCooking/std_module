@@ -77,6 +77,7 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | | | `STD_MODULE_BUILD_ALL_MODULES=ON` | | Build all modules |
 | | | `STD_MODULE_INSTALL=ON` | | Generate install targets |
 | `<algorithm>` | ✅ | `STD_MODULE_BUILD_ALGORITHM=ON` | `std_module::algorithm` | `import std_module.algorithm;` |
+| `<any>` | ✅ | `STD_MODULE_BUILD_ANY=ON` | `std_module::any` | `import std_module.any;` |
 | `<barrier>` | ✅ | `STD_MODULE_BUILD_BARRIER=ON` | `std_module::barrier` | `import std_module.barrier;` |
 | `<bitset>` | ✅ | `STD_MODULE_BUILD_BITSET=ON` | `std_module::bitset` | `import std_module.bitset;` |
 | `<charconv>` | ✅ | `STD_MODULE_BUILD_CHARCONV=ON` | `std_module::charconv` | `import std_module.charconv;` |
@@ -84,6 +85,7 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | `<concepts>` | ✅ | `STD_MODULE_BUILD_CONCEPTS=ON` | `std_module::concepts` | `import std_module.concepts;` |
 | `<deque>` | ✅ | `STD_MODULE_BUILD_DEQUE=ON` | `std_module::deque` | `import std_module.deque;` |
 | `<exception>` | ✅ | `STD_MODULE_BUILD_EXCEPTION=ON` | `std_module::exception` | `import std_module.exception;` |
+| `<execution>` | ✅ | `STD_MODULE_BUILD_EXECUTION=ON` | `std_module::execution` | `import std_module.execution;` |
 | `<format>` | ✅ | `STD_MODULE_BUILD_FORMAT=ON` | `std_module::format` | `import std_module.format;` |
 | `<fstream>` | ✅ | `STD_MODULE_BUILD_FSTREAM=ON` | `std_module::fstream` | `import std_module.fstream;` |
 | `<filesystem>` | ✅ | `STD_MODULE_BUILD_FILESYSTEM=ON` | `std_module::filesystem` | `import std_module.filesystem;` |
@@ -99,6 +101,7 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | `<latch>` | ✅ | `STD_MODULE_BUILD_LATCH=ON` | `std_module::latch` | `import std_module.latch;` |
 | `<locale>` | ✅ | `STD_MODULE_BUILD_LOCALE=ON` | `std_module::locale` | `import std_module.locale;` |
 | `<map>` | ✅ | `STD_MODULE_BUILD_MAP=ON` | `std_module::map` | `import std_module.map;` |
+| `<memory_resource>` | ✅ | `STD_MODULE_BUILD_MEMORY_RESOURCE=ON` | `std_module::memory_resource` | `import std_module.memory_resource;` |
 | `<new>` | ✅ | `STD_MODULE_BUILD_NEW=ON` | `std_module::new` | `import std_module.new_;` [†](#notes) |
 | `<numeric>` | ✅ | `STD_MODULE_BUILD_NUMERIC=ON` | `std_module::numeric` | `import std_module.numeric;` |
 | `<optional>` | ✅ | `STD_MODULE_BUILD_OPTIONAL=ON` | `std_module::optional` | `import std_module.optional;` |
