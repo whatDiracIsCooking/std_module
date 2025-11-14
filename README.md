@@ -84,79 +84,79 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 - CMake Target: `std_module::<name>`
 - Import Statement: `import std_module.<name>;`
 
-| Header | Status | Notes |
-|--------|--------|-------|
-| `<algorithm>` | ✅ | Algorithms library |
-| `<any>` | ✅ | Type-safe container for single values |
-| `<array>` | ✅ | Fixed-size arrays |
-| `<atomic>` | ✅ | Atomic operations |
-| `<barrier>` | ✅ | Thread coordination (C++20) |
-| `<bit>` | ✅ | Bit manipulation (C++20) |
-| `<bitset>` | ✅ | Fixed-size bit arrays |
-| `<charconv>` | ✅ | Low-level numeric conversions |
-| `<chrono>` | ✅ | Time utilities |
-| `<codecvt>` | ✅ | Character encoding conversion |
-| `<compare>` | ✅ | Three-way comparison (C++20) |
-| `<complex>` | ✅ | Complex numbers |
-| `<concepts>` | ✅ | Concept definitions (C++20) |
-| `<condition_variable>` | ✅ | Thread synchronization |
-| `<coroutine>` | ✅ | Coroutine support (C++20) |
-| `<deque>` | ✅ | Double-ended queue |
-| `<exception>` | ✅ | Exception handling |
-| `<execution>` | ✅ | Parallel algorithm policies |
-| `<filesystem>` | ✅ | Filesystem library |
-| `<format>` | ✅ | Text formatting (C++20) |
-| `<forward_list>` | ✅ | Singly-linked list |
-| `<fstream>` | ✅ | File streams |
-| `<functional>` | ✅ | Function objects |
-| `<future>` | ⚠️ | Async operations (`packaged_task` broken) |
-| `<initializer_list>` | ✅ | Initializer list support |
-| `<iomanip>` | ⚠️ | I/O manipulators (ADL limitations) |
-| `<ios>` | ✅ | I/O base classes |
-| `<iosfwd>` | ✅ | Forward declarations for I/O |
-| `<iostream>` | ✅ | Standard I/O streams |
-| `<istream>` | ✅ | Input streams |
-| `<iterator>` | ✅ | Iterator utilities |
-| `<latch>` | ✅ | Single-use thread barrier (C++20) |
-| `<limits>` | ✅ | Numeric limits |
-| `<list>` | ✅ | Doubly-linked list |
-| `<locale>` | ✅ | Localization |
-| `<map>` | ✅ | Associative containers (map, multimap) |
-| `<memory>` | ✅ | Memory management |
-| `<memory_resource>` | ✅ | Polymorphic allocators |
-| `<mutex>` | ✅ | Mutual exclusion |
-| `<new>` | ✅ | Dynamic memory (import as `std_module.new_`) |
-| `<numbers>` | ✅ | Mathematical constants (C++20) |
-| `<numeric>` | ✅ | Numeric operations |
-| `<optional>` | ✅ | Optional values |
-| `<ostream>` | ✅ | Output streams |
-| `<queue>` | ✅ | Queue adapters |
-| `<random>` | ✅ | Random number generation |
-| `<ranges>` | ✅ | Ranges library (C++20) |
-| `<ratio>` | ✅ | Compile-time rational arithmetic |
-| `<regex>` | ✅ | Regular expressions |
-| `<scoped_allocator>` | ✅ | Nested allocator support |
-| `<semaphore>` | ✅ | Semaphores (C++20) |
-| `<set>` | ✅ | Associative containers (set, multiset) |
-| `<source_location>` | ✅ | Source code location (C++20) |
-| `<span>` | ✅ | Non-owning array view (C++20) |
-| `<stack>` | ✅ | Stack adapter |
-| `<stdexcept>` | ✅ | Standard exceptions |
-| `<streambuf>` | ✅ | Stream buffers |
-| `<string>` | ✅ | String class |
-| `<string_view>` | ✅ | Non-owning string view |
-| `<syncstream>` | ✅ | Synchronized output streams (C++20) |
-| `<system_error>` | ✅ | System error support |
-| `<thread>` | ✅ | Threading |
-| `<tuple>` | ✅ | Tuple type |
-| `<type_traits>` | ✅ | Type trait utilities |
-| `<typeindex>` | ✅ | Type index wrapper |
-| `<typeinfo>` | ✅ | Runtime type information |
-| `<unordered_map>` | ✅ | Hash maps |
-| `<unordered_set>` | ✅ | Hash sets |
-| `<valarray>` | ✅ | Numeric arrays |
-| `<variant>` | ✅ | Type-safe unions |
-| `<vector>` | ✅ | Dynamic arrays |
+| Header | Status |
+|--------|--------|
+| `<algorithm>` | ✅ |
+| `<any>` | ✅ |
+| `<array>` | ✅ |
+| `<atomic>` | ✅ |
+| `<barrier>` | ✅ |
+| `<bit>` | ✅ |
+| `<bitset>` | ✅ |
+| `<charconv>` | ✅ |
+| `<chrono>` | ✅ |
+| `<codecvt>` | ✅ |
+| `<compare>` | ✅ |
+| `<complex>` | ✅ |
+| `<concepts>` | ✅ |
+| `<condition_variable>` | ✅ |
+| `<coroutine>` | ✅ |
+| `<deque>` | ✅ |
+| `<exception>` | ✅ |
+| `<execution>` | ✅ |
+| `<filesystem>` | ✅ |
+| `<format>` | ✅ |
+| `<forward_list>` | ✅ |
+| `<fstream>` | ✅ |
+| `<functional>` | ✅ |
+| `<future>` | ⚠️ |
+| `<initializer_list>` | ✅ |
+| `<iomanip>` | ⚠️ |
+| `<ios>` | ✅ |
+| `<iosfwd>` | ✅ |
+| `<iostream>` | ✅ |
+| `<istream>` | ✅ |
+| `<iterator>` | ✅ |
+| `<latch>` | ✅ |
+| `<limits>` | ✅ |
+| `<list>` | ✅ |
+| `<locale>` | ✅ |
+| `<map>` | ✅ |
+| `<memory>` | ✅ |
+| `<memory_resource>` | ✅ |
+| `<mutex>` | ✅ |
+| `<new>` | ✅ |
+| `<numbers>` | ✅ |
+| `<numeric>` | ✅ |
+| `<optional>` | ✅ |
+| `<ostream>` | ✅ |
+| `<queue>` | ✅ |
+| `<random>` | ✅ |
+| `<ranges>` | ✅ |
+| `<ratio>` | ✅ |
+| `<regex>` | ✅ |
+| `<scoped_allocator>` | ✅ |
+| `<semaphore>` | ✅ |
+| `<set>` | ✅ |
+| `<source_location>` | ✅ |
+| `<span>` | ✅ |
+| `<stack>` | ✅ |
+| `<stdexcept>` | ✅ |
+| `<streambuf>` | ✅ |
+| `<string>` | ✅ |
+| `<string_view>` | ✅ |
+| `<syncstream>` | ✅ |
+| `<system_error>` | ✅ |
+| `<thread>` | ✅ |
+| `<tuple>` | ✅ |
+| `<type_traits>` | ✅ |
+| `<typeindex>` | ✅ |
+| `<typeinfo>` | ✅ |
+| `<unordered_map>` | ✅ |
+| `<unordered_set>` | ✅ |
+| `<valarray>` | ✅ |
+| `<variant>` | ✅ |
+| `<vector>` | ✅ |
 
 **Special Targets:**
 - `std_module::all` - Convenience target that links all modules
@@ -221,14 +221,18 @@ std_module/
     └── README.md
 ```
 
-## Known Limitations
+## Known Limitations and Special Cases
 
-Two modules have minor limitations:
+**Modules with limitations (⚠️):**
 
-- **`<iomanip>`** (⚠️) - I/O manipulators like `std::setw()`, `std::setfill()` have limited functionality
-- **`<future>`** (⚠️) - `std::packaged_task` is not functional; other async components work
+- **`<future>`** - `std::packaged_task` is not functional; other async components (`std::future`, `std::promise`, `std::async`) work correctly
+- **`<iomanip>`** - I/O manipulators like `std::setw()`, `std::setfill()`, `std::setprecision()` have limited functionality due to C++20 module ADL limitations
 
-All other 70 modules are fully functional with pure module-only usage (no `#include` needed).
+**Special naming:**
+
+- **`<new>`** - Use `import std_module.new_;` (with underscore) because `new` is a C++ keyword
+
+All other 69 modules are fully functional with pure module-only usage (no `#include` needed).
 
 ## Contributing
 
