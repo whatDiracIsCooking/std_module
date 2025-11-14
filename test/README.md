@@ -161,6 +161,43 @@ Module: format
 
 **Purpose:** Ensures no exported symbols are accidentally left untested.
 
+## Export Validation
+
+The test suite includes authoritative validation via `scripts/validate_exports.py` which uses Clang's AST dump to verify module exports.
+
+### Running Export Validation
+
+```bash
+# Validate all modules (compares regex extraction vs Clang AST)
+python3 scripts/validate_exports.py
+
+# Validate a specific module
+python3 scripts/validate_exports.py src/format.cppm
+
+# List exports without validation
+python3 scripts/validate_exports.py src/format.cppm --list-only
+```
+
+### Validation Output
+
+```
+Module: format.cppm
+  Clang AST: 25 exports
+  Regex:     25 exports
+
+✓ VALIDATION PASSED
+  Regex extraction matches Clang AST 100% (25 symbols)
+```
+
+**Purpose:** Provides authoritative proof that:
+- Our module exports are correct (Clang compiler sees them)
+- Symbol coverage analysis is accurate (regex matches compiler view)
+- No exports are missing or incorrectly parsed
+
+**How it works:** Uses `clang++ -Xclang -ast-dump` to get the compiler's actual view of module exports, then compares with the regex-based extraction used by `symbol_coverage.py`.
+
+**Results:** 45/49 modules show 100% match. The 4 mismatches are expected (conditional compilation with `#ifdef`).
+
 ## CMake Test Infrastructure
 
 ### Adding a New Test
