@@ -86,6 +86,7 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_EXCEPTION` | ON | Build std_module.exception |
 | `STD_MODULE_BUILD_COMPLEX` | ON | Build std_module.complex |
 | `STD_MODULE_BUILD_DEQUE` | ON | Build std_module.deque |
+| `STD_MODULE_BUILD_FSTREAM` | ON | Build std_module.fstream |
 
 Example:
 
@@ -108,6 +109,7 @@ Currently wrapped standard library headers:
 - ✅ `<exception>` → `import std_module.exception;`
 - ✅ `<complex>` → `import std_module.complex;`
 - ✅ `<deque>` → `import std_module.deque;`
+- ✅ `<fstream>` → `import std_module.fstream;`
 
 *More modules coming soon!*
 
@@ -137,6 +139,7 @@ The build system provides these CMake targets:
 - `std_module::exception` - Just the exception module
 - `std_module::complex` - Just the complex module
 - `std_module::deque` - Just the deque module
+- `std_module::fstream` - Just the fstream module
 - `std_module::all` - All available modules (convenience target)
 
 Link only what you need:
@@ -167,6 +170,7 @@ std_module/
 │   ├── exception.cppm      # <exception> wrapper
 │   ├── complex.cppm        # <complex> wrapper
 │   ├── deque.cppm          # <deque> wrapper
+│   ├── fstream.cppm        # <fstream> wrapper
 │   └── std.cppm           # Aggregate module (WIP)
 ├── test/                   # Tests and examples
 │   ├── CMakeLists.txt
@@ -178,6 +182,7 @@ std_module/
 │   ├── test_exception.cpp
 │   ├── test_complex.cpp
 │   ├── test_deque.cpp
+│   ├── test_fstream.cpp
 │   └── build_manual.sh    # Manual build demo
 └── cmake/                  # CMake configuration files
 ```

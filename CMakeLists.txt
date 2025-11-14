@@ -22,6 +22,7 @@ option(STD_MODULE_BUILD_STRING_VIEW "Build std_module.string_view" ON)
 option(STD_MODULE_BUILD_EXCEPTION "Build std_module.exception" ON)
 option(STD_MODULE_BUILD_COMPLEX "Build std_module.complex" ON)
 option(STD_MODULE_BUILD_DEQUE "Build std_module.deque" ON)
+option(STD_MODULE_BUILD_FSTREAM "Build std_module.fstream" ON)
 # More options will be added as we wrap more headers:
 # option(STD_MODULE_BUILD_STRING "Build std_module.string" ON)
 # etc.
@@ -147,4 +148,5 @@ message(STATUS "  string_view:            ${STD_MODULE_BUILD_STRING_VIEW}")
 message(STATUS "  exception:              ${STD_MODULE_BUILD_EXCEPTION}")
 message(STATUS "  complex:                ${STD_MODULE_BUILD_COMPLEX}")
 message(STATUS "  deque:                  ${STD_MODULE_BUILD_DEQUE}")
+message(STATUS "  fstream:                ${STD_MODULE_BUILD_FSTREAM}")
 message(STATUS "")

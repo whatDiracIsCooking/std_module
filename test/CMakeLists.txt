@@ -19,6 +19,7 @@ std_module_add_test(complex)
 std_module_add_test(vector)
 std_module_add_test(exception)
 std_module_add_test(deque)
+std_module_add_test(fstream)
 
 # Add more tests here as modules are implemented:
 # std_module_add_test(string)
