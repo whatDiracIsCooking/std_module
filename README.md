@@ -77,9 +77,11 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | | | `STD_MODULE_BUILD_ALL_MODULES=ON` | | Build all modules |
 | | | `STD_MODULE_INSTALL=ON` | | Generate install targets |
 | `<algorithm>` | ✅ | `STD_MODULE_BUILD_ALGORITHM=ON` | `std_module::algorithm` | `import std_module.algorithm;` |
+| `<barrier>` | ✅ | `STD_MODULE_BUILD_BARRIER=ON` | `std_module::barrier` | `import std_module.barrier;` |
 | `<bitset>` | ✅ | `STD_MODULE_BUILD_BITSET=ON` | `std_module::bitset` | `import std_module.bitset;` |
 | `<charconv>` | ✅ | `STD_MODULE_BUILD_CHARCONV=ON` | `std_module::charconv` | `import std_module.charconv;` |
 | `<complex>` | ✅ | `STD_MODULE_BUILD_COMPLEX=ON` | `std_module::complex` | `import std_module.complex;` |
+| `<concepts>` | ✅ | `STD_MODULE_BUILD_CONCEPTS=ON` | `std_module::concepts` | `import std_module.concepts;` |
 | `<deque>` | ✅ | `STD_MODULE_BUILD_DEQUE=ON` | `std_module::deque` | `import std_module.deque;` |
 | `<exception>` | ✅ | `STD_MODULE_BUILD_EXCEPTION=ON` | `std_module::exception` | `import std_module.exception;` |
 | `<format>` | ✅ | `STD_MODULE_BUILD_FORMAT=ON` | `std_module::format` | `import std_module.format;` |
@@ -94,6 +96,7 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | `<iterator>` | ✅ | `STD_MODULE_BUILD_ITERATOR=ON` | `std_module::iterator` | `import std_module.iterator;` |
 | `<limits>` | ✅ | `STD_MODULE_BUILD_LIMITS=ON` | `std_module::limits` | `import std_module.limits;` |
 | `<list>` | ✅ | `STD_MODULE_BUILD_LIST=ON` | `std_module::list` | `import std_module.list;` |
+| `<latch>` | ✅ | `STD_MODULE_BUILD_LATCH=ON` | `std_module::latch` | `import std_module.latch;` |
 | `<locale>` | ✅ | `STD_MODULE_BUILD_LOCALE=ON` | `std_module::locale` | `import std_module.locale;` |
 | `<map>` | ✅ | `STD_MODULE_BUILD_MAP=ON` | `std_module::map` | `import std_module.map;` |
 | `<new>` | ✅ | `STD_MODULE_BUILD_NEW=ON` | `std_module::new` | `import std_module.new_;` [†](#notes) |
@@ -101,6 +104,7 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | `<optional>` | ✅ | `STD_MODULE_BUILD_OPTIONAL=ON` | `std_module::optional` | `import std_module.optional;` |
 | `<queue>` | ✅ | `STD_MODULE_BUILD_QUEUE=ON` | `std_module::queue` | `import std_module.queue;` |
 | `<random>` | ✅ | `STD_MODULE_BUILD_RANDOM=ON` | `std_module::random` | `import std_module.random;` |
+| `<semaphore>` | ✅ | `STD_MODULE_BUILD_SEMAPHORE=ON` | `std_module::semaphore` | `import std_module.semaphore;` |
 | `<string_view>` | ✅ | `STD_MODULE_BUILD_STRING_VIEW=ON` | `std_module::string_view` | `import std_module.string_view;` |
 | `<syncstream>` | ✅ | `STD_MODULE_BUILD_SYNCSTREAM=ON` | `std_module::syncstream` | `import std_module.syncstream;` |
 | `<system_error>` | ✅ | `STD_MODULE_BUILD_SYSTEM_ERROR=ON` | `std_module::system_error` | `import std_module.system_error;` |
