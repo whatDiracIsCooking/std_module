@@ -93,6 +93,11 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | `<limits>` | ✅ | `STD_MODULE_BUILD_LIMITS=ON` | `std_module::limits` | `import std_module.limits;` |
 | `<list>` | ✅ | `STD_MODULE_BUILD_LIST=ON` | `std_module::list` | `import std_module.list;` |
 | `<locale>` | ✅ | `STD_MODULE_BUILD_LOCALE=ON` | `std_module::locale` | `import std_module.locale;` |
+| `<map>` | ✅ | `STD_MODULE_BUILD_MAP=ON` | `std_module::map` | `import std_module.map;` |
+| `<new>` | ✅ | `STD_MODULE_BUILD_NEW=ON` | `std_module::new` | `import std_module.new_;` [†](#notes) |
+| `<numeric>` | ✅ | `STD_MODULE_BUILD_NUMERIC=ON` | `std_module::numeric` | `import std_module.numeric;` |
+| `<optional>` | ✅ | `STD_MODULE_BUILD_OPTIONAL=ON` | `std_module::optional` | `import std_module.optional;` |
+| `<ostream>` | ✅ | `STD_MODULE_BUILD_OSTREAM=ON` | `std_module::ostream` | `import std_module.ostream;` |
 | `<queue>` | ✅ | `STD_MODULE_BUILD_QUEUE=ON` | `std_module::queue` | `import std_module.queue;` |
 | `<set>` | ✅ | `STD_MODULE_BUILD_SET=ON` | `std_module::set` | `import std_module.set;` |
 | `<stack>` | ✅ | `STD_MODULE_BUILD_STACK=ON` | `std_module::stack` | `import std_module.stack;` |
@@ -157,6 +162,11 @@ std_module/
 │   ├── limits.cppm
 │   ├── list.cppm
 │   ├── locale.cppm
+│   ├── map.cppm
+│   ├── new.cppm
+│   ├── numeric.cppm
+│   ├── optional.cppm
+│   ├── ostream.cppm
 │   ├── queue.cppm
 │   ├── set.cppm
 │   ├── stack.cppm
@@ -185,6 +195,11 @@ std_module/
 │   ├── test_limits.cpp
 │   ├── test_list.cpp
 │   ├── test_locale.cpp
+│   ├── test_map.cpp
+│   ├── test_new.cpp
+│   ├── test_numeric.cpp
+│   ├── test_optional.cpp
+│   ├── test_ostream.cpp
 │   ├── test_queue.cpp
 │   ├── test_set.cpp
 │   ├── test_stack.cpp
