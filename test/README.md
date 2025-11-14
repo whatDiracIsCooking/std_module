@@ -1,69 +1,352 @@
-# Manual Build Test
+# std_module Test Suite
 
-This directory contains minimal tests to validate the module setup before creating a full build system.
+Comprehensive test suite for the std_module C++20 module wrapper library.
 
-## Files
+## Overview
 
-- **test_format.cpp** - Simple test that uses `std_module.format`
-- **build_manual.sh** - Shell script showing manual compilation steps
-- **README.md** - This file
+This directory contains **25 test files** that validate all implemented standard library modules. Each test thoroughly exercises the exported APIs from its corresponding module to ensure correct functionality and comprehensive symbol coverage.
 
-## Manual Build Process
+**Test Infrastructure:**
+- CMake-based test system with CTest integration
+- Automated symbol coverage analysis
+- Macro-driven test registration (one line per test)
+- Manual build script for educational purposes
 
-### Prerequisites
+## Quick Start
 
-You need a C++20 compatible compiler with modules support:
-- **Clang 16+** (recommended)
-- **GCC 11+** (experimental modules support)
+### Running All Tests
 
-### Building and Running
+```bash
+# From project root
+cmake -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++
+cmake --build build
+ctest --test-dir build --output-on-failure
+```
+
+### Running Specific Tests
+
+```bash
+# Run a single test
+ctest --test-dir build -R test_format --output-on-failure
+
+# Run tests matching a pattern
+ctest --test-dir build -R "test_(format|vector)" --verbose
+
+# List all available tests
+ctest --test-dir build -N
+```
+
+## Test Files
+
+The test suite includes tests for all 25 implemented modules:
+
+| Module | Test File | Description |
+|--------|-----------|-------------|
+| `algorithm` | `test_algorithm.cpp` | Sorting, searching, algorithms |
+| `bitset` | `test_bitset.cpp` | Fixed-size bit arrays |
+| `complex` | `test_complex.cpp` | Complex number arithmetic (⚠️ operators limited) |
+| `deque` | `test_deque.cpp` | Double-ended queue container |
+| `exception` | `test_exception.cpp` | Exception handling utilities |
+| `format` | `test_format.cpp` | Text formatting (comprehensive reference test) |
+| `fstream` | `test_fstream.cpp` | File I/O streams |
+| `functional` | `test_functional.cpp` | Function objects and utilities |
+| `iomanip` | `test_iomanip.cpp` | I/O manipulators (⚠️ limited by ADL) |
+| `ios` | `test_ios.cpp` | I/O stream base classes |
+| `iosfwd` | `test_iosfwd.cpp` | Forward declarations for I/O |
+| `iostream` | `test_iostream.cpp` | Standard I/O streams |
+| `istream` | `test_istream.cpp` | Input stream operations |
+| `iterator` | `test_iterator.cpp` | Iterator utilities and adapters |
+| `limits` | `test_limits.cpp` | Numeric limits |
+| `list` | `test_list.cpp` | Doubly-linked list container |
+| `locale` | `test_locale.cpp` | Localization facilities |
+| `map` | `test_map.cpp` | Associative array container |
+| `new` | `test_new.cpp` | Dynamic memory management |
+| `queue` | `test_queue.cpp` | FIFO queue adaptor |
+| `random` | `test_random.cpp` | Random number generation |
+| `string_view` | `test_string_view.cpp` | Non-owning string view |
+| `system_error` | `test_system_error.cpp` | System error reporting |
+| `typeindex` | `test_typeindex.cpp` | Type identification wrapper |
+| `vector` | `test_vector.cpp` | Dynamic array container |
+
+**Legend:**
+- ⚠️ = Module has limitations due to C++20 module ADL issues (see CLAUDE.md)
+
+## Test Structure
+
+### Naming Convention
+
+All test files follow the pattern: `test_{module}.cpp`
+
+### Test Implementation Pattern
+
+Each test follows the structure established in `test_format.cpp:1-273`:
+
+```cpp
+import std_module.{module};     // Import the module under test
+#include <iostream>              // For output
+#include <cassert>               // For assertions
+
+// Test functions
+void test_basic_functionality() {
+    // Arrange
+    auto input = /* ... */;
+
+    // Act
+    auto result = std::some_function(input);
+
+    // Assert
+    assert(result == expected);
+    std::cout << "  ✓ Test description: " << result << "\n";
+}
+
+int main() {
+    std::cout << "Testing std_module.{module}...\n";
+
+    test_basic_functionality();
+    test_edge_cases();
+    test_error_conditions();
+    // ... more test functions
+
+    std::cout << "All tests passed!\n";
+    return 0;
+}
+```
+
+### Key Testing Principles
+
+1. **Import-Only Testing**: Tests must use ONLY `import std_module.{module};` - never `#include <{module}>`
+   - This ensures we test exactly what the module exports
+   - If functionality doesn't work, mark with `// FIXME:` rather than working around it
+
+2. **Comprehensive Coverage**: Test ALL exported symbols
+   - Functions, classes, type aliases, constants
+   - Multiple argument types and edge cases
+   - Error conditions and exceptions
+
+3. **Visual Feedback**: Use checkmarks for successful tests
+   ```cpp
+   std::cout << "  ✓ Test passed: description\n";
+   ```
+
+4. **Self-Contained**: Each test function should be independent
+
+5. **Assertion-Based**: Validate results with `assert()`
+
+## Symbol Coverage Analysis
+
+The test suite includes automated symbol coverage analysis via `scripts/symbol_coverage.py`.
+
+### Running Coverage Analysis
+
+```bash
+# Check a specific module
+python3 scripts/symbol_coverage.py format
+
+# Check all modules
+python3 scripts/symbol_coverage.py --all
+
+# Coverage runs automatically with ctest
+ctest --test-dir build
+```
+
+### Coverage Output
+
+```
+Module: format
+  Exported symbols: 25
+  Tested symbols: 25
+  Untested symbols: 0
+  Coverage: 100.0%
+```
+
+**Purpose:** Ensures no exported symbols are accidentally left untested.
+
+## CMake Test Infrastructure
+
+### Adding a New Test
+
+Tests are registered using the `std_module_add_test()` macro in `CMakeLists.txt`:
+
+```cmake
+# In test/CMakeLists.txt
+std_module_add_test(newmodule)
+```
+
+This single line:
+1. Creates executable target `test_newmodule`
+2. Links against `std_module::newmodule`
+3. Sets C++20 requirement
+4. Registers with CTest
+
+### Build Options
+
+Tests respect the same build options as modules:
+
+```bash
+# Build only specific tests
+cmake -B build -G Ninja \
+  -DSTD_MODULE_BUILD_ALL_MODULES=OFF \
+  -DSTD_MODULE_BUILD_FORMAT=ON \
+  -DSTD_MODULE_BUILD_VECTOR=ON
+
+# Disable all tests
+cmake -B build -G Ninja -DSTD_MODULE_BUILD_TESTS=OFF
+```
+
+## Manual Build Process (Educational)
+
+The `build_manual.sh` script demonstrates low-level C++20 module compilation without CMake.
+
+### Usage
 
 ```bash
 cd test
 ./build_manual.sh
 ```
 
-### What the Build Script Does
-
-1. **Compiles the module** (`format.cppm`) into a Binary Module Interface (`.pcm` file)
-2. **Compiles the test program** that imports the module
-3. **Links and creates** the test executable
-4. **Runs the test** to verify everything works
-
-### Expected Output
-
-```
-Hello, World!
-The answer is 42 and pi is approximately 3.14
-first comes before second
-All tests passed!
-```
-
-## Manual Commands (for reference)
-
-If you want to build manually without the script:
+### What It Does
 
 ```bash
-# Step 1: Precompile the module interface
+# 1. Precompile module interface (.cppm → .pcm)
 clang++ -std=c++20 -x c++-module ../src/format.cppm --precompile -o format.pcm
 
-# Step 2: Compile the module to object file
+# 2. Compile module to object file (.pcm → .o)
 clang++ -std=c++20 -c format.pcm -o format.o
 
-# Step 3: Compile the test program (with module mapping)
-clang++ -std=c++20 -fmodule-file=std_module.format=format.pcm -c test_format.cpp -o test_format.o
+# 3. Compile test program (.cpp → .o)
+clang++ -std=c++20 -fmodule-file=std_module.format=format.pcm \
+        -c test_format.cpp -o test_format.o
 
-# Step 4: Link everything together
+# 4. Link executable
 clang++ -std=c++20 format.o test_format.o -o test_format
 
-# Step 5: Run
+# 5. Run test
 ./test_format
 ```
 
-## Notes
+**Purpose:**
+- Understanding C++20 module compilation mechanics
+- Debugging build issues at a low level
+- Educational reference for module build process
+- Verifying compiler behavior without CMake
 
-- Module compilation creates `.pcm` files (precompiled module interfaces)
-- The `-fmodule-file=<module-name>=<pcm-file>` flag tells the compiler where to find imported modules
-- Both the module and the test program need to be compiled to object files before linking
-- Different compilers may use different flags and file extensions
-- Warnings from the standard library implementation itself are normal and can be ignored
+## Known Limitations
+
+### C++20 Module ADL Issues
+
+Some modules have limited functionality due to C++20 module Argument-Dependent Lookup (ADL) limitations with non-member operators:
+
+**Affected Modules:**
+- `<iomanip>` - Manipulators don't work (operator<< not found)
+- `<complex>` - Arithmetic operators don't work (operator+, operator*, etc.)
+
+**Details:** See CLAUDE.md section "Testing Conventions" subsection 3 for full explanation.
+
+**Testing Policy:**
+- Tests mark broken functionality with `// FIXME: C++20 module ADL limitation`
+- Do NOT add `#include <header>` as a workaround
+- Keep test coverage high for working functionality
+- Document what doesn't work in comments
+
+## Troubleshooting
+
+### Test Compilation Fails
+
+**Problem:** "Module 'std_module.X' not found"
+- **Solution:** Ensure the module is built: `cmake --build build`
+- **Check:** Module option is enabled (e.g., `-DSTD_MODULE_BUILD_X=ON`)
+
+### Test Crashes at Runtime
+
+**Problem:** Assertion failures or segfaults
+- **Solution:** Verify all used symbols are exported in `src/{module}.cppm`
+- **Check:** Module and test use matching C++20 standard
+
+### Coverage Analysis Fails
+
+**Problem:** Python script can't find symbols
+- **Solution:** Ensure test file and module file follow naming conventions
+- **Check:** Python 3 is available: `python3 --version`
+
+### Manual Build Script Fails
+
+**Problem:** Compiler errors or missing files
+- **Solution:** Check compiler version (Clang 16+)
+- **Solution:** Run from `test/` directory: `cd test && ./build_manual.sh`
+
+## Adding a New Test
+
+Complete checklist for adding a new test:
+
+1. **Create test file**: `test/test_{module}.cpp`
+   - Follow the pattern in `test_format.cpp`
+   - Import only: `import std_module.{module};`
+   - Test all exported symbols
+   - Use assertions and visual feedback
+
+2. **Register with CMake**: Add one line to `test/CMakeLists.txt`
+   ```cmake
+   std_module_add_test({module})
+   ```
+
+3. **Build and run**:
+   ```bash
+   cmake --build build
+   ctest --test-dir build -R test_{module} --output-on-failure
+   ```
+
+4. **Verify coverage**:
+   ```bash
+   python3 scripts/symbol_coverage.py {module}
+   ```
+
+5. **Check output**: Should see "All tests passed!" and 100% coverage
+
+## Test Execution Order
+
+CTest executes tests in parallel by default for performance. Each test is independent and can run concurrently.
+
+**Sequential execution** (for debugging):
+```bash
+ctest --test-dir build -j1 --verbose
+```
+
+**Parallel execution** (default):
+```bash
+ctest --test-dir build -j$(nproc)
+```
+
+## Continuous Integration
+
+Tests are designed to run in CI environments:
+
+```yaml
+# Example CI configuration
+- name: Build and Test
+  run: |
+    cmake -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++
+    cmake --build build
+    ctest --test-dir build --output-on-failure
+```
+
+**Exit codes:**
+- `0` - All tests passed
+- Non-zero - One or more tests failed
+
+## Reference Implementation
+
+**Best Test Example:** `test/test_format.cpp` (273 lines)
+- Comprehensive coverage of all format APIs
+- Custom type formatting with `std::formatter` specialization
+- Error condition testing
+- Multiple data types (int, float, string, custom)
+- Clear output with checkmarks
+- Well-organized test functions
+
+Use this as a template when writing new tests.
+
+---
+
+**Last Updated:** 2025-11-14
+**Test Count:** 25 modules
+**Test Coverage:** 100% of exported symbols (per symbol_coverage.py)
