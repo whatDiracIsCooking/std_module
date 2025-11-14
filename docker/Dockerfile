@@ -35,11 +35,11 @@ RUN cmake -B build -G Ninja \
 # Build all modules and tests
 RUN cmake --build build --parallel
 
-# Run tests by default when container starts
-CMD ["ctest", "--test-dir", "build", "--output-on-failure", "--parallel"]
+# Run tests during build (ensures build fails if tests fail)
+RUN ctest --test-dir build --output-on-failure
 
-# Alternative: Run tests during build (uncomment if desired)
-# RUN ctest --test-dir build --output-on-failure
+# Run tests by default when container starts (optional - can be overridden)
+CMD ["ctest", "--test-dir", "build", "--output-on-failure", "--parallel"]
 
 # Usage:
 # Build the image:
