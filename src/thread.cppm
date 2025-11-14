@@ -6,7 +6,6 @@
 module;
 
 #include <thread>
-#include <stop_token>
 
 export module std_module.thread;
 
@@ -17,13 +16,6 @@ using std::thread;
 
 // jthread (C++20)
 using std::jthread;
-
-// Stop token support (C++20)
-using std::stop_token;
-using std::stop_source;
-using std::stop_callback;
-using std::nostopstate;
-using std::nostopstate_t;
 
 // this_thread namespace
 namespace this_thread

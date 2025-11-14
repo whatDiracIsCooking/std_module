@@ -142,6 +142,7 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | `<span>` | ✅ |
 | `<stack>` | ✅ |
 | `<stdexcept>` | ✅ |
+| `<stop_token>` | ✅ |
 | `<streambuf>` | ✅ |
 | `<string>` | ✅ |
 | `<string_view>` | ✅ |
