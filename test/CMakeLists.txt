@@ -20,6 +20,7 @@ std_module_add_test(vector)
 std_module_add_test(exception)
 std_module_add_test(deque)
 std_module_add_test(fstream)
+std_module_add_test(functional)
 
 # Add more tests here as modules are implemented:
 # std_module_add_test(string)

@@ -24,6 +24,7 @@ std_module_add_module(vector)
 std_module_add_module(exception)
 std_module_add_module(deque)
 std_module_add_module(fstream)
+std_module_add_module(functional)
 
 # Add more modules here as they are implemented:
 # std_module_add_module(string)
@@ -50,6 +51,7 @@ std_module_add_to_aggregate(vector)
 std_module_add_to_aggregate(exception)
 std_module_add_to_aggregate(deque)
 std_module_add_to_aggregate(fstream)
+std_module_add_to_aggregate(functional)
 
 # Add more module dependencies here as they are implemented:
 # std_module_add_to_aggregate(string)

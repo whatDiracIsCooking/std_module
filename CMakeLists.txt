@@ -23,6 +23,7 @@ option(STD_MODULE_BUILD_EXCEPTION "Build std_module.exception" ON)
 option(STD_MODULE_BUILD_COMPLEX "Build std_module.complex" ON)
 option(STD_MODULE_BUILD_DEQUE "Build std_module.deque" ON)
 option(STD_MODULE_BUILD_FSTREAM "Build std_module.fstream" ON)
+option(STD_MODULE_BUILD_FUNCTIONAL "Build std_module.functional" ON)
 # More options will be added as we wrap more headers:
 # option(STD_MODULE_BUILD_STRING "Build std_module.string" ON)
 # etc.
@@ -149,4 +150,5 @@ message(STATUS "  exception:              ${STD_MODULE_BUILD_EXCEPTION}")
 message(STATUS "  complex:                ${STD_MODULE_BUILD_COMPLEX}")
 message(STATUS "  deque:                  ${STD_MODULE_BUILD_DEQUE}")
 message(STATUS "  fstream:                ${STD_MODULE_BUILD_FSTREAM}")
+message(STATUS "  functional:             ${STD_MODULE_BUILD_FUNCTIONAL}")
 message(STATUS "")

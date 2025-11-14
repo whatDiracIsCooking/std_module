@@ -87,6 +87,7 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_COMPLEX` | ON | Build std_module.complex |
 | `STD_MODULE_BUILD_DEQUE` | ON | Build std_module.deque |
 | `STD_MODULE_BUILD_FSTREAM` | ON | Build std_module.fstream |
+| `STD_MODULE_BUILD_FUNCTIONAL` | ON | Build std_module.functional |
 
 Example:
 
@@ -110,6 +111,7 @@ Currently wrapped standard library headers:
 - ✅ `<complex>` → `import std_module.complex;`
 - ✅ `<deque>` → `import std_module.deque;`
 - ✅ `<fstream>` → `import std_module.fstream;`
+- ✅ `<functional>` → `import std_module.functional;`
 
 *More modules coming soon!*
 
@@ -140,6 +142,7 @@ The build system provides these CMake targets:
 - `std_module::complex` - Just the complex module
 - `std_module::deque` - Just the deque module
 - `std_module::fstream` - Just the fstream module
+- `std_module::functional` - Just the functional module
 - `std_module::all` - All available modules (convenience target)
 
 Link only what you need:
