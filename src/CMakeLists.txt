@@ -32,6 +32,7 @@ std_module_add_module(iostream)
 std_module_add_module(istream)
 std_module_add_module(iterator)
 std_module_add_module(limits)
+std_module_add_module(locale)
 
 # Add more modules here as they are implemented:
 # std_module_add_module(string)
@@ -66,6 +67,7 @@ std_module_add_to_aggregate(iostream)
 std_module_add_to_aggregate(istream)
 std_module_add_to_aggregate(iterator)
 std_module_add_to_aggregate(limits)
+std_module_add_to_aggregate(locale)
 
 # Add more module dependencies here as they are implemented:
 # std_module_add_to_aggregate(string)

@@ -28,6 +28,7 @@ std_module_add_test(iostream)
 std_module_add_test(istream)
 std_module_add_test(iterator)
 std_module_add_test(limits)
+std_module_add_test(locale)
 
 # Add more tests here as modules are implemented:
 # std_module_add_test(string)
