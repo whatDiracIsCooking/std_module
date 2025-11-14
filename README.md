@@ -93,6 +93,7 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | `<limits>` | ✅ | `STD_MODULE_BUILD_LIMITS=ON` | `std_module::limits` | `import std_module.limits;` |
 | `<list>` | ✅ | `STD_MODULE_BUILD_LIST=ON` | `std_module::list` | `import std_module.list;` |
 | `<locale>` | ✅ | `STD_MODULE_BUILD_LOCALE=ON` | `std_module::locale` | `import std_module.locale;` |
+| `<queue>` | ✅ | `STD_MODULE_BUILD_QUEUE=ON` | `std_module::queue` | `import std_module.queue;` |
 | `<string_view>` | ✅ | `STD_MODULE_BUILD_STRING_VIEW=ON` | `std_module::string_view` | `import std_module.string_view;` |
 | `<vector>` | ✅ | `STD_MODULE_BUILD_VECTOR=ON` | `std_module::vector` | `import std_module.vector;` |
 | *(Convenience)* | | | `std_module::all` | All modules combined |
@@ -137,6 +138,7 @@ std_module/
 │   ├── algorithm.cppm
 │   ├── bitset.cppm
 │   ⋮
+│   ├── queue.cppm
 │   ├── vector.cppm
 │   └── std.cppm
 ├── test/
@@ -144,6 +146,7 @@ std_module/
 │   ├── test_algorithm.cpp
 │   ├── test_bitset.cpp
 │   ⋮
+│   ├── test_queue.cpp
 │   ├── test_vector.cpp
 │   └── build_manual.sh
 └── cmake/

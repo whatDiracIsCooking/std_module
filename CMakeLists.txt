@@ -33,6 +33,7 @@ option(STD_MODULE_BUILD_ITERATOR "Build std_module.iterator" ON)
 option(STD_MODULE_BUILD_LIMITS "Build std_module.limits" ON)
 option(STD_MODULE_BUILD_LIST "Build std_module.list" ON)
 option(STD_MODULE_BUILD_LOCALE "Build std_module.locale" ON)
+option(STD_MODULE_BUILD_QUEUE "Build std_module.queue" ON)
 # More options will be added as we wrap more headers:
 # option(STD_MODULE_BUILD_STRING "Build std_module.string" ON)
 # etc.
@@ -169,4 +170,5 @@ message(STATUS "  iterator:               ${STD_MODULE_BUILD_ITERATOR}")
 message(STATUS "  limits:                 ${STD_MODULE_BUILD_LIMITS}")
 message(STATUS "  list:                   ${STD_MODULE_BUILD_LIST}")
 message(STATUS "  locale:                 ${STD_MODULE_BUILD_LOCALE}")
+message(STATUS "  queue:                  ${STD_MODULE_BUILD_QUEUE}")
 message(STATUS "")
