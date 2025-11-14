@@ -79,6 +79,7 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_ALL_MODULES` | ON | Build all available modules |
 | `STD_MODULE_INSTALL` | ON | Generate installation targets |
 | `STD_MODULE_BUILD_FORMAT` | ON | Build std_module.format |
+| `STD_MODULE_BUILD_BITSET` | ON | Build std_module.bitset |
 
 Example:
 
@@ -94,6 +95,7 @@ cmake -B build \
 Currently wrapped standard library headers:
 
 - ✅ `<format>` → `import std_module.format;`
+- ✅ `<bitset>` → `import std_module.bitset;`
 
 *More modules coming soon!*
 
@@ -116,6 +118,7 @@ int main() {
 The build system provides these CMake targets:
 
 - `std_module::format` - Just the format module
+- `std_module::bitset` - Just the bitset module
 - `std_module::all` - All available modules (convenience target)
 
 Link only what you need:
@@ -136,10 +139,12 @@ std_module/
 ├── src/                    # Module implementations
 │   ├── CMakeLists.txt
 │   ├── format.cppm         # <format> wrapper
+│   ├── bitset.cppm         # <bitset> wrapper
 │   └── std.cppm           # Aggregate module (WIP)
 ├── test/                   # Tests and examples
 │   ├── CMakeLists.txt
 │   ├── test_format.cpp
+│   ├── test_bitset.cpp
 │   └── build_manual.sh    # Manual build demo
 └── cmake/                  # CMake configuration files
 ```
