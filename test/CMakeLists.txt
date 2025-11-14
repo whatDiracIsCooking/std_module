@@ -39,6 +39,7 @@ std_module_add_test(queue)
 std_module_add_test(set)
 std_module_add_test(stack)
 std_module_add_test(stdexcept)
+std_module_add_test(stop_token)
 std_module_add_test(streambuf)
 std_module_add_test(string)
 
