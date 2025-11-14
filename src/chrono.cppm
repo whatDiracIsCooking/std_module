@@ -144,19 +144,6 @@ using std::chrono::choose;
 using std::chrono::treat_as_floating_point;
 using std::chrono::treat_as_floating_point_v;
 
-// Literals - users can use "using namespace std::chrono_literals;"
-inline namespace chrono_literals
-{
-using std::chrono_literals::operator""h;
-using std::chrono_literals::operator""min;
-using std::chrono_literals::operator""s;
-using std::chrono_literals::operator""ms;
-using std::chrono_literals::operator""us;
-using std::chrono_literals::operator""ns;
-using std::chrono_literals::operator""d;
-using std::chrono_literals::operator""y;
-}  // namespace chrono_literals
-
 // CRITICAL: Export operators to fix C++20 module ADL limitation
 // Without these exports, operators are not found even though types are exported
 // Reference: https://github.com/cplusplus/papers/issues/1005
@@ -177,15 +164,27 @@ using std::chrono::operator>;
 using std::chrono::operator>=;
 using std::chrono::operator<=>;
 
+// Duration literals - export in inline namespace for "using namespace std::chrono_literals;"
+inline namespace chrono_literals
+{
+using std::chrono_literals::operator""h;
+using std::chrono_literals::operator""min;
+using std::chrono_literals::operator""s;
+using std::chrono_literals::operator""ms;
+using std::chrono_literals::operator""us;
+using std::chrono_literals::operator""ns;
+using std::chrono_literals::operator""d;
+using std::chrono_literals::operator""y;
+}  // namespace chrono_literals
+
 }  // namespace std::chrono
 
-// Stream operators for chrono types (if available)
+// Stream operators and chrono_literals accessibility from std namespace
 export namespace std {
 using std::operator<<;
 using std::operator>>;
 
-// Export chrono_literals in std namespace (inline namespace accessibility)
-// This makes "using namespace std::chrono_literals;" work in user code
+// Re-export chrono_literals for "using namespace std::chrono_literals;" accessibility
 inline namespace chrono_literals {
 using std::chrono_literals::operator""h;
 using std::chrono_literals::operator""min;
