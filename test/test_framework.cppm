@@ -80,6 +80,18 @@ export namespace test {
     }
 
     /**
+     * Assert that a condition is false, abort with message if true
+     * @param condition The boolean condition to test (should be false)
+     * @param message Error message to display on failure
+     */
+    inline void assert_false(bool condition, const char* message = "Assertion failed (expected false)") {
+        if (condition) {
+            cerr << "❌ ASSERTION FAILED: " << message << endl;
+            std::abort();
+        }
+    }
+
+    /**
      * Assert that two values are equal using operator==
      * @param actual The actual value from the test
      * @param expected The expected value

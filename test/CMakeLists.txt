@@ -24,7 +24,19 @@ endif()
 
 std_module_add_test(any)
 std_module_add_test(array)
-# std_module_add_test(atomic)  # TODO: Fix linking with libatomic
+
+# test_array needs stdexcept for exception types
+if(TARGET test_array)
+    target_link_libraries(test_array PRIVATE std_module::stdexcept)
+endif()
+
+std_module_add_test(atomic)
+
+# test_atomic needs libatomic for lock-free operations
+if(TARGET test_atomic)
+    target_link_libraries(test_atomic PRIVATE atomic)
+endif()
+
 std_module_add_test(barrier)
 std_module_add_test(bit)
 std_module_add_test(bitset)
@@ -130,6 +142,10 @@ if(STD_MODULE_BUILD_TESTS)
     message(STATUS "Configured test: test_test_framework")
 
     # Link tests that use test_framework
+    std_module_link_test_framework(algorithm)
+    std_module_link_test_framework(any)
+    std_module_link_test_framework(array)
+    std_module_link_test_framework(atomic)
     std_module_link_test_framework(bit)
 endif()
 
