@@ -56,6 +56,7 @@ std_module_add_module(semaphore)
 std_module_add_module(source_location)
 std_module_add_module(span)
 std_module_add_module(string_view)
+std_module_add_module(string)
 std_module_add_module(syncstream)
 std_module_add_module(system_error)
 std_module_add_module(thread)
@@ -69,7 +70,6 @@ std_module_add_module(variant)
 std_module_add_module(vector)
 
 # Add more modules here as they are implemented:
-# std_module_add_module(string)
 # std_module_add_module(ranges)
 # etc.
 # std_module_add_module(ranges)
@@ -126,6 +126,7 @@ std_module_add_to_aggregate(semaphore)
 std_module_add_to_aggregate(source_location)
 std_module_add_to_aggregate(span)
 std_module_add_to_aggregate(string_view)
+std_module_add_to_aggregate(string)
 std_module_add_to_aggregate(syncstream)
 std_module_add_to_aggregate(system_error)
 std_module_add_to_aggregate(thread)
@@ -139,7 +140,6 @@ std_module_add_to_aggregate(variant)
 std_module_add_to_aggregate(vector)
 
 # Add more module dependencies here as they are implemented:
-# std_module_add_to_aggregate(string)
 # std_module_add_to_aggregate(ranges)
 # etc.
 # std_module_add_to_aggregate(string)
