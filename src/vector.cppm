@@ -18,6 +18,15 @@ using std::vector;
 using std::erase;
 using std::erase_if;
 
+// Export operator overloads (fixes C++20 module ADL limitation)
+// CRITICAL: Without these, operators won't be found across module boundaries
+using std::operator==;
+using std::operator!=;
+using std::operator<;
+using std::operator<=;
+using std::operator>;
+using std::operator>=;
+
 // PMR types
 namespace pmr
 {

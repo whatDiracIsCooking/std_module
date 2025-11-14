@@ -12,6 +12,16 @@
 
 # Add tests for all available modules (alphabetical order)
 std_module_add_test(algorithm)
+
+# test_algorithm needs additional dependencies (vector, iostream, iterator, exception)
+if(TARGET test_algorithm)
+    target_link_libraries(test_algorithm PRIVATE
+        std_module::vector
+        std_module::iostream
+        std_module::iterator
+        std_module::exception)
+endif()
+
 std_module_add_test(any)
 std_module_add_test(array)
 # std_module_add_test(atomic)  # TODO: Fix linking with libatomic
