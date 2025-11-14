@@ -1,18 +1,10 @@
 # std_module
 
-A production-ready C++20 module wrapper for the C++ standard library. Instead of `#include <format>`, use `import std_module.format;`.
+A C++20 module wrapper for the C++ standard library. Use `import std_module.format;` instead of `#include <format>`.
 
-## Overview
+## Status
 
-This project provides C++20 module interfaces for 45+ standard library headers, allowing you to use modern `import` statements instead of traditional `#include` directives. The build system is designed to be flexible and non-opinionated, supporting multiple integration methods.
-
-## Features
-
-- **Modular**: Import only what you need (`import std_module.format;`)
-- **Flexible Build System**: Use as subdirectory, installed library, or manual compilation
-- **Compiler Support**: Clang 16+, GCC 11+, MSVC 19.30+
-- **Opt-in Architecture**: Build only the modules you need
-- **Standard Compliant**: Wraps the standard library without modifications
+✅ **Production Ready** - 49 standard library modules implemented with comprehensive test coverage.
 
 ## Requirements
 
@@ -25,10 +17,8 @@ This project provides C++20 module interfaces for 45+ standard library headers, 
 
 ## Quick Start
 
-### Building with CMake
-
 ```bash
-# Configure (Ninja generator is required for C++20 modules)
+# Configure (Ninja generator is required)
 cmake -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++
 
 # Build
@@ -41,28 +31,43 @@ ctest --test-dir build --output-on-failure
 cmake --install build --prefix /usr/local
 ```
 
+## Usage Example
+
+```cpp
+import std_module.format;
+import std_module.vector;
+
+#include <iostream>  // Still needed for non-modularized components
+
+int main() {
+    std::vector<int> numbers = {1, 2, 3};
+    auto msg = std::format("Numbers: {}", numbers.size());
+    std::cout << msg << std::endl;
+    return 0;
+}
+```
+
 ## Integration Methods
 
 ### Method 1: CMake Subdirectory
-
-Add to your project:
 
 ```cmake
 add_subdirectory(external/std_module)
 
 add_executable(myapp main.cpp)
-target_link_libraries(myapp PRIVATE std_module::format)
+target_link_libraries(myapp PRIVATE
+    std_module::format
+    std_module::vector
+)
 ```
 
 ### Method 2: Installed Library
 
-After installation:
-
 ```cmake
-find_package(std_module REQUIRED COMPONENTS format)
+find_package(std_module REQUIRED COMPONENTS format vector)
 
 add_executable(myapp main.cpp)
-target_link_libraries(myapp PRIVATE std_module::format)
+target_link_libraries(myapp PRIVATE std_module::format std_module::vector)
 ```
 
 ### Method 3: Manual Compilation
@@ -71,288 +76,176 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 
 ## CMake Options
 
-Configure the build with these options:
+**Global Options:**
+- `STD_MODULE_BUILD_TESTS` - Build test executables (default: ON)
+- `STD_MODULE_BUILD_ALL_MODULES` - Build all available modules (default: ON)
+- `STD_MODULE_BUILD_INSTALL` - Generate installation targets (default: ON)
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `STD_MODULE_BUILD_TESTS` | ON | Build test executables |
-| `STD_MODULE_BUILD_ALL_MODULES` | ON | Build all available modules |
-| `STD_MODULE_INSTALL` | ON | Generate installation targets |
-| `STD_MODULE_BUILD_FORMAT` | ON | Build std_module.format |
-| `STD_MODULE_BUILD_VECTOR` | ON | Build std_module.vector |
-| `STD_MODULE_BUILD_ALGORITHM` | ON | Build std_module.algorithm |
-| `STD_MODULE_BUILD_BITSET` | ON | Build std_module.bitset |
-| `STD_MODULE_BUILD_STRING_VIEW` | ON | Build std_module.string_view |
-| `STD_MODULE_BUILD_EXCEPTION` | ON | Build std_module.exception |
-| `STD_MODULE_BUILD_COMPLEX` | ON | Build std_module.complex |
-| `STD_MODULE_BUILD_CONDITION_VARIABLE` | ON | Build std_module.condition_variable |
-| `STD_MODULE_BUILD_DEQUE` | ON | Build std_module.deque |
-| `STD_MODULE_BUILD_FORWARD_LIST` | ON | Build std_module.forward_list |
-| `STD_MODULE_BUILD_FSTREAM` | ON | Build std_module.fstream |
-| `STD_MODULE_BUILD_FUNCTIONAL` | ON | Build std_module.functional |
-| `STD_MODULE_BUILD_FUTURE` | ON | Build std_module.future |
-| `STD_MODULE_BUILD_IOMANIP` | ON | Build std_module.iomanip |
-| `STD_MODULE_BUILD_IOS` | ON | Build std_module.ios |
-| `STD_MODULE_BUILD_IOSFWD` | ON | Build std_module.iosfwd |
-| `STD_MODULE_BUILD_IOSTREAM` | ON | Build std_module.iostream |
-| `STD_MODULE_BUILD_ISTREAM` | ON | Build std_module.istream |
-| `STD_MODULE_BUILD_INITIALIZER_LIST` | ON | Build std_module.initializer_list |
-| `STD_MODULE_BUILD_ITERATOR` | ON | Build std_module.iterator |
-| `STD_MODULE_BUILD_LIMITS` | ON | Build std_module.limits |
-| `STD_MODULE_BUILD_LIST` | ON | Build std_module.list |
-| `STD_MODULE_BUILD_LOCALE` | ON | Build std_module.locale |
+**Per-Module Options:**
 
-Example:
+Each module has a build option following the pattern `STD_MODULE_BUILD_<NAME>` (all default to ON). For example:
+- `STD_MODULE_BUILD_FORMAT` - Build the format module
+- `STD_MODULE_BUILD_VECTOR` - Build the vector module
+- `STD_MODULE_BUILD_RANGES` - Build the ranges module
+
+See [Available Modules](#available-modules) below for the complete list.
+
+**Examples:**
 
 ```bash
-cmake -B build \
-  -DSTD_MODULE_BUILD_TESTS=OFF \
-  -DSTD_MODULE_BUILD_ALL_MODULES=OFF \
-  -DSTD_MODULE_BUILD_FORMAT=ON
-```
-
-## Available Modules
-
-Currently wrapped standard library headers:
-
-| Header | Status |
-|--------|--------|
-| `<algorithm>` | ✅ |
-| `<any>` | ✅ |
-| `<barrier>` | ✅ |
-| `<bit>` | ✅ |
-| `<bitset>` | ✅ |
-| `<charconv>` | ✅ |
-| `<compare>` | ✅ |
-| `<complex>` | ✅ |
-| `<concepts>` | ✅ |
-| `<condition_variable>` | ✅ |
-| `<coroutine>` | ✅ |
-| `<deque>` | ✅ |
-| `<exception>` | ✅ |
-| `<execution>` | ✅ |
-| `<filesystem>` | ✅ |
-| `<format>` | ✅ |
-| `<forward_list>` | ✅ |
-| `<fstream>` | ✅ |
-| `<functional>` | ✅ |
-| `<future>` | ⚠️ |
-| `<initializer_list>` | ✅ |
-| `<iomanip>` | ⚠️ |
-| `<ios>` | ✅ |
-| `<iosfwd>` | ✅ |
-| `<iostream>` | ✅ |
-| `<istream>` | ✅ |
-| `<iterator>` | ✅ |
-| `<latch>` | ✅ |
-| `<limits>` | ✅ |
-| `<list>` | ✅ |
-| `<locale>` | ✅ |
-| `<map>` | ✅ |
-| `<memory_resource>` | ✅ |
-| `<new>` | ✅ |
-| `<numbers>` | ✅ |
-| `<numeric>` | ✅ |
-| `<optional>` | ✅ |
-| `<queue>` | ✅ |
-| `<random>` | ✅ |
-| `<ranges>` | ✅ |
-| `<semaphore>` | ✅ |
-| `<source_location>` | ✅ |
-| `<span>` | ✅ |
-| `<string_view>` | ✅ |
-| `<syncstream>` | ✅ |
-| `<system_error>` | ✅ |
-| `<typeindex>` | ✅ |
-| `<variant>` | ✅ |
-| `<vector>` | ✅ |
-
-**Special Cases:**
-- `<new>` uses `import std_module.new_;` (underscore suffix) to avoid C++ keyword conflicts
-- `<future>` marked ⚠️ - `packaged_task` unusable due to C++20 module limitations
-- `<iomanip>` marked ⚠️ - see [Known Limitations](#known-limitations) for details
-
-### Build Examples
-
-Using the [naming conventions](#module-naming-conventions) above, here are common build patterns:
-
-```bash
-# Build only specific modules (using STD_MODULE_BUILD_<NAME> options)
+# Build only specific modules
 cmake -B build -G Ninja \
   -DSTD_MODULE_BUILD_ALL_MODULES=OFF \
   -DSTD_MODULE_BUILD_FORMAT=ON \
   -DSTD_MODULE_BUILD_VECTOR=ON
 
-# Link specific modules (using std_module::<name> targets)
-target_link_libraries(myapp PRIVATE std_module::format std_module::vector)
+# Build everything except iomanip
+cmake -B build -G Ninja -DSTD_MODULE_BUILD_IOMANIP=OFF
 
-# Or link everything
-target_link_libraries(myapp PRIVATE std_module::all)
-```
-
-## Usage Example
-
-```cpp
-import std_module.format;
-
-#include <iostream>
-
-int main() {
-    auto msg = std::format("Hello, {}!", "World");
-    std::cout << msg << std::endl;
-    return 0;
-}
+# Build without tests
+cmake -B build -G Ninja -DSTD_MODULE_BUILD_TESTS=OFF
 ```
 
 ## Library Targets
 
-The build system provides these CMake targets:
-
-- `std_module::format` - Just the format module
-- `std_module::vector` - Just the vector module
-- `std_module::algorithm` - Just the algorithm module
-- `std_module::bitset` - Just the bitset module
-- `std_module::string_view` - Just the string_view module
-- `std_module::exception` - Just the exception module
-- `std_module::complex` - Just the complex module
-- `std_module::condition_variable` - Just the condition_variable module
-- `std_module::deque` - Just the deque module
-- `std_module::forward_list` - Just the forward_list module
-- `std_module::fstream` - Just the fstream module
-- `std_module::functional` - Just the functional module
-- `std_module::future` - Just the future module
-- `std_module::iomanip` - Just the iomanip module
-- `std_module::ios` - Just the ios module
-- `std_module::iosfwd` - Just the iosfwd module
-- `std_module::iostream` - Just the iostream module
-- `std_module::istream` - Just the istream module
-- `std_module::initializer_list` - Just the initializer_list module
-- `std_module::iterator` - Just the iterator module
-- `std_module::limits` - Just the limits module
-- `std_module::list` - Just the list module
-- `std_module::locale` - Just the locale module
+All modules follow the naming pattern `std_module::<name>`. For example:
+- `std_module::format` - The format module
+- `std_module::vector` - The vector module
+- `std_module::ranges` - The ranges module
 - `std_module::all` - All available modules (convenience target)
 
 Link only what you need:
 
 ```cmake
 # Link specific modules
-target_link_libraries(myapp PRIVATE std_module::format)
-target_link_libraries(myapp PRIVATE std_module::vector)
-target_link_libraries(myapp PRIVATE std_module::algorithm)
-target_link_libraries(myapp PRIVATE std_module::string_view)
+target_link_libraries(myapp PRIVATE std_module::format std_module::vector)
 
 # Or link everything
 target_link_libraries(myapp PRIVATE std_module::all)
 ```
+
+## Module Naming Conventions
+
+- **Import statement:** `import std_module.<name>;`
+- **CMake target:** `std_module::<name>`
+- **CMake option:** `STD_MODULE_BUILD_<NAME>`
+- **Source file:** `src/<name>.cppm`
+- **Test file:** `test/test_<name>.cpp`
+
+**Special case:** `<new>` uses `std_module.new_` (with underscore) to avoid C++ keyword conflicts.
+
+## Available Modules
+
+Currently wrapped standard library headers (49 modules):
+
+| Header | Module | Status | Notes |
+|--------|--------|--------|-------|
+| `<algorithm>` | `std_module.algorithm` | ✅ | |
+| `<any>` | `std_module.any` | ✅ | |
+| `<barrier>` | `std_module.barrier` | ✅ | |
+| `<bit>` | `std_module.bit` | ✅ | |
+| `<bitset>` | `std_module.bitset` | ✅ | |
+| `<charconv>` | `std_module.charconv` | ✅ | |
+| `<compare>` | `std_module.compare` | ✅ | |
+| `<complex>` | `std_module.complex` | ✅ | |
+| `<concepts>` | `std_module.concepts` | ✅ | |
+| `<condition_variable>` | `std_module.condition_variable` | ✅ | |
+| `<coroutine>` | `std_module.coroutine` | ✅ | |
+| `<deque>` | `std_module.deque` | ✅ | |
+| `<exception>` | `std_module.exception` | ✅ | |
+| `<execution>` | `std_module.execution` | ✅ | |
+| `<filesystem>` | `std_module.filesystem` | ✅ | |
+| `<format>` | `std_module.format` | ✅ | |
+| `<forward_list>` | `std_module.forward_list` | ✅ | |
+| `<fstream>` | `std_module.fstream` | ✅ | |
+| `<functional>` | `std_module.functional` | ✅ | |
+| `<future>` | `std_module.future` | ⚠️ | `packaged_task` unusable due to C++20 module limitations |
+| `<initializer_list>` | `std_module.initializer_list` | ✅ | |
+| `<iomanip>` | `std_module.iomanip` | ⚠️ | Manipulators unusable - see [Known Limitations](#known-limitations) |
+| `<ios>` | `std_module.ios` | ✅ | |
+| `<iosfwd>` | `std_module.iosfwd` | ✅ | |
+| `<iostream>` | `std_module.iostream` | ✅ | |
+| `<istream>` | `std_module.istream` | ✅ | |
+| `<iterator>` | `std_module.iterator` | ✅ | |
+| `<latch>` | `std_module.latch` | ✅ | |
+| `<limits>` | `std_module.limits` | ✅ | |
+| `<list>` | `std_module.list` | ✅ | |
+| `<locale>` | `std_module.locale` | ✅ | |
+| `<map>` | `std_module.map` | ✅ | |
+| `<memory_resource>` | `std_module.memory_resource` | ✅ | |
+| `<new>` | `std_module.new_` | ✅ | Note: underscore suffix to avoid keyword conflict |
+| `<numbers>` | `std_module.numbers` | ✅ | |
+| `<numeric>` | `std_module.numeric` | ✅ | |
+| `<optional>` | `std_module.optional` | ✅ | |
+| `<queue>` | `std_module.queue` | ✅ | |
+| `<random>` | `std_module.random` | ✅ | |
+| `<ranges>` | `std_module.ranges` | ✅ | |
+| `<semaphore>` | `std_module.semaphore` | ✅ | |
+| `<source_location>` | `std_module.source_location` | ✅ | |
+| `<span>` | `std_module.span` | ✅ | |
+| `<string_view>` | `std_module.string_view` | ✅ | |
+| `<syncstream>` | `std_module.syncstream` | ✅ | |
+| `<system_error>` | `std_module.system_error` | ✅ | |
+| `<typeindex>` | `std_module.typeindex` | ✅ | |
+| `<variant>` | `std_module.variant` | ✅ | |
+| `<vector>` | `std_module.vector` | ✅ | |
 
 ## Project Structure
 
 ```
 std_module/
 ├── CMakeLists.txt          # Root build configuration
-├── src/                    # Module implementations
+├── README.md               # This file
+├── CLAUDE.md              # AI assistant development guide
+├── src/                    # Module implementations (.cppm files)
 │   ├── CMakeLists.txt
-│   ├── format.cppm         # <format> wrapper
-│   ├── vector.cppm         # <vector> wrapper
-│   ├── algorithm.cppm      # <algorithm> wrapper
-│   ├── bitset.cppm         # <bitset> wrapper
-│   ├── string_view.cppm    # <string_view> wrapper
-│   ├── exception.cppm      # <exception> wrapper
-│   ├── complex.cppm        # <complex> wrapper
-│   ├── condition_variable.cppm  # <condition_variable> wrapper
-│   ├── deque.cppm          # <deque> wrapper
-│   ├── forward_list.cppm   # <forward_list> wrapper
-│   ├── fstream.cppm        # <fstream> wrapper
-│   ├── functional.cppm     # <functional> wrapper
-│   ├── future.cppm         # <future> wrapper
-│   ├── iomanip.cppm        # <iomanip> wrapper
-│   ├── ios.cppm            # <ios> wrapper
-│   ├── iosfwd.cppm         # <iosfwd> wrapper
-│   ├── iostream.cppm       # <iostream> wrapper
-│   ├── istream.cppm        # <istream> wrapper
-│   ├── initializer_list.cppm  # <initializer_list> wrapper
-│   ├── iterator.cppm       # <iterator> wrapper
-│   ├── limits.cppm         # <limits> wrapper
-│   ├── list.cppm           # <list> wrapper
-│   ├── locale.cppm         # <locale> wrapper
+│   ├── format.cppm
+│   ├── vector.cppm
+│   ⋮
 │   └── std.cppm           # Aggregate module (WIP)
-├── test/                   # Tests and examples
+├── test/                   # Test suite
 │   ├── CMakeLists.txt
+│   ├── README.md          # Manual build documentation
 │   ├── test_format.cpp
 │   ├── test_vector.cpp
-│   ├── test_algorithm.cpp
-│   ├── test_bitset.cpp
-│   ├── test_string_view.cpp
-│   ├── test_exception.cpp
-│   ├── test_complex.cpp
-│   ├── test_condition_variable.cpp
-│   ├── test_deque.cpp
-│   ├── test_forward_list.cpp
-│   ├── test_fstream.cpp
-│   ├── test_functional.cpp
-│   ├── test_future.cpp
-│   ├── test_iomanip.cpp
-│   ├── test_ios.cpp
-│   ├── test_iosfwd.cpp
-│   ├── test_iostream.cpp
-│   ├── test_istream.cpp
-│   ├── test_initializer_list.cpp
-│   ├── test_iterator.cpp
-│   ├── test_limits.cpp
-│   ├── test_list.cpp
-│   ├── test_locale.cpp
-│   └── build_manual.sh    # Manual build demo
-└── cmake/                  # CMake configuration files
+│   ⋮
+│   └── build_manual.sh    # Manual build demo script
+├── cmake/                  # CMake infrastructure
+│   ├── StdModuleMacros.cmake
+│   └── std_module-config.cmake.in
+└── scripts/                # Automation tools
+    ├── README.md
+    └── symbol_coverage.py  # Symbol coverage analyzer
 ```
 
 ## Known Limitations
 
 ### C++20 Module ADL Issues
 
-Some standard library modules are affected by **Argument-Dependent Lookup (ADL) limitations** in current C++20 module implementations. This is a language/compiler issue, not a bug in this library.
+Some modules are affected by **Argument-Dependent Lookup (ADL) limitations** in current C++20 module implementations. This is a language/compiler issue, not a bug in this library.
 
 **Affected Modules:**
 
-- **`<iomanip>`** - ⚠️ **Non-functional**
-  - **Problem:** I/O manipulators like `std::setw()`, `std::setfill()`, etc. return hidden implementation types
-  - **Impact:** The `operator<<` overloads for these types are not found through module boundaries
-  - **Status:** All manipulators are unusable when using `import std_module.iomanip;` alone
-  - **Workaround:** Must `#include <iomanip>` in addition to `import` (defeats the purpose)
+- **`<iomanip>`** ⚠️ - I/O manipulators like `std::setw()` return hidden implementation types whose `operator<<` overloads are not found through module boundaries. Manipulators are unusable with modules alone.
 
-- **`<complex>`** - ⚠️ **Partially functional**
-  - **Problem:** Arithmetic operators (`operator+`, `operator-`, etc.) not found via ADL
-  - **Impact:** Cannot perform arithmetic on `std::complex` values using modules alone
-  - **Status:** Construction, member functions work; operators don't
+- **`<future>`** ⚠️ - `std::packaged_task` internal machinery not properly exposed. Other components (`promise`, `future`, `shared_future`, `async`) work correctly.
 
-- **`<future>`** - ⚠️ **Partially functional**
-  - **Problem:** `std::packaged_task` internal template machinery not properly exposed
-  - **Impact:** Cannot construct `std::packaged_task` objects using modules alone
-  - **Status:** `std::promise`, `std::future`, `std::shared_future`, and `std::async` work correctly; `std::packaged_task` doesn't
-
-**Technical Details:**
-
-The core issue is that non-member operator overloads and functions depending on ADL are not properly exported/found when using C++20 modules. Even when using-declarations export these symbols, the compiler's ADL mechanism doesn't find them across module boundaries.
+**Workaround:** Combine `import std_module.header;` with `#include <header>` if needed.
 
 **Reference:** https://github.com/cplusplus/papers/issues/1005
 
-**What This Means:**
-
-- Modules marked ⚠️ have limited functionality when using `import` alone
-- Users can work around by combining `import std_module.header;` with `#include <header>`
-- Module implementations are kept complete for when compiler/standard fixes arrive
-- See `CLAUDE.md` for complete technical documentation
+See `CLAUDE.md` for complete technical documentation.
 
 ## Contributing
 
-When adding a new stdlib header wrapper:
+To add a new standard library header wrapper:
 
-1. Create `src/<header>.cppm` following the pattern in existing modules
-2. Add one line to `src/CMakeLists.txt`: `std_module_add_module(<header>)`
-3. Add one line to `src/CMakeLists.txt` (aggregate section): `std_module_add_to_aggregate(<header>)`
+1. Create `src/<header>.cppm` following existing patterns
+2. Add to `src/CMakeLists.txt`: `std_module_add_module(<header>)`
+3. Add to `src/CMakeLists.txt` (aggregate section): `std_module_add_to_aggregate(<header>)`
 4. Create `test/test_<header>.cpp` with comprehensive tests
-5. Add one line to `test/CMakeLists.txt`: `std_module_add_test(<header>)`
-6. Update this README
+5. Add to `test/CMakeLists.txt`: `std_module_add_test(<header>)`
+6. Update this README's [Available Modules](#available-modules) table
 
 See `CLAUDE.md` for detailed development guidelines.
 
@@ -362,14 +255,9 @@ This project prioritizes **flexibility over opinion**:
 
 - No forced dependencies between modules
 - Multiple integration methods supported
-- Minimal assumptions about your build environment
-- Opt-in module selection
-- Standard library semantics preserved exactly
+- Opt-in module selection (build only what you need)
+- Standard library semantics preserved exactly (no modifications)
 
 ## License
 
 [Add your license here]
-
-## Status
-
-✅ **Production Ready** - 45 standard library modules implemented with comprehensive test coverage. The module interface is stable and ready for use in production code.

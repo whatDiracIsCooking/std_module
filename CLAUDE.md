@@ -9,7 +9,7 @@ This document provides comprehensive guidance for AI assistants working with the
 - **Language:** C++20 with modules
 - **Version:** 0.1.0
 - **Build System:** CMake 3.28+ with Ninja (required)
-- **Status:** Production-ready - 25 standard library modules implemented with comprehensive tests
+- **Status:** Production-ready - 49 standard library modules implemented with comprehensive tests
 
 ### Core Philosophy
 
@@ -24,38 +24,91 @@ The project prioritizes **flexibility over opinion**:
 ```
 /home/user/std_module/
 ├── CMakeLists.txt              # Root build config
-├── README.md                   # User-facing documentation
-├── src/                        # Module implementations (25 .cppm files)
+├── README.md                   # User-facing documentation (lean, pattern-focused)
+├── CLAUDE.md                   # This file - comprehensive AI guide
+├── src/                        # Module implementations (49 .cppm files)
 │   ├── CMakeLists.txt         # Module build targets (uses macros)
 │   ├── format.cppm            # Example: <format> wrapper
 │   ├── vector.cppm            # Example: <vector> wrapper
-│   ├── algorithm.cppm         # Example: <algorithm> wrapper
-│   └── ... 22 more modules
-├── test/                       # Test suite (25 test files)
+│   ⋮
+│   └── std.cppm               # Aggregate module (WIP)
+├── test/                       # Test suite (49 test files)
 │   ├── CMakeLists.txt         # Test build config (uses macros)
-│   ├── README.md              # Test documentation
+│   ├── README.md              # Manual build documentation
 │   ├── build_manual.sh        # Manual build demo script
 │   ├── test_format.cpp        # Example: comprehensive format tests
-│   └── ... 24 more test files
+│   ⋮
 ├── cmake/                      # CMake infrastructure
 │   ├── StdModuleMacros.cmake  # Helper macros for adding modules
 │   └── std_module-config.cmake.in
 └── scripts/                    # Automation scripts
+    ├── README.md
     └── symbol_coverage.py     # Symbol coverage analysis tool
 ```
 
-### Implemented Modules (25 Total)
+### Implemented Modules (49 Total)
 
-| Category | Modules |
-|----------|---------|
-| **Algorithms** | algorithm, functional, iterator |
-| **Containers** | bitset, deque, list, map, queue, vector |
-| **I/O** | fstream, ios, iosfwd, iostream, istream, iomanip (⚠️) |
-| **Text** | format, locale, string_view |
-| **Utilities** | exception, limits, new, random, system_error, typeindex |
-| **Numeric** | complex |
+**Note:** README.md contains the canonical, exhaustive list of all 49 implemented modules in the "Available Modules" table. That table is the **single source of truth** for module availability, status, and special notes.
 
-**Note:** See README.md for complete module details with CMake options and import statements.
+**Categories overview:**
+- **Algorithms & Iterators:** algorithm, functional, iterator, ranges
+- **Containers:** any, bitset, deque, forward_list, initializer_list, list, map, optional, queue, span, variant, vector
+- **I/O:** fstream, ios, iosfwd, iostream, istream, iomanip (⚠️), syncstream
+- **Text & Formatting:** charconv, format, locale, string_view
+- **Concurrency:** barrier, condition_variable, coroutine, future (⚠️), latch, semaphore
+- **Utilities:** bit, compare, concepts, exception, execution, filesystem, limits, memory_resource, new, numbers, numeric, random, source_location, system_error, typeindex
+
+**Special cases:**
+- `<new>` → `std_module.new_` (underscore to avoid keyword conflict)
+- `<iomanip>` → ⚠️ Manipulators unusable due to ADL limitations
+- `<future>` → ⚠️ `packaged_task` unusable, other components work
+
+### README.md Documentation Philosophy
+
+**IMPORTANT:** The README.md follows a **lean, pattern-focused approach**. This is a deliberate design choice to keep user-facing documentation concise and maintainable.
+
+**Key principles:**
+
+1. **Describe patterns, not exhaustive lists**
+   - CMake options: Show the pattern `STD_MODULE_BUILD_<NAME>`, list the 3 special options, note defaults
+   - Library targets: Show the pattern `std_module::<name>`, give 3-4 examples
+   - **Don't** create tables listing all 49 modules in multiple places
+
+2. **Single source of truth**
+   - The "Available Modules" table is the **ONLY** place that exhaustively lists all 49 modules
+   - Everything else refers to this table
+   - When adding a module, update **only** this table in README.md
+
+3. **Assume user knowledge**
+   - **Don't** explain what `<vector>` does or what features `<algorithm>` provides
+   - Users of this library already know the standard library
+   - Focus on: module name, import statement, build options, known limitations
+
+4. **Use vertical ellipses in file trees**
+   - Example: `├── format.cppm`, `├── vector.cppm`, `⋮`, `└── std.cppm`
+   - Saves space while conveying "many files here"
+
+5. **Be concise everywhere except "Available Modules"**
+   - Short paragraphs
+   - Minimal examples
+   - Only essential information
+
+**What this means when updating README.md:**
+
+- ✅ Add new module to "Available Modules" table with status and notes
+- ✅ Keep examples to 3-4 items max (don't list all 49 modules)
+- ✅ Use patterns instead of exhaustive enumerations
+- ❌ Don't add the module to CMake Options table (removed - uses pattern now)
+- ❌ Don't add the module to Library Targets table (removed - uses pattern now)
+- ❌ Don't describe what the standard library component does
+- ❌ Don't create new exhaustive lists
+
+**Rationale:** With 49 modules (and growing toward 90+), exhaustive tables become:
+- Hard to maintain (update in N places for each new module)
+- Noisy for users (too much scrolling)
+- Redundant (same information repeated multiple ways)
+
+**This file (CLAUDE.md)** remains comprehensive and detailed - it's the AI assistant guide. README.md is for human users who want to get started quickly.
 
 ## Critical C++20 Module Concepts
 
@@ -153,7 +206,7 @@ Examples:
 - `STD_MODULE_BUILD_VECTOR=ON` - Build vector module
 - `STD_MODULE_BUILD_ALGORITHM=ON` - Build algorithm module
 
-See README.md for the complete list of all 25 module options.
+See README.md "Available Modules" table for the complete list of all 49 modules (each has a corresponding `STD_MODULE_BUILD_<NAME>` option).
 
 ### Standard Build Workflow
 
@@ -460,9 +513,12 @@ Create `test/test_{header}.cpp` following `test/test_format.cpp:1-273`:
 
 #### 4. Update Documentation
 
-Update `README.md` section "Available Modules" table (around line 75-104):
+Update **only** the "Available Modules" table in `README.md`:
 
-Add a new row with the module information following the existing pattern.
+- Add a new row with: header name, module import statement, status (✅ or ⚠️), and notes if applicable
+- Follow the existing pattern exactly
+- **Do NOT** add the module anywhere else in README.md (no exhaustive lists per the README philosophy)
+- The table is around line 137-192 in the current README.md
 
 #### 5. Test the Implementation
 
@@ -1064,15 +1120,15 @@ Likely affected: `<chrono>`, `<filesystem>`, `<valarray>`, and potentially other
 
 ## Version History
 
-- **0.1.0** (Current) - Production-ready release with 25 modules
+- **0.1.0** (Current) - Production-ready release with 49 modules
   - **Module System:**
-    - 25 standard library modules with comprehensive tests
+    - 49 standard library modules with comprehensive tests
     - Macro-based CMake infrastructure for easy module addition
     - Symbol coverage analysis tool
     - Manual build script for educational purposes
   - **Build System:**
     - Flexible CMake 3.28+ build system with Ninja generator
-    - Per-module build options
+    - Per-module build options (`STD_MODULE_BUILD_<NAME>`)
     - Aggregate `std_module::all` target
     - Full installation support
   - **Integration:**
@@ -1083,16 +1139,17 @@ Likely affected: `<chrono>`, `<filesystem>`, `<valarray>`, and potentially other
     - Automated symbol coverage analysis
     - CTest integration
   - **Documentation:**
-    - Comprehensive CLAUDE.md for AI assistants
-    - User-facing README with module table
-    - C++20 module ADL limitation documentation
+    - Comprehensive CLAUDE.md for AI assistants (detailed, pattern-focused)
+    - Lean, user-facing README with pattern-focused documentation
+    - Single source of truth: "Available Modules" table lists all 49 modules
+    - C++20 module ADL limitation documentation and solutions
 
-**Implemented Modules (25):**
-algorithm, bitset, complex, deque, exception, format, fstream, functional, iomanip, ios, iosfwd, iostream, istream, iterator, limits, list, locale, map, new, queue, random, string_view, system_error, typeindex, vector
+**Implemented Modules (49):**
+algorithm, any, barrier, bit, bitset, charconv, compare, complex, concepts, condition_variable, coroutine, deque, exception, execution, filesystem, format, forward_list, fstream, functional, future, initializer_list, iomanip, ios, iosfwd, iostream, istream, iterator, latch, limits, list, locale, map, memory_resource, new, numbers, numeric, optional, queue, random, ranges, semaphore, source_location, span, string_view, syncstream, system_error, typeindex, variant, vector
 
 ---
 
 **Last Updated:** 2025-11-14
 **Repository:** /home/user/std_module
 **Primary Maintainer:** AI Assistant
-**Documentation Version:** 2.0
+**Documentation Version:** 3.0 (README philosophy update)
