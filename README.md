@@ -136,7 +136,7 @@ target_link_libraries(myapp PRIVATE std_module::all)
 
 ## Available Modules
 
-Currently wrapped standard library headers (62 modules):
+Currently wrapped standard library headers (63 modules):
 
 | Header | Module | Status | Notes |
 |--------|--------|--------|-------|
@@ -200,8 +200,10 @@ Currently wrapped standard library headers (62 modules):
 | `<typeindex>` | `std_module.typeindex` | ✅ | |
 | `<unordered_map>` | `std_module.unordered_map` | ✅ | |
 | `<unordered_set>` | `std_module.unordered_set` | ✅ | |
+| `<valarray>` | `std_module.valarray` | ⚠️ | Binary arithmetic/comparison operators unavailable due to C++20 module ADL limitations |
 | `<variant>` | `std_module.variant` | ✅ | |
 | `<vector>` | `std_module.vector` | ✅ | |
+
 ## Project Structure
 
 ```
@@ -241,6 +243,8 @@ Some modules are affected by **Argument-Dependent Lookup (ADL) limitations** in 
 - **`<iomanip>`** ⚠️ - I/O manipulators like `std::setw()` return hidden implementation types whose `operator<<` overloads are not found through module boundaries. Manipulators are unusable with modules alone.
 
 - **`<future>`** ⚠️ - `std::packaged_task` internal machinery not properly exposed. Other components (`promise`, `future`, `shared_future`, `async`) work correctly.
+
+- **`<valarray>`** ⚠️ - Binary arithmetic/comparison operators (`operator+`, `operator-`, `operator*`, `operator/`, `operator==`, `operator<`, etc.) not found via ADL. Cannot perform element-wise operations between `std::valarray` instances. Member functions (sum, min, max, apply, shift, cshift), compound assignments (+=, -=, *=, /=), slicing, and transcendental functions work correctly.
 
 **Workaround:** Combine `import std_module.header;` with `#include <header>` if needed.
 

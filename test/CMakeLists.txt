@@ -60,6 +60,7 @@ std_module_add_test(type_traits)
 std_module_add_test(typeindex)
 std_module_add_test(unordered_map)
 std_module_add_test(unordered_set)
+std_module_add_test(valarray)
 std_module_add_test(variant)
 std_module_add_test(vector)
 
