@@ -12,7 +12,6 @@ project(std_module
 option(STD_MODULE_BUILD_TESTS "Build tests" ON)
 option(STD_MODULE_BUILD_ALL_MODULES "Build all available standard library modules" ON)
 option(STD_MODULE_INSTALL "Generate installation targets" ON)
-option(STD_MODULE_ENABLE_COVERAGE "Enable code coverage reporting (gcov/lcov)" OFF)
 
 # Individual module options (opt-in when BUILD_ALL_MODULES is OFF)
 option(STD_MODULE_BUILD_FORMAT "Build std_module.format" ON)
@@ -60,30 +59,6 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     endif()
 else()
     message(WARNING "Untested compiler: ${CMAKE_CXX_COMPILER_ID}")
-endif()
-
-# ==============================================================================
-# Code Coverage Configuration
-# ==============================================================================
-
-if(STD_MODULE_ENABLE_COVERAGE)
-    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-        message(STATUS "Code coverage enabled")
-
-        # Coverage compiler flags
-        set(COVERAGE_COMPILE_FLAGS "--coverage -fprofile-arcs -ftest-coverage -O0 -g")
-        set(COVERAGE_LINK_FLAGS "--coverage")
-
-        # Apply to all targets (will be inherited by tests)
-        add_compile_options(--coverage -fprofile-arcs -ftest-coverage -O0 -g)
-        add_link_options(--coverage)
-
-        # Note: Coverage data for module files will show low coverage because
-        # 'using' declarations and module exports are compile-time constructs
-        # that don't generate executable code. Focus on test file coverage.
-    else()
-        message(WARNING "Code coverage only supported with GCC or Clang")
-    endif()
 endif()
 
 # ==============================================================================
