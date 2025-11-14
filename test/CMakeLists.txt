@@ -36,6 +36,23 @@ if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_STRING_VIEW)
     message(STATUS "Configured test: test_string_view")
 endif()
 
+# Test for complex module
+if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_COMPLEX)
+    add_executable(test_complex test_complex.cpp)
+
+    target_link_libraries(test_complex
+        PRIVATE
+            std_module::complex
+    )
+
+    target_compile_features(test_complex PRIVATE cxx_std_20)
+
+    # Register as a CTest test
+    add_test(NAME test_complex COMMAND test_complex)
+
+    message(STATUS "Configured test: test_complex")
+endif()
+
 # ==============================================================================
 # Add more tests here as modules are implemented
 # ==============================================================================
