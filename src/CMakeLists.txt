@@ -22,6 +22,7 @@ std_module_add_module(string_view)
 std_module_add_module(complex)
 std_module_add_module(vector)
 std_module_add_module(deque)
+std_module_add_module(functional)
 
 # Add more modules here as they are implemented:
 # std_module_add_module(string)
@@ -46,6 +47,7 @@ std_module_add_to_aggregate(string_view)
 std_module_add_to_aggregate(complex)
 std_module_add_to_aggregate(vector)
 std_module_add_to_aggregate(deque)
+std_module_add_to_aggregate(functional)
 
 # Add more module dependencies here as they are implemented:
 # std_module_add_to_aggregate(string)

@@ -84,6 +84,7 @@ Configure the build with these options:
 | `STD_MODULE_BUILD_BITSET` | ON | Build std_module.bitset |
 | `STD_MODULE_BUILD_STRING_VIEW` | ON | Build std_module.string_view |
 | `STD_MODULE_BUILD_DEQUE` | ON | Build std_module.deque |
+| `STD_MODULE_BUILD_FUNCTIONAL` | ON | Build std_module.functional |
 
 Example:
 
@@ -104,6 +105,7 @@ Currently wrapped standard library headers:
 - ✅ `<bitset>` → `import std_module.bitset;`
 - ✅ `<string_view>` → `import std_module.string_view;`
 - ✅ `<deque>` → `import std_module.deque;`
+- ✅ `<functional>` → `import std_module.functional;`
 
 *More modules coming soon!*
 
@@ -130,6 +132,8 @@ The build system provides these CMake targets:
 - `std_module::algorithm` - Just the algorithm module
 - `std_module::bitset` - Just the bitset module
 - `std_module::string_view` - Just the string_view module
+- `std_module::deque` - Just the deque module
+- `std_module::functional` - Just the functional module
 - `std_module::all` - All available modules (convenience target)
 
 Link only what you need:
