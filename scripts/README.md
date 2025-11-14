@@ -92,9 +92,7 @@ This is a **text-based** analysis tool:
 
 ### CI Integration
 
-Symbol coverage runs automatically as part of the test suite. The test exits with:
-- **Code 0**: All symbols covered (100%)
-- **Code 1**: Some symbols untested (< 100%)
+Symbol coverage runs automatically as part of the test suite. The script is **informational only** and always exits successfully (code 0), making it useful for tracking coverage trends without blocking builds.
 
 In CI, symbol coverage will run with your regular tests:
 
@@ -105,16 +103,10 @@ In CI, symbol coverage will run with your regular tests:
     cmake -B build -G Ninja
     cmake --build build
     ctest --test-dir build --output-on-failure
-    # Symbol coverage runs automatically as test #6
+    # Symbol coverage runs as test #6 (informational only)
 ```
 
-To make CI pass despite incomplete coverage, exclude the test:
-
-```yaml
-# If you want CI to pass with <100% coverage
-- name: Run tests (skip coverage check)
-  run: ctest --test-dir build --exclude-regex symbol-coverage
-```
+The coverage report appears in test output but won't fail the build. To track coverage over time, you could parse the output and compare against a baseline.
 
 ### Current Coverage (as of last check)
 
@@ -128,6 +120,17 @@ To make CI pass despite incomplete coverage, exclude the test:
 | **Overall** | **60.9%** | 🟠 |
 
 Many untested symbols are low-level types (like `basic_format_arg`, `format_args`) that are implicitly used but not directly referenced. Consider whether these need explicit tests.
+
+### Adding New Modules
+
+When you add a new module to the project:
+
+1. **No script updates needed!** The script automatically discovers all `.cppm` files in `src/`
+2. Create your module: `src/new_module.cppm`
+3. Create your test: `test/test_new_module.cpp`
+4. Run coverage: The new module appears automatically in `--all` output
+
+The script uses glob patterns to find modules, so it adapts as your project grows.
 
 ### Improving Coverage
 
