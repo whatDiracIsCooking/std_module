@@ -136,7 +136,7 @@ target_link_libraries(myapp PRIVATE std_module::all)
 
 ## Available Modules
 
-Currently wrapped standard library headers (50 modules):
+Currently wrapped standard library headers (51 modules):
 
 | Header | Module | Status | Notes |
 |--------|--------|--------|-------|
@@ -146,6 +146,7 @@ Currently wrapped standard library headers (50 modules):
 | `<bit>` | `std_module.bit` | ✅ | |
 | `<bitset>` | `std_module.bitset` | ✅ | |
 | `<charconv>` | `std_module.charconv` | ✅ | |
+| `<chrono>` | `std_module.chrono` | ⚠️ | Operators and literals unavailable due to C++20 module ADL limitations |
 | `<codecvt>` | `std_module.codecvt` | ✅ | Deprecated in C++17 but fully functional |
 | `<compare>` | `std_module.compare` | ✅ | |
 | `<complex>` | `std_module.complex` | ✅ | |
