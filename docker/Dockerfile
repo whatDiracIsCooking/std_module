@@ -37,6 +37,7 @@ COPY . .
 RUN cmake -B build-clang-${CLANG_VERSION} -G Ninja \
     -DCMAKE_CXX_COMPILER=clang++-${CLANG_VERSION} \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_FLAGS="-Wno-deprecated-declarations" \
     -DSTD_MODULE_BUILD_TESTS=ON \
     -DSTD_MODULE_BUILD_ALL_MODULES=ON
 
