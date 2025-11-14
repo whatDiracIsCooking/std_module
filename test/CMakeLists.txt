@@ -31,6 +31,9 @@ std_module_add_test(limits)
 std_module_add_test(list)
 std_module_add_test(locale)
 std_module_add_test(queue)
+std_module_add_test(random)
+std_module_add_test(system_error)
+std_module_add_test(typeindex)
 
 # Add more tests here as modules are implemented:
 # std_module_add_test(string)

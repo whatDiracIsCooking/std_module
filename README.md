@@ -94,7 +94,10 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | `<list>` | ✅ | `STD_MODULE_BUILD_LIST=ON` | `std_module::list` | `import std_module.list;` |
 | `<locale>` | ✅ | `STD_MODULE_BUILD_LOCALE=ON` | `std_module::locale` | `import std_module.locale;` |
 | `<queue>` | ✅ | `STD_MODULE_BUILD_QUEUE=ON` | `std_module::queue` | `import std_module.queue;` |
+| `<random>` | ✅ | `STD_MODULE_BUILD_RANDOM=ON` | `std_module::random` | `import std_module.random;` |
 | `<string_view>` | ✅ | `STD_MODULE_BUILD_STRING_VIEW=ON` | `std_module::string_view` | `import std_module.string_view;` |
+| `<system_error>` | ✅ | `STD_MODULE_BUILD_SYSTEM_ERROR=ON` | `std_module::system_error` | `import std_module.system_error;` |
+| `<typeindex>` | ✅ | `STD_MODULE_BUILD_TYPEINDEX=ON` | `std_module::typeindex` | `import std_module.typeindex;` |
 | `<vector>` | ✅ | `STD_MODULE_BUILD_VECTOR=ON` | `std_module::vector` | `import std_module.vector;` |
 | *(Convenience)* | | | `std_module::all` | All modules combined |
 
