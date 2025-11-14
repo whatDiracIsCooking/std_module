@@ -95,6 +95,7 @@ See [`test/README.md`](test/README.md) for manual build instructions.
 | `<locale>` | ✅ | `STD_MODULE_BUILD_LOCALE=ON` | `std_module::locale` | `import std_module.locale;` |
 | `<queue>` | ✅ | `STD_MODULE_BUILD_QUEUE=ON` | `std_module::queue` | `import std_module.queue;` |
 | `<streambuf>` | ✅ | `STD_MODULE_BUILD_STREAMBUF=ON` | `std_module::streambuf` | `import std_module.streambuf;` |
+| `<stdexcept>` | ✅ | `STD_MODULE_BUILD_STDEXCEPT=ON` | `std_module::stdexcept` | `import std_module.stdexcept;` |
 | `<string>` | ✅ | `STD_MODULE_BUILD_STRING=ON` | `std_module::string` | `import std_module.string;` |
 | `<string_view>` | ✅ | `STD_MODULE_BUILD_STRING_VIEW=ON` | `std_module::string_view` | `import std_module.string_view;` |
 | `<vector>` | ✅ | `STD_MODULE_BUILD_VECTOR=ON` | `std_module::vector` | `import std_module.vector;` |
@@ -154,6 +155,9 @@ std_module/
 │   ├── limits.cppm
 │   ├── list.cppm
 │   ├── locale.cppm
+│   ├── queue.cppm
+│   ├── stdexcept.cppm
+│   ├── streambuf.cppm
 │   ├── string.cppm
 │   ├── string_view.cppm
 │   ├── vector.cppm
@@ -177,6 +181,9 @@ std_module/
 │   ├── test_limits.cpp
 │   ├── test_list.cpp
 │   ├── test_locale.cpp
+│   ├── test_queue.cpp
+│   ├── test_stdexcept.cpp
+│   ├── test_streambuf.cpp
 │   ├── test_string.cpp
 │   ├── test_string_view.cpp
 │   ├── test_vector.cpp
