@@ -26,6 +26,7 @@ RUN apt-get update && apt-get install -y \
 # Set Clang as the default C++ compiler
 ENV CXX=clang++-${CLANG_VERSION}
 ENV CC=clang-${CLANG_VERSION}
+ENV BUILD_DIR=build-clang-${CLANG_VERSION}
 
 # Create working directory
 WORKDIR /workspace
@@ -34,7 +35,7 @@ WORKDIR /workspace
 COPY . .
 
 # Configure the build with Ninja generator and Clang
-RUN cmake -B build-clang-${CLANG_VERSION} -G Ninja \
+RUN cmake -B ${BUILD_DIR} -G Ninja \
     -DCMAKE_CXX_COMPILER=clang++-${CLANG_VERSION} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_CXX_FLAGS="-Wno-deprecated-declarations" \
@@ -42,13 +43,13 @@ RUN cmake -B build-clang-${CLANG_VERSION} -G Ninja \
     -DSTD_MODULE_BUILD_ALL_MODULES=ON
 
 # Build all modules and tests
-RUN cmake --build build-clang-${CLANG_VERSION} --parallel
+RUN cmake --build ${BUILD_DIR} --parallel
 
 # Run tests during build (ensures build fails if tests fail)
-RUN ctest --test-dir build-clang-${CLANG_VERSION} --output-on-failure
+RUN ctest --test-dir ${BUILD_DIR} --output-on-failure
 
 # Run tests by default when container starts (optional - can be overridden)
-CMD ["sh", "-c", "ctest --test-dir build-clang-${CLANG_VERSION} --output-on-failure --parallel"]
+CMD ["sh", "-c", "ctest --test-dir ${BUILD_DIR} --output-on-failure --parallel"]
 
 # Usage:
 # Build the image (default Clang 18):
