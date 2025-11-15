@@ -13,7 +13,9 @@ module;
 #include <sstream>
 #include <iomanip>
 #include <string>
-#include <cstdlib>  // for std::abort
+#include <cstdlib>   // for std::abort
+#include <stdexcept> // for exception types (out_of_range, etc.)
+#include <any>       // for bad_any_cast
 
 export module std_module.test_framework;
 
@@ -40,6 +42,14 @@ export namespace std {
 
     // String support
     using std::string;
+
+    // Exception types (for testing exception handling)
+    using std::exception;
+    using std::logic_error;
+    using std::runtime_error;
+    using std::out_of_range;
+    using std::invalid_argument;
+    using std::bad_any_cast;
 
     // Stream operators (CRITICAL: must be in std namespace for ADL)
     using std::operator<<;

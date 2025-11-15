@@ -7,7 +7,6 @@
  */
 
 import std_module.array;
-import std_module.stdexcept;
 import std_module.test_framework;
 
 int main() {

@@ -79,6 +79,12 @@ endmacro()
 #   - Register with CTest
 #   - Print status message
 #
+# Note: To link test_framework, add target_link_libraries after std_module_add_test:
+#   std_module_add_test(format)
+#   if(TARGET test_format)
+#       target_link_libraries(test_format PRIVATE std_module::test_framework)
+#   endif()
+#
 # Parameters:
 #   MODULE_NAME - The name of the module (e.g., "format", "vector")
 #
@@ -99,7 +105,7 @@ macro(std_module_add_test MODULE_NAME)
 
         # Special handling for modules requiring additional system libraries
         if(MODULE_NAME STREQUAL "atomic")
-            target_link_options(test_${MODULE_NAME} PRIVATE "-latomic")
+            target_link_options(test_${MODULE_NAME} PRIVATE -latomic)
         elseif(MODULE_NAME STREQUAL "thread")
             find_package(Threads REQUIRED)
             target_link_libraries(test_${MODULE_NAME} PRIVATE Threads::Threads)

@@ -2,10 +2,40 @@
 # Tests for std_module
 # ==============================================================================
 
+# ==============================================================================
+# Test Framework - Testing Utility Module
+# ==============================================================================
+# Build test_framework FIRST so it's available for tests that need it
+
+if(STD_MODULE_BUILD_TESTS)
+    # Build the test_framework module library
+    add_library(std_module_test_framework)
+    target_sources(std_module_test_framework
+        PUBLIC
+            FILE_SET CXX_MODULES FILES
+                test_framework.cppm
+    )
+    target_compile_features(std_module_test_framework PUBLIC cxx_std_20)
+    add_library(std_module::test_framework ALIAS std_module_test_framework)
+    message(STATUS "Configured test utility: std_module::test_framework")
+
+    # Test the test_framework itself
+    add_executable(test_test_framework test_test_framework.cpp)
+    target_link_libraries(test_test_framework PRIVATE std_module::test_framework)
+    target_compile_features(test_test_framework PRIVATE cxx_std_20)
+    add_test(NAME test_test_framework COMMAND test_test_framework)
+    message(STATUS "Configured test: test_test_framework")
+endif()
+
+# ==============================================================================
+# Module Tests
+# ==============================================================================
+
 # Note: The std_module_add_test() macro is defined in cmake/StdModuleMacros.cmake
 # It handles:
 #   - Creating the test executable
 #   - Linking against the module library
+#   - Optionally linking test_framework (pass TRUE as second param)
 #   - Setting C++20 requirement
 #   - Registering with CTest
 #   - Printing status message
@@ -13,32 +43,38 @@
 # Add tests for all available modules (alphabetical order)
 std_module_add_test(algorithm)
 
-# test_algorithm needs additional dependencies (vector, iostream, iterator, exception)
+# test_algorithm needs additional dependencies (vector, iostream, iterator, exception, test_framework)
 if(TARGET test_algorithm)
     target_link_libraries(test_algorithm PRIVATE
         std_module::vector
         std_module::iostream
         std_module::iterator
-        std_module::exception)
+        std_module::exception
+        std_module::test_framework)
 endif()
 
 std_module_add_test(any)
-std_module_add_test(array)
+if(TARGET test_any)
+    target_link_libraries(test_any PRIVATE std_module::test_framework)
+endif()
 
-# test_array needs stdexcept for exception types
+std_module_add_test(array)
 if(TARGET test_array)
-    target_link_libraries(test_array PRIVATE std_module::stdexcept)
+    target_link_libraries(test_array PRIVATE std_module::test_framework)
 endif()
 
 std_module_add_test(atomic)
-
-# test_atomic needs libatomic for lock-free operations
 if(TARGET test_atomic)
-    target_link_libraries(test_atomic PRIVATE atomic)
+    target_link_libraries(test_atomic PRIVATE std_module::test_framework)
+    target_link_options(test_atomic PRIVATE -latomic)
 endif()
 
 std_module_add_test(barrier)
+
 std_module_add_test(bit)
+if(TARGET test_bit)
+    target_link_libraries(test_bit PRIVATE std_module::test_framework)
+endif()
 std_module_add_test(bitset)
 std_module_add_test(charconv)
 std_module_add_test(chrono)
@@ -113,41 +149,6 @@ std_module_add_test(unordered_set)
 std_module_add_test(valarray)
 std_module_add_test(variant)
 std_module_add_test(vector)
-
-# ==============================================================================
-# Test Framework - Testing Utility Module
-# ==============================================================================
-
-# The test_framework is a testing utility module (not a stdlib wrapper).
-# It provides assert functions, I/O utilities, and formatting helpers for
-# pure module-only tests. Only built when tests are enabled.
-
-if(STD_MODULE_BUILD_TESTS)
-    # Build the test_framework module library
-    add_library(std_module_test_framework)
-    target_sources(std_module_test_framework
-        PUBLIC
-            FILE_SET CXX_MODULES FILES
-                test_framework.cppm
-    )
-    target_compile_features(std_module_test_framework PUBLIC cxx_std_20)
-    add_library(std_module::test_framework ALIAS std_module_test_framework)
-    message(STATUS "Configured test utility: std_module::test_framework")
-
-    # Test the test_framework itself
-    add_executable(test_test_framework test_test_framework.cpp)
-    target_link_libraries(test_test_framework PRIVATE std_module::test_framework)
-    target_compile_features(test_test_framework PRIVATE cxx_std_20)
-    add_test(NAME test_test_framework COMMAND test_test_framework)
-    message(STATUS "Configured test: test_test_framework")
-
-    # Link tests that use test_framework
-    std_module_link_test_framework(algorithm)
-    std_module_link_test_framework(any)
-    std_module_link_test_framework(array)
-    std_module_link_test_framework(atomic)
-    std_module_link_test_framework(bit)
-endif()
 
 # ==============================================================================
 # Symbol Coverage Analysis
