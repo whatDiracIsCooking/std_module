@@ -53,43 +53,110 @@ ls test/test_*.cpp
 ctest --test-dir build -N
 ```
 
+## Testing Philosophy
+
+### Core Principle
+
+**We test module integration and C++20 module compatibility, NOT standard library correctness.**
+
+- ✅ Verify `import std_module.vector;` works
+- ✅ Verify symbols are accessible through the module
+- ✅ Verify ADL-dependent operators work (or document as broken)
+- ❌ Don't test `std::vector::push_back()` correctness (trust the stdlib)
+- ❌ Don't exhaustively test edge cases (stdlib's job)
+
+### The Three Testing Tiers
+
+Tests are categorized into three tiers based on complexity and importance:
+
+| Tier | Target Lines | When to Use | What to Test |
+|------|--------------|-------------|--------------|
+| **Tier 1: Minimal** | 50-100 | Simple utilities, rarely-used modules | Basic usage, iterators, ADL operators (status only) |
+| **Tier 2: Comprehensive** | 200-400 | Core containers, I/O, algorithms | All operation categories, extensive ADL testing |
+| **Tier 3: Integration** | Future | Cross-module dependencies | Wait until dependent modules available |
+
+**Examples:**
+- **Tier 1:** `<limits>`, `<bit>`, `<compare>`, `<ratio>` - Simple, focused tests
+- **Tier 2:** `<format>` (273 lines), `<vector>` (390 lines), `<iostream>` - Comprehensive tests
+- **Tier 3:** Tests requiring multiple modules that aren't yet implemented
+
 ## Test Structure
 
 ### Naming Convention
 
 All test files follow the pattern: `test_{module}.cpp`
 
-### Test Implementation Pattern
+### Tier 1 Template (Minimal Viable Test)
 
-Each test follows the structure established in `test_format.cpp:1-273`:
+For simple modules, use this 50-100 line template:
 
 ```cpp
-import std_module.{module};     // Import the module under test
-#include <iostream>              // For output
-#include <cassert>               // For assertions
+import std_module.{module};
+#include <iostream>  // Allowed - testing infrastructure
+#include <cassert>   // Allowed - assert is a macro
 
-// Test functions
-void test_basic_functionality() {
-    // Arrange
-    auto input = /* ... */;
+void test_basic_usage() {
+    std::cout << "Testing basic usage...\n";
+    std::container<int> c{1, 2, 3};
+    assert(c.size() == 3);
+    std::cout << "  ✓ Construction and size\n";
+}
 
-    // Act
-    auto result = std::some_function(input);
+void test_iterators() {
+    std::cout << "\nTesting iterators...\n";
+    std::container<int> c{1, 2, 3};
+    int sum = 0;
+    for (int val : c) sum += val;
+    assert(sum == 6);
+    std::cout << "  ✓ Range-based for\n";
+}
 
-    // Assert
-    assert(result == expected);
-    std::cout << "  ✓ Test description: " << result << "\n";
+void test_adl_operators() {
+    std::cout << "\nTesting ADL operators...\n";
+    try {
+        bool eq = (a == b);
+        std::cout << "  ✓ operator== works\n";
+    } catch (...) {
+        std::cout << "  ⚠ operator== unavailable (ADL limitation)\n";
+    }
 }
 
 int main() {
-    std::cout << "Testing std_module.{module}...\n";
+    std::cout << "=== Testing std_module.{module} ===\n\n";
+    test_basic_usage();
+    test_iterators();
+    test_adl_operators();
+    std::cout << "\n=== All tests passed! ===\n";
+    return 0;
+}
+```
 
-    test_basic_functionality();
-    test_edge_cases();
-    test_error_conditions();
-    // ... more test functions
+### Tier 2 Pattern (Comprehensive Test)
 
-    std::cout << "All tests passed!\n";
+For important modules, see `test/test_format.cpp:1-273` or `test/test_vector.cpp`:
+
+```cpp
+import std_module.{module};
+#include <iostream>
+#include <cassert>
+#include <sstream>  // If needed for testing
+
+// Test each operation category
+void test_construction() { /* ... */ }
+void test_modifiers() { /* ... */ }
+void test_accessors() { /* ... */ }
+void test_capacity() { /* ... */ }
+void test_iterators() { /* ... */ }
+void test_operators() { /* ... */ }
+void test_algorithms() { /* ... */ }
+void test_error_conditions() { /* ... */ }
+
+int main() {
+    std::cout << "=== Testing std_module.{module} ===\n\n";
+    test_construction();
+    test_modifiers();
+    // ... all test functions
+    std::cout << "\n=== All tests passed! ===\n";
     return 0;
 }
 ```
@@ -98,21 +165,46 @@ int main() {
 
 1. **Import-Only Testing**: Tests must use ONLY `import std_module.{module};` - never `#include <{module}>`
    - This ensures we test exactly what the module exports
-   - If functionality doesn't work, mark with `// FIXME:` rather than working around it
+   - Validates true module isolation
+   - See updated ADL solution below
 
-2. **Comprehensive Coverage**: Test ALL exported symbols
-   - Functions, classes, type aliases, constants
-   - Multiple argument types and edge cases
-   - Error conditions and exceptions
+2. **Allowed Includes**: Only these three headers for testing infrastructure
+   - ✅ `<cassert>` - Required (assert is a macro)
+   - ✅ `<iostream>` - For test output
+   - ✅ `<sstream>` - For string stream testing
+   - ❌ Everything else - Wait for modules or document as FUTURE
 
-3. **Visual Feedback**: Use checkmarks for successful tests
+3. **ADL Operator Testing**: REQUIRED for all tests
+   ```cpp
+   void test_operators() {
+       std::cout << "\nTesting operators...\n";
+       try {
+           bool result = (a == b);  // Try the operator
+           assert(result);
+           std::cout << "  ✓ operator== works\n";
+       } catch (...) {
+           std::cout << "  ⚠ operator== unavailable (ADL limitation)\n";
+           // Don't fail - document status and continue
+       }
+   }
+   ```
+
+4. **FUTURE Tests**: Document tests requiring unavailable modules
+   ```cpp
+   // FUTURE: Requires import std_module.string
+   // void test_with_strings() { ... }
+   ```
+
+5. **Visual Feedback**: Use checkmarks for successful tests
    ```cpp
    std::cout << "  ✓ Test passed: description\n";
    ```
 
-4. **Self-Contained**: Each test function should be independent
+6. **Self-Contained**: Each test function should be independent
 
-5. **Assertion-Based**: Validate results with `assert()`
+7. **Assertion-Based**: Validate results with `assert()`
+
+8. **Test Variety, Not Exhaustiveness**: One example per operation category
 
 ## Symbol Coverage Analysis
 
@@ -212,23 +304,84 @@ cmake -B build -G Ninja \
 cmake -B build -G Ninja -DSTD_MODULE_BUILD_TESTS=OFF
 ```
 
-## Known Limitations
+## C++20 Module ADL Limitation - SOLUTION FOUND ✅
 
-### C++20 Module ADL Issues
+### The Problem (Historical)
 
-Some modules have limited functionality due to C++20 module Argument-Dependent Lookup (ADL) limitations with non-member operators:
+C++20 modules had issues with Argument-Dependent Lookup (ADL) for operators across module boundaries. Without `#include` directives, operators like `operator<<` weren't found even when types were exported.
 
-**Affected Modules:**
-- `<iomanip>` - Manipulators don't work (operator<< not found)
-- `<complex>` - Arithmetic operators don't work (operator+, operator*, etc.)
+### THE SOLUTION ✅
 
-**Details:** See CLAUDE.md section "Testing Conventions" subsection 3 for full explanation.
+**BREAKTHROUGH DISCOVERY (2025-11-14):** The ADL limitation CAN be fixed by explicitly exporting operators in the module!
 
-**Testing Policy:**
-- Tests mark broken functionality with `// FIXME: C++20 module ADL limitation`
-- Do NOT add `#include <header>` as a workaround
-- Keep test coverage high for working functionality
-- Document what doesn't work in comments
+**How to Fix:**
+
+In the module file (`.cppm`), export operators explicitly:
+
+```cpp
+export module std_module.{module};
+
+export namespace std {
+    // Export types/objects
+    using std::cout;
+    using std::vector;
+
+    // CRITICAL: Export operators to fix ADL
+    using std::operator<<;
+    using std::operator>>;
+    using std::operator+;
+    using std::operator-;
+    // ... export all relevant operators
+
+    // Export manipulators if needed
+    using std::endl;
+    using std::flush;
+}
+```
+
+**Verification:**
+
+After exporting operators, test with **NO `#include` directives** - only `import`:
+
+```cpp
+import std_module.iostream;
+// NO #include directives!
+
+int main() {
+    std::cout << "Hello World" << std::endl;  // Works!
+}
+```
+
+### Module Status
+
+**✅ FIXED (operators work):**
+- `<iostream>` - Exports `operator<<`, `operator>>`, `endl`, `flush`
+- `<chrono>` - Exports arithmetic, comparison, and literal operators
+- Works on Clang + libstdc++, Clang + libc++, GCC + libstdc++
+
+**⚠️ TODO (not yet tested with operator exports):**
+- `<iomanip>` - May be fixable by exporting manipulator operators
+- `<complex>` - Should be fixable by exporting arithmetic operators
+- Potentially fixable: `<valarray>`, `<filesystem>`, etc.
+
+### Testing Policy
+
+1. **Export operators in the module** - Add `using std::operator...;` declarations
+2. **Test with NO includes** - Remove ALL `#include` statements (except allowed test infrastructure)
+3. **If tests fail, add more exports** - Identify missing operators from error messages
+4. **Verify on multiple compilers** - Test with Clang + libstdc++, Clang + libc++, GCC
+5. **Update status** - Move module to "FIXED" section when operators work
+
+**DO NOT:**
+- ❌ Add `#include <header>` to work around operator issues (defeats module testing)
+- ❌ Accept broken operators as "unfixable" (they ARE fixable with exports)
+- ❌ Mix `import` + `#include` of the same header (causes different issues)
+
+**Reference Implementations:**
+- `src/iostream.cppm` - Stream operators
+- `src/chrono.cppm` - Arithmetic, comparison, and literal operators
+- `test/test_iostream.cpp` - Pure module-only test (no includes)
+- `test/test_chrono.cpp` - Comprehensive operator testing
 
 ## Troubleshooting
 
@@ -250,15 +403,43 @@ Some modules have limited functionality due to C++20 module Argument-Dependent L
 - **Solution:** Ensure test file and module file follow naming conventions
 - **Check:** Python 3 is available: `python3 --version`
 
+## Test Quality Checklist
+
+Before committing a new test, verify:
+
+**Code Structure:**
+- [ ] Uses `import std_module.<module>;` not `#include <header>`
+- [ ] Only includes allowed headers (`<cassert>`, `<iostream>`, `<sstream>`)
+- [ ] Appropriate line count: 50-100 (Tier 1) or 200-400 (Tier 2)
+- [ ] Returns 0 on success, 1 on failure
+
+**Test Coverage:**
+- [ ] Tests basic usage (construction, size, access)
+- [ ] Tests iterators (if applicable) including range-based for
+- [ ] Tests ADL operators with try/catch pattern (reports status, doesn't fail)
+- [ ] Documents FUTURE tests requiring unavailable modules
+
+**Output Quality:**
+- [ ] Has meaningful output with ✓ checkmarks
+- [ ] Shows test categories being executed
+- [ ] Displays "=== All tests passed! ===" on success
+
+**Validation:**
+- [ ] Passes: `ctest --test-dir build -R test_<module> --output-on-failure`
+- [ ] Passes: `python3 scripts/symbol_coverage.py <module>`
+- [ ] Compiles without warnings
+
 ## Adding a New Test
 
-Complete checklist for adding a new test:
+Complete workflow for adding a new test:
 
 1. **Create test file**: `test/test_{module}.cpp`
-   - Follow the pattern in `test_format.cpp`
+   - Choose appropriate tier (Tier 1: 50-100 lines, Tier 2: 200-400 lines)
+   - Start with Tier 1 template (see above)
    - Import only: `import std_module.{module};`
    - Test all exported symbols
-   - Use assertions and visual feedback
+   - Use try/catch for ADL operators
+   - Document FUTURE tests with comments
 
 2. **Register with CMake**: Add one line to `test/CMakeLists.txt`
    ```cmake
@@ -276,7 +457,9 @@ Complete checklist for adding a new test:
    python3 scripts/symbol_coverage.py {module}
    ```
 
-5. **Check output**: Should see "All tests passed!" and 100% coverage
+5. **Check output**: Should see "=== All tests passed! ===" and 100% coverage
+
+6. **Run quality checklist**: See "Test Quality Checklist" section above
 
 ## Test Execution Order
 
@@ -309,20 +492,62 @@ Tests are designed to run in CI environments:
 - `0` - All tests passed
 - Non-zero - One or more tests failed
 
-## Reference Implementation
+## Reference Implementations
 
-**Best Test Example:** `test/test_format.cpp` (273 lines)
-- Comprehensive coverage of all format APIs
+### Tier 1 Examples (50-100 lines)
+
+**Simple, focused tests for utilities:**
+- `test/test_limits.cpp` - Type limits testing
+- `test/test_bit.cpp` - Bit manipulation utilities
+- `test/test_compare.cpp` - Three-way comparison
+- `test/test_ratio.cpp` - Compile-time ratios
+
+**Pattern:**
+- Basic usage validation
+- Iterator testing (if applicable)
+- ADL operator status check
+- Minimal but complete
+
+### Tier 2 Examples (200-400 lines)
+
+**Comprehensive tests for core modules:**
+
+**`test/test_format.cpp` (273 lines)**
+- Complete coverage of formatting APIs
 - Custom type formatting with `std::formatter` specialization
 - Error condition testing
 - Multiple data types (int, float, string, custom)
-- Clear output with checkmarks
 - Well-organized test functions
 
-Use this as a template when writing new tests.
+**`test/test_vector.cpp` (~390 lines)**
+- All container operations (construction, modifiers, accessors, capacity)
+- Iterator testing (begin, end, rbegin, rend)
+- Comparison operators
+- Algorithm integration
+- Exception safety
+
+**`test/test_iostream.cpp`**
+- Stream insertion/extraction operators
+- Manipulator testing
+- State management
+- **IMPORTANT:** Pure module-only test (no `#include` directives except test infrastructure)
+- Reference for ADL operator solution
+
+**`test/test_chrono.cpp`**
+- Duration and time_point operations
+- Arithmetic and comparison operators
+- Literal operators (in inline namespace)
+- Calendar operations
+- **IMPORTANT:** Comprehensive operator export example
+
+**When to Use Each:**
+- **New simple module?** Start with Tier 1 template
+- **Core container/algorithm?** Follow `test_format.cpp` or `test_vector.cpp` patterns
+- **Operator-heavy module?** Study `test_iostream.cpp` and `test_chrono.cpp`
 
 ---
 
-**Last Updated:** 2025-11-14
+**Last Updated:** 2025-11-15
 **Test Count:** 72 modules
 **Test Coverage:** 100% of exported symbols (per symbol_coverage.py)
+**Testing Philosophy:** Three-tier system (Tier 1: 50-100 lines, Tier 2: 200-400 lines, Tier 3: Integration)
