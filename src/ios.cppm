@@ -74,4 +74,13 @@ using std::fixed;
 using std::scientific;
 using std::hexfloat;
 using std::defaultfloat;
+
+// Export bitwise operators for ios_base enums (C++20 module ADL fix)
+using std::operator|;
+using std::operator&;
+using std::operator^;
+using std::operator~;
+using std::operator|=;
+using std::operator&=;
+using std::operator^=;
 }  // namespace std
