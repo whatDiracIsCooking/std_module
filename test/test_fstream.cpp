@@ -7,6 +7,8 @@
  */
 
 import std_module.fstream;
+import std_module.ios;
+import std_module.string;
 import std_module.test_framework;
 
 int main() {
@@ -63,7 +65,10 @@ int main() {
 
     // Test fstream for read/write
     {
-        std::fstream file(test_file, std::ios::in | std::ios::out | std::ios::trunc);
+        // FIXME: C++20 module limitation - constructor with mode flags not visible
+        // Use open() method instead of constructor with flags
+        std::fstream file;
+        file.open(test_file, std::ios::in | std::ios::out | std::ios::trunc);
         test::assert_true(file.is_open(), "fstream open");
 
         file << "bidirectional" << test::endl;
@@ -77,7 +82,9 @@ int main() {
 
     // Test file positioning
     {
-        std::fstream file(test_file, std::ios::in | std::ios::out);
+        // FIXME: C++20 module limitation - use open() instead of constructor
+        std::fstream file;
+        file.open(test_file, std::ios::in | std::ios::out);
         file.seekg(0, std::ios::end);
         auto size = file.tellg();
         test::assert_true(size >= 0, "tellg/seekg");
@@ -121,7 +128,9 @@ int main() {
         std::wifstream win(wide_file);
         test::assert_true(win.is_open(), "wifstream open");
 
-        std::wfstream wfile(wide_file, std::ios::in | std::ios::out);
+        // FIXME: C++20 module limitation - use open() instead of constructor
+        std::wfstream wfile;
+        wfile.open(wide_file, std::ios::in | std::ios::out);
         test::assert_true(wfile.is_open(), "wfstream open");
     }
     test::success("wide character file streams accessible");

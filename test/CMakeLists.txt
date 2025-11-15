@@ -198,11 +198,42 @@ if(TARGET test_atomic)
     target_link_options(test_atomic PRIVATE -latomic)
 endif()
 
+# Additional module dependencies for tests that import multiple modules
 # test_chrono needs iostream module (it imports std_module.iostream)
 if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_CHRONO)
     if(TARGET std_module::iostream)
         target_link_libraries(test_chrono PRIVATE std_module::iostream)
     endif()
+endif()
+
+# test_format needs iterator and string modules
+if(TARGET test_format)
+    target_link_libraries(test_format PRIVATE std_module::iterator std_module::string)
+endif()
+
+# test_functional needs compare and iterator modules
+if(TARGET test_functional)
+    target_link_libraries(test_functional PRIVATE std_module::compare std_module::iterator)
+endif()
+
+# test_future needs chrono and exception modules
+if(TARGET test_future)
+    target_link_libraries(test_future PRIVATE std_module::chrono std_module::exception)
+endif()
+
+# test_fstream needs ios and string modules
+if(TARGET test_fstream)
+    target_link_libraries(test_fstream PRIVATE std_module::ios std_module::string)
+endif()
+
+# test_iomanip needs ios module
+if(TARGET test_iomanip)
+    target_link_libraries(test_iomanip PRIVATE std_module::ios)
+endif()
+
+# test_ios needs system_error module
+if(TARGET test_ios)
+    target_link_libraries(test_ios PRIVATE std_module::system_error)
 endif()
 
 # ==============================================================================
