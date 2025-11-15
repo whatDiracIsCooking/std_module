@@ -65,6 +65,7 @@ endif()
 std_module_add_test(atomic)
 if(TARGET test_atomic)
     target_link_libraries(test_atomic PRIVATE std_module::test_framework)
+    # libatomic is needed for lock-free atomic operations on some platforms
     target_link_options(test_atomic PRIVATE -latomic)
 endif()
 
