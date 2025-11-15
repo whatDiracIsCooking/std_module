@@ -8,6 +8,8 @@
 
 import std_module.span;
 import std_module.test_framework;
+#include <cstddef>  // For size_t
+#include <iterator> // For iterator operators (ADL workaround)
 
 int main() {
     test::test_header("std_module.span");

@@ -8,6 +8,7 @@
 
 import std_module.ostream;
 import std_module.test_framework;
+#include <sstream>  // For ostringstream (not in ostream module)
 
 int main() {
     test::test_header("std_module.ostream");
@@ -16,36 +17,38 @@ int main() {
 
     // Test basic stream operations are accessible
     std::ostringstream oss;
-    test::assert_true(oss.good(), "ostringstream construction");
+    std::ostream& os = oss;  // Use ostream interface from module
+    test::assert_true(os.good(), "ostream reference");
 
-    oss.put('A');
+    os.put('A');
     test::success("put()");
 
     const char msg[] = "Hello";
-    oss.write(msg, 5);
+    os.write(msg, 5);
     test::success("write()");
 
-    oss << "test" << std::flush;
+    os << "test" << std::flush;
     test::success("operator<< and flush");
 
-    oss << "line" << std::endl;
+    os << "line" << std::endl;
     test::success("endl");
 
-    oss << "text" << std::ends;
+    os << "text" << std::ends;
     test::success("ends");
 
-    oss.flush();
+    os.flush();
     test::success("flush() member");
 
-    std::streampos pos = oss.tellp();
+    std::streampos pos = os.tellp();
     test::assert_true(pos >= std::streampos(0), "tellp()");
 
-    oss.seekp(0);
+    os.seekp(0);
     test::success("seekp()");
 
     // Test wide streams
     std::wostringstream woss;
-    woss << L"wide" << std::endl;
+    std::wostream& wos = woss;  // Use wostream interface from module
+    wos << L"wide" << std::endl;
     test::success("wide character streams");
 
     test::test_footer();

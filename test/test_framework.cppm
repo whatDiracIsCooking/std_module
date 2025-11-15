@@ -14,6 +14,7 @@ module;
 #include <iomanip>
 #include <string>
 #include <cstdlib>   // for std::abort
+#include <cstddef>   // for size_t
 #include <stdexcept> // for exception types (out_of_range, etc.)
 #include <any>       // for bad_any_cast
 
@@ -21,6 +22,9 @@ export module std_module.test_framework;
 
 // Re-export std types in std namespace (required for ADL to work correctly)
 export namespace std {
+    // Common types
+    using std::size_t;
+
     // I/O Streams
     using std::cout;
     using std::cerr;
