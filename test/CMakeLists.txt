@@ -32,60 +32,25 @@ endif()
 # ==============================================================================
 
 # Note: The std_module_add_test() macro is defined in cmake/StdModuleMacros.cmake
-# Usage:
-#   std_module_add_test(format)
-#   # Then optionally link test_framework:
-#   if(TARGET test_format)
-#       target_link_libraries(test_format PRIVATE std_module::test_framework)
-#   endif()
-#
 # It handles:
 #   - Creating the test executable
 #   - Linking against the module library
 #   - Setting C++20 requirement
 #   - Registering with CTest
 #   - Printing status message
+#
+# Additional linking (test_framework, system libraries, etc.) is done below
 
 # Add tests for all available modules (alphabetical order)
 std_module_add_test(algorithm)
-if(TARGET test_algorithm)
-    target_link_libraries(test_algorithm PRIVATE std_module::test_framework)
-endif()
-
 std_module_add_test(any)
-if(TARGET test_any)
-    target_link_libraries(test_any PRIVATE std_module::test_framework)
-endif()
-
 std_module_add_test(array)
-if(TARGET test_array)
-    target_link_libraries(test_array PRIVATE std_module::test_framework)
-endif()
-
 std_module_add_test(atomic)
-if(TARGET test_atomic)
-    target_link_libraries(test_atomic PRIVATE std_module::test_framework)
-    # libatomic is needed for lock-free atomic operations on some platforms
-    target_link_options(test_atomic PRIVATE -latomic)
-endif()
-
 std_module_add_test(barrier)
-
 std_module_add_test(bit)
-if(TARGET test_bit)
-    target_link_libraries(test_bit PRIVATE std_module::test_framework)
-endif()
 std_module_add_test(bitset)
 std_module_add_test(charconv)
 std_module_add_test(chrono)
-
-# test_chrono needs iostream module as well (it imports std_module.iostream)
-if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_CHRONO)
-    if(TARGET std_module::iostream)
-        target_link_libraries(test_chrono PRIVATE std_module::iostream)
-    endif()
-endif()
-
 std_module_add_test(codecvt)
 std_module_add_test(compare)
 std_module_add_test(complex)
@@ -149,6 +114,29 @@ std_module_add_test(unordered_set)
 std_module_add_test(valarray)
 std_module_add_test(variant)
 std_module_add_test(vector)
+
+# ==============================================================================
+# Additional Test Linking
+# ==============================================================================
+
+# Link test_framework for tests that use it
+std_module_link_test_framework(algorithm)
+std_module_link_test_framework(any)
+std_module_link_test_framework(array)
+std_module_link_test_framework(atomic)
+std_module_link_test_framework(bit)
+
+# test_atomic needs libatomic for lock-free atomic operations on some platforms
+if(TARGET test_atomic)
+    target_link_options(test_atomic PRIVATE -latomic)
+endif()
+
+# test_chrono needs iostream module (it imports std_module.iostream)
+if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_CHRONO)
+    if(TARGET std_module::iostream)
+        target_link_libraries(test_chrono PRIVATE std_module::iostream)
+    endif()
+endif()
 
 # ==============================================================================
 # Symbol Coverage Analysis
