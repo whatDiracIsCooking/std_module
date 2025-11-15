@@ -7,6 +7,7 @@
  */
 
 import std_module.numeric;
+import std_module.functional;  // For std::plus<>
 import std_module.test_framework;
 
 int main() {

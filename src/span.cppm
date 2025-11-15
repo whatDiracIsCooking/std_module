@@ -20,4 +20,13 @@ using std::dynamic_extent;
 // Byte operations (often used with span)
 using std::as_bytes;
 using std::as_writable_bytes;
+
+// Comparison operators for iterators (fix ADL issues)
+using std::operator==;
+using std::operator!=;
+using std::operator<;
+using std::operator<=;
+using std::operator>;
+using std::operator>=;
+using std::operator<=>;
 }  // namespace std

@@ -7,6 +7,7 @@
  */
 
 import std_module.semaphore;
+import std_module.chrono;  // For milliseconds, steady_clock
 import std_module.test_framework;
 
 int main() {

@@ -8,6 +8,7 @@
 
 import std_module.set;
 import std_module.test_framework;
+#include <cstddef>  // For size_t
 
 int main() {
     test::test_header("std_module.set");
