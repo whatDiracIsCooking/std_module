@@ -26,6 +26,7 @@ using std::destroying_delete_t;
 
 // Constants
 using std::nothrow;
+using std::destroying_delete;
 
 #ifdef __cpp_lib_hardware_interference_size
 // Hardware interference sizes (C++17, may not be available on all compilers)
@@ -37,7 +38,15 @@ using std::hardware_constructive_interference_size;
 using std::get_new_handler;
 using std::set_new_handler;
 using std::launder;
-
-// Note: operator new/delete are global functions and are automatically available
-// They don't need to be explicitly exported from std namespace
 }  // namespace std
+
+// Export global operator new/delete (in global namespace, not std)
+export {
+    // Basic operator new/delete
+    using ::operator new;
+    using ::operator delete;
+
+    // Array variants
+    using ::operator new[];
+    using ::operator delete[];
+}
