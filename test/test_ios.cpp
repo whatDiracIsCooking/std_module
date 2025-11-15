@@ -8,6 +8,7 @@
 
 import std_module.ios;
 import std_module.test_framework;
+#include <sstream>  // For stringstream testing
 
 int main() {
     test::test_header("std_module.ios");
@@ -15,7 +16,7 @@ int main() {
     test::section("Testing boolean manipulators");
 
     // Test boolalpha/noboolalpha (just check they're accessible)
-    test::ostringstream oss;
+    std::ostringstream oss;
     oss << std::boolalpha << true;
     test::success("boolalpha/noboolalpha accessible");
 
@@ -65,7 +66,7 @@ int main() {
 
     // Test showpos/noshowpos
     oss.str("");
-    oss << std::showpos << 42;
+    oss << std::dec << std::showpos << 42;  // Reset to decimal first
     test::assert_equal(oss.str(), "+42", "showpos");
 
     oss.str("");
@@ -107,7 +108,7 @@ int main() {
     test::section("Testing whitespace manipulators");
 
     // Test skipws/noskipws
-    test::istringstream iss("  42  ");
+    std::istringstream iss("  42  ");
     int value;
     iss >> std::skipws >> value;
     test::assert_equal(value, 42, "skipws");
@@ -131,13 +132,13 @@ int main() {
     test::section("Testing stream state");
 
     // Test good, eof, fail, bad, clear
-    test::ostringstream oss2;
+    std::ostringstream oss2;
     test::assert_true(oss2.good(), "good");
     test::assert_false(oss2.fail(), "fail");
     test::assert_false(oss2.bad(), "bad");
     test::assert_false(oss2.eof(), "eof");
 
-    test::istringstream iss2("");
+    std::istringstream iss2("");
     char c;
     iss2 >> c;
     test::assert_true(iss2.eof(), "eof after read");
