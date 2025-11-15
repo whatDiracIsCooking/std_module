@@ -133,6 +133,11 @@ std_module_link_test_framework(codecvt)
 std_module_link_test_framework(compare)
 std_module_link_test_framework(complex)
 std_module_link_test_framework(concepts)
+std_module_link_test_framework(condition_variable)
+std_module_link_test_framework(coroutine)
+std_module_link_test_framework(deque)
+std_module_link_test_framework(exception)
+std_module_link_test_framework(execution)
 
 # test_atomic needs libatomic for lock-free atomic operations on some platforms
 if(TARGET test_atomic)
