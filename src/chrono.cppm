@@ -164,24 +164,14 @@ using std::chrono::operator>;
 using std::chrono::operator>=;
 using std::chrono::operator<=>;
 
-// Duration literals - export in inline namespace for "using namespace std::chrono_literals;"
-inline namespace chrono_literals
-{
-using std::chrono_literals::operator""h;
-using std::chrono_literals::operator""min;
-using std::chrono_literals::operator""s;
-using std::chrono_literals::operator""ms;
-using std::chrono_literals::operator""us;
-using std::chrono_literals::operator""ns;
-using std::chrono_literals::operator""d;
-using std::chrono_literals::operator""y;
-}  // namespace chrono_literals
-
 }  // namespace std::chrono
 
 export namespace std {
+// Stream operators for chrono types (defined in std, not std::chrono)
 using std::operator<<;
 using std::operator>>;
+
+// Duration literals - these are in std::chrono_literals (inline namespace within std)
 inline namespace chrono_literals {
 using std::chrono_literals::operator""h;
 using std::chrono_literals::operator""min;
