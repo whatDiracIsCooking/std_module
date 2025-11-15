@@ -271,7 +271,7 @@ This creates the test executable, links it to the module, and registers with CTe
 
 ### Overview of CMake Macro System
 
-The project uses a sophisticated macro-based build system to minimize boilerplate and ensure consistency across all 25 modules. This is a **key pattern** to understand and follow.
+The project uses a sophisticated macro-based build system to minimize boilerplate and ensure consistency across all 72 modules. This is a **key pattern** to understand and follow.
 
 **Location:** `cmake/StdModuleMacros.cmake`
 
@@ -297,7 +297,7 @@ std_module_add_to_aggregate(newmodule)
 ```
 
 **Why This Matters:**
-- Consistency: All 25 modules follow identical patterns
+- Consistency: All 72 modules follow identical patterns
 - Maintainability: Changes to build logic happen in one place (the macro)
 - Simplicity: Adding a module doesn't require understanding complex CMake
 
@@ -354,7 +354,7 @@ add_library(std_module::all ALIAS std_module_all)
 
 std_module_add_to_aggregate(format)
 std_module_add_to_aggregate(vector)
-# ... all 25 modules
+# ... all 72 modules
 ```
 
 **Usage by consumers:**
@@ -1195,24 +1195,36 @@ This is a wrapper library that re-exports standard library symbols:
 
 ## Future Expansion Roadmap
 
-**Status:** 25 of 90+ standard library headers wrapped
+**Status:** 72 of 90+ standard library headers wrapped
 
-**High-Priority Candidates:**
+**Remaining High-Priority Candidates:**
 
-| Header | Complexity | Notes |
-|--------|------------|-------|
-| `<string>` | Medium | Core text processing |
-| `<array>` | Low | Simple container |
-| `<unordered_map>` | Medium | Hash map container |
-| `<set>` / `<unordered_set>` | Medium | Set containers |
-| `<memory>` | High | Smart pointers, allocators |
-| `<chrono>` | High | May have ADL issues with operators |
-| `<filesystem>` | High | May have ADL issues with stream operators |
-| `<thread>` / `<mutex>` | Medium | Concurrency primitives |
-| `<regex>` | Medium | Regular expressions |
-| `<ranges>` | Very High | Modern ranges library |
-| `<span>` | Low | Non-owning view |
-| `<optional>` / `<variant>` / `<any>` | Medium | Sum types |
+Most commonly-used C++ standard library headers have been implemented. The remaining ~18-20 headers fall into these categories:
+
+1. **C++23 New Features:**
+   - `<print>` - Modern printing facilities
+   - `<expected>` - Error handling type
+   - `<mdspan>` - Multidimensional span
+   - `<generator>` - Coroutine generators
+   - `<flat_map>`, `<flat_set>` - Flat associative containers
+   - `<stacktrace>` - Stack trace library
+   - `<stdfloat>` - Fixed-width floating-point types
+
+2. **Utility Headers:**
+   - `<utility>` - General utilities (pair, move, forward, etc.)
+   - `<functional>` (already implemented, verify completeness)
+
+3. **C Library Wrappers:**
+   - `<cmath>`, `<cstdio>`, `<cstring>`, `<cstdlib>`, `<cctype>`
+   - `<cwchar>`, `<cwctype>`, `<cuchar>` - Wide character support
+   - `<ctime>` - C time library
+   - `<csignal>`, `<csetjmp>` - Signal handling and non-local jumps
+   - `<cfenv>`, `<clocale>` - Floating-point environment and locale
+
+4. **Specialized/Rarely-Used:**
+   - Various deprecated or platform-specific headers
+
+**Note:** The C library wrapper headers (`<c*>`) may require special handling since they export C symbols, not C++ symbols.
 
 **Aggregate Target:**
 
@@ -1223,11 +1235,21 @@ target_link_libraries(myapp PRIVATE std_module::all)
 
 **ADL Limitation Tracking:**
 
-Continue to document modules affected by C++20 ADL issues. Currently known:
-- `<iomanip>` - Non-functional (manipulator operators)
-- `<complex>` - Partially functional (arithmetic operators broken)
+Continue to document modules affected by C++20 ADL issues. Status of known cases:
 
-Likely affected: `<chrono>`, `<filesystem>`, `<valarray>`, and potentially others with operator-heavy APIs.
+**✅ RESOLVED:**
+- ✅ `<iostream>` - Fixed by exporting stream operators
+- ✅ `<chrono>` - Fixed by exporting arithmetic, comparison, and literal operators
+
+**⚠️ PARTIALLY FUNCTIONAL:**
+- ⚠️ `<iomanip>` - Manipulator operators still problematic (implementation-specific types)
+- ⚠️ `<complex>` - Arithmetic operators need export fix (TODO: apply operator export solution)
+
+**🔄 TODO (apply operator export solution):**
+- `<valarray>` - Should be fixable by exporting arithmetic operators
+- `<filesystem>` - Should be fixable by exporting path operators
+
+**Solution:** Export all relevant operators explicitly in the module. See `src/iostream.cppm` and `src/chrono.cppm` for reference patterns.
 
 ## Troubleshooting Guide
 
@@ -1286,7 +1308,7 @@ algorithm, any, array, atomic, barrier, bit, bitset, charconv, chrono, codecvt, 
 
 ---
 
-**Last Updated:** 2025-11-14
+**Last Updated:** 2025-11-15
 **Repository:** /home/user/std_module
 **Primary Maintainer:** AI Assistant
-**Documentation Version:** 3.1 (Testing guidelines integration)
+**Documentation Version:** 3.2 (Updated module count and roadmap)
