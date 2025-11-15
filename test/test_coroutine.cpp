@@ -2,168 +2,51 @@
  * @file test_coroutine.cpp
  * @brief Tests for std_module.coroutine
  *
- * Comprehensive test suite for C++20 <coroutine> functionality through modules.
+ * Verifies module integration - NOT standard library correctness.
+ * Tests that symbols are accessible and callable through the module.
  */
 
 import std_module.coroutine;
+import std_module.test_framework;
 
-#include <iostream>
-#include <cassert>
+int main() {
+    test::test_header("std_module.coroutine");
 
-// Test coroutine_handle
-void test_coroutine_handle()
-{
-    std::cout << "\nTesting coroutine_handle:\n";
+    test::section("Testing coroutine_handle symbols");
 
-    // Test default construction
+    // Test default construction and basic operations
     std::coroutine_handle<> handle;
-    assert(!handle);
-    assert(handle.address() == nullptr);
-    std::cout << "  ✓ Default constructed coroutine_handle is null\n";
+    test::assert_true(!handle, "default coroutine_handle is null");
+    test::assert_true(handle.address() == nullptr, "address() is nullptr");
 
-    // Test from_address
-    void* addr = nullptr;
-    auto handle2 = std::coroutine_handle<>::from_address(addr);
-    assert(!handle2);
-    std::cout << "  ✓ coroutine_handle::from_address works\n";
-}
+    auto handle2 = std::coroutine_handle<>::from_address(nullptr);
+    test::assert_true(!handle2, "from_address works");
 
-// Test suspend_always and suspend_never
-void test_trivial_awaitables()
-{
-    std::cout << "\nTesting trivial awaitables:\n";
+    test::section("Testing trivial awaitables");
 
+    // Test suspend_always
     std::suspend_always always;
-    std::suspend_never never;
-
-    assert(always.await_ready() == false);
-    assert(never.await_ready() == true);
-    std::cout << "  ✓ suspend_always::await_ready() returns false\n";
-    std::cout << "  ✓ suspend_never::await_ready() returns true\n";
-
-    // Test await_suspend and await_resume (they're no-ops)
-    std::coroutine_handle<> handle;
+    test::assert_true(always.await_ready() == false, "suspend_always::await_ready");
     always.await_suspend(handle);
-    never.await_suspend(handle);
     always.await_resume();
-    never.await_resume();
-    std::cout << "  ✓ await_suspend and await_resume work\n";
-}
+    test::success("suspend_always methods callable");
 
-// Test noop_coroutine
-void test_noop_coroutine()
-{
-    std::cout << "\nTesting noop_coroutine:\n";
+    // Test suspend_never
+    std::suspend_never never;
+    test::assert_true(never.await_ready() == true, "suspend_never::await_ready");
+    never.await_suspend(handle);
+    never.await_resume();
+    test::success("suspend_never methods callable");
+
+    test::section("Testing noop_coroutine");
 
     auto noop = std::noop_coroutine();
-    assert(noop);
-    assert(!noop.done());
-    std::cout << "  ✓ noop_coroutine is valid and not done\n";
-
-    // Resume should be safe to call
+    test::assert_true(static_cast<bool>(noop), "noop_coroutine is valid");
+    test::assert_true(!noop.done(), "noop_coroutine not done");
     noop.resume();
-    std::cout << "  ✓ noop_coroutine can be resumed\n";
-
-    // Get address
     [[maybe_unused]] void* addr = noop.address();
-    std::cout << "  ✓ noop_coroutine address can be obtained\n";
-}
+    test::success("noop_coroutine methods callable");
 
-// Simple generator coroutine example
-struct Generator
-{
-    struct promise_type
-    {
-        int current_value;
-
-        Generator get_return_object()
-        {
-            return Generator{std::coroutine_handle<promise_type>::from_promise(*this)};
-        }
-
-        std::suspend_always initial_suspend() { return {}; }
-        std::suspend_always final_suspend() noexcept { return {}; }
-        void return_void() {}
-        void unhandled_exception() { std::terminate(); }
-
-        std::suspend_always yield_value(int value)
-        {
-            current_value = value;
-            return {};
-        }
-    };
-
-    std::coroutine_handle<promise_type> handle;
-
-    explicit Generator(std::coroutine_handle<promise_type> h) : handle(h) {}
-    ~Generator()
-    {
-        if (handle)
-            handle.destroy();
-    }
-
-    bool next()
-    {
-        handle.resume();
-        return !handle.done();
-    }
-
-    int value() const { return handle.promise().current_value; }
-};
-
-Generator counter()
-{
-    for (int i = 0; i < 3; ++i)
-    {
-        co_yield i;
-    }
-}
-
-// Test a simple coroutine
-void test_simple_coroutine()
-{
-    std::cout << "\nTesting simple coroutine:\n";
-
-    auto gen = counter();
-
-    assert(gen.next());
-    assert(gen.value() == 0);
-    std::cout << "  ✓ First yield: " << gen.value() << "\n";
-
-    assert(gen.next());
-    assert(gen.value() == 1);
-    std::cout << "  ✓ Second yield: " << gen.value() << "\n";
-
-    assert(gen.next());
-    assert(gen.value() == 2);
-    std::cout << "  ✓ Third yield: " << gen.value() << "\n";
-
-    assert(!gen.next());
-    std::cout << "  ✓ Coroutine completes correctly\n";
-}
-
-int main()
-{
-    std::cout << "=================================\n";
-    std::cout << "Testing std_module.coroutine\n";
-    std::cout << "=================================\n";
-
-    try
-    {
-        test_coroutine_handle();
-        test_trivial_awaitables();
-        test_noop_coroutine();
-        test_simple_coroutine();
-
-        std::cout << "\n=================================\n";
-        std::cout << "All tests passed! ✓\n";
-        std::cout << "=================================\n";
-    }
-    catch (const std::exception& e)
-    {
-        std::cerr << "\n✗ Test failed with exception: " << e.what() << "\n";
-        return 1;
-    }
-
+    test::test_footer();
     return 0;
 }
