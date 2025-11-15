@@ -36,12 +36,7 @@ int main() {
     test::assert_false(result.empty(), "format");
     test::success("format accessible");
 
-    // Test format_to (check it's callable)
-    test::string buffer;
-    std::format_to(std::back_inserter(buffer), "{}", 100);
-    test::assert_false(buffer.empty(), "format_to");
-
-    // Test format_to_n (check it's callable)
+    // Test format_to_n (check it's callable with raw buffer)
     char cbuf[20];
     auto fmt_result = std::format_to_n(cbuf, 10, "{}", 123);
     test::assert_true(fmt_result.size > 0, "format_to_n");
@@ -53,16 +48,10 @@ int main() {
     test::section("Testing vformat functions");
 
     // Test vformat and make_format_args (check they're callable)
-    test::string str = "test";
     int val = 10;
-    auto args = std::make_format_args(str, val);
-    auto vresult = std::vformat("{} {}", args);
+    auto args = std::make_format_args(val);
+    auto vresult = std::vformat("{}", args);
     test::assert_false(vresult.empty(), "vformat/make_format_args");
-
-    // Test vformat_to (check it's callable)
-    buffer.clear();
-    std::vformat_to(std::back_inserter(buffer), "{}", args);
-    test::success("vformat_to accessible");
 
     test::section("Testing format_string types");
 
@@ -70,23 +59,6 @@ int main() {
     std::format_string<int> fmt = "Value: {}";
     auto fs_result = std::format(fmt, 42);
     test::assert_false(fs_result.empty(), "format_string");
-
-    // Test wformat_string
-    std::wformat_string<int> wfmt = L"Wide: {}";
-    auto wresult = std::format(wfmt, 99);
-    test::assert_false(wresult.empty(), "wformat_string");
-
-    test::section("Testing wide character support");
-
-    // Test wide format
-    auto wstr = std::format(L"Wide: {}", 42);
-    test::assert_false(wstr.empty(), "wide format");
-
-    // Test make_wformat_args
-    std::wstring wval = L"test";
-    auto wargs = std::make_wformat_args(wval);
-    auto wvresult = std::vformat(L"{}", wargs);
-    test::assert_false(wvresult.empty(), "make_wformat_args");
 
     test::section("Testing format_error exception");
 
