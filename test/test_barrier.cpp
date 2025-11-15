@@ -191,7 +191,7 @@ void test_producer_consumer_pattern() {
     constexpr int num_iterations = 5;
     std::barrier<> barrier(2); // Producer and consumer
     std::atomic<int> data{0};
-    bool finished = false;
+    std::atomic<int> processed_count{0};
 
     std::thread producer([&]() {
         for (int i = 1; i <= num_iterations; ++i) {
@@ -199,26 +199,29 @@ void test_producer_consumer_pattern() {
             barrier.arrive_and_wait(); // Signal data ready
             barrier.arrive_and_wait(); // Wait for consumer to process
         }
-        finished = true;
+        data.store(-1); // Sentinel value to signal completion
         barrier.arrive_and_wait(); // Final signal
     });
 
     std::thread consumer([&]() {
-        while (!finished) {
+        while (true) {
             barrier.arrive_and_wait(); // Wait for data
             int value = data.load();
-            if (value > 0 && value <= num_iterations) {
-                // Process data
-                assert(value >= 1 && value <= num_iterations);
+            if (value == -1) {
+                // Sentinel received, exit without additional synchronization
+                break;
             }
+            // Process data
+            assert(value >= 1 && value <= num_iterations);
+            processed_count.fetch_add(1);
             barrier.arrive_and_wait(); // Signal processed
         }
-        barrier.arrive_and_wait(); // Final sync
     });
 
     producer.join();
     consumer.join();
 
+    assert(processed_count.load() == num_iterations);
     std::cout << "  ✓ Producer-consumer synchronized correctly for " << num_iterations << " iterations\n";
 }
 
