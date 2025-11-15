@@ -7,6 +7,8 @@
  */
 
 import std_module.format;
+import std_module.iterator;
+import std_module.string;
 import std_module.test_framework;
 
 // Custom type for testing custom formatter

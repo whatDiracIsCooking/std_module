@@ -7,6 +7,8 @@
  */
 
 import std_module.functional;
+import std_module.compare;
+import std_module.iterator;
 import std_module.test_framework;
 
 // Test helper functions

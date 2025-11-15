@@ -192,17 +192,93 @@ std_module_link_test_framework(future)
 std_module_link_test_framework(initializer_list)
 std_module_link_test_framework(iomanip)
 std_module_link_test_framework(ios)
+std_module_link_test_framework(iosfwd)
+std_module_link_test_framework(iostream)
+std_module_link_test_framework(istream)
+std_module_link_test_framework(iterator)
+std_module_link_test_framework(latch)
+std_module_link_test_framework(limits)
+std_module_link_test_framework(list)
+std_module_link_test_framework(locale)
+std_module_link_test_framework(map)
+std_module_link_test_framework(memory)
+std_module_link_test_framework(memory_resource)
+std_module_link_test_framework(mutex)
+std_module_link_test_framework(new)
+std_module_link_test_framework(numbers)
+std_module_link_test_framework(numeric)
+std_module_link_test_framework(optional)
+std_module_link_test_framework(ostream)
+std_module_link_test_framework(queue)
+std_module_link_test_framework(random)
+std_module_link_test_framework(ranges)
+std_module_link_test_framework(ratio)
+std_module_link_test_framework(regex)
+std_module_link_test_framework(scoped_allocator)
+std_module_link_test_framework(semaphore)
+std_module_link_test_framework(set)
+std_module_link_test_framework(source_location)
+std_module_link_test_framework(span)
+std_module_link_test_framework(stack)
+std_module_link_test_framework(stdexcept)
+std_module_link_test_framework(stop_token)
+std_module_link_test_framework(streambuf)
+std_module_link_test_framework(string)
+std_module_link_test_framework(string_view)
+std_module_link_test_framework(syncstream)
+std_module_link_test_framework(system_error)
+std_module_link_test_framework(thread)
+std_module_link_test_framework(tuple)
+std_module_link_test_framework(type_traits)
+std_module_link_test_framework(typeindex)
+std_module_link_test_framework(typeinfo)
+std_module_link_test_framework(unordered_map)
+std_module_link_test_framework(unordered_set)
+std_module_link_test_framework(valarray)
+std_module_link_test_framework(variant)
+std_module_link_test_framework(vector)
 
 # test_atomic needs libatomic for lock-free atomic operations on some platforms
 if(TARGET test_atomic)
     target_link_options(test_atomic PRIVATE -latomic)
 endif()
 
+# Additional module dependencies for tests that import multiple modules
 # test_chrono needs iostream module (it imports std_module.iostream)
 if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_CHRONO)
     if(TARGET std_module::iostream)
         target_link_libraries(test_chrono PRIVATE std_module::iostream)
     endif()
+endif()
+
+# test_format needs iterator and string modules
+if(TARGET test_format)
+    target_link_libraries(test_format PRIVATE std_module::iterator std_module::string)
+endif()
+
+# test_functional needs compare and iterator modules
+if(TARGET test_functional)
+    target_link_libraries(test_functional PRIVATE std_module::compare std_module::iterator)
+endif()
+
+# test_future needs chrono and exception modules
+if(TARGET test_future)
+    target_link_libraries(test_future PRIVATE std_module::chrono std_module::exception)
+endif()
+
+# test_fstream needs ios and string modules
+if(TARGET test_fstream)
+    target_link_libraries(test_fstream PRIVATE std_module::ios std_module::string)
+endif()
+
+# test_iomanip needs ios module
+if(TARGET test_iomanip)
+    target_link_libraries(test_iomanip PRIVATE std_module::ios)
+endif()
+
+# test_ios needs system_error module
+if(TARGET test_ios)
+    target_link_libraries(test_ios PRIVATE std_module::system_error)
 endif()
 
 # ==============================================================================

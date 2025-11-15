@@ -7,6 +7,8 @@
  */
 
 import std_module.fstream;
+import std_module.ios;
+import std_module.string;
 import std_module.test_framework;
 
 int main() {

@@ -7,6 +7,7 @@
  */
 
 import std_module.ios;
+import std_module.system_error;
 import std_module.test_framework;
 #include <sstream>  // For stringstream testing
 

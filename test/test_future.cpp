@@ -9,6 +9,8 @@
  */
 
 import std_module.future;
+import std_module.chrono;
+import std_module.exception;
 import std_module.test_framework;
 
 int main() {

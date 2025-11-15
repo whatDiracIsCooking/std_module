@@ -11,6 +11,7 @@
  */
 
 import std_module.iomanip;
+import std_module.ios;
 import std_module.test_framework;
 
 int main() {
