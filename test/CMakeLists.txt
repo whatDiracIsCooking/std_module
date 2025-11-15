@@ -32,10 +32,16 @@ endif()
 # ==============================================================================
 
 # Note: The std_module_add_test() macro is defined in cmake/StdModuleMacros.cmake
+# Usage:
+#   std_module_add_test(format)
+#   # Then optionally link test_framework:
+#   if(TARGET test_format)
+#       target_link_libraries(test_format PRIVATE std_module::test_framework)
+#   endif()
+#
 # It handles:
 #   - Creating the test executable
 #   - Linking against the module library
-#   - Optionally linking test_framework (pass TRUE as second param)
 #   - Setting C++20 requirement
 #   - Registering with CTest
 #   - Printing status message
@@ -43,7 +49,7 @@ endif()
 # Add tests for all available modules (alphabetical order)
 std_module_add_test(algorithm)
 
-# test_algorithm needs additional dependencies (vector, iostream, iterator, exception, test_framework)
+# test_algorithm needs additional dependencies
 if(TARGET test_algorithm)
     target_link_libraries(test_algorithm PRIVATE
         std_module::vector
