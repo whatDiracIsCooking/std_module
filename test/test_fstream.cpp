@@ -1,428 +1,182 @@
 /**
  * @file test_fstream.cpp
- * @brief Comprehensive test for std_module.fstream (C++20)
+ * @brief Tests for std_module.fstream
+ *
+ * Verifies module integration - NOT standard library correctness.
+ * Tests that symbols are accessible and callable through the module.
  */
 
 import std_module.fstream;
+import std_module.test_framework;
 
-#include <iostream>   // FIXME: Should be import std_module.iostream when available
-#include <cassert>    // NOTE: Must be #include - assert is a macro, not exportable via modules
-#include <string>     // FIXME: Should be import std_module.string when available
-#include <filesystem> // For cleanup
+int main() {
+    test::test_header("std_module.fstream");
 
-// Test file names
-const char* TEST_FILE = "test_file.txt";
-const char* TEST_FILE2 = "test_file2.txt";
-const char* TEST_BINARY = "test_binary.bin";
-const wchar_t* TEST_WIDE = L"test_wide.txt";
+    const char* test_file = "test_fstream_module.txt";
 
-void test_basic_ofstream() {
-    std::cout << "Testing basic ofstream...\n";
+    test::section("Testing ofstream (output file stream)");
 
-    // Test basic file writing
+    // Test ofstream construction and basic operations
     {
-        std::ofstream out(TEST_FILE);
-        assert(out.is_open());
-        out << "Hello, World!\n";
-        out << "Line 2\n";
-        out << "Number: " << 42 << "\n";
+        std::ofstream out(test_file);
+        test::assert_true(out.is_open(), "ofstream open");
+        out << "test data" << test::endl;
         out.close();
-        assert(!out.is_open());
-        std::cout << "  ✓ Basic ofstream write and close\n";
+        test::assert_false(out.is_open(), "ofstream close");
     }
+    test::success("ofstream construction and basic I/O accessible");
 
-    // Test writing with explicit mode
+    // Test ofstream with modes
     {
-        std::ofstream out(TEST_FILE, std::ios::out | std::ios::trunc);
-        assert(out.is_open());
-        out << "Truncated content\n";
-        std::cout << "  ✓ ofstream with explicit trunc mode\n";
+        std::ofstream out(test_file, std::ios::app);
+        test::assert_true(out.is_open(), "ofstream with append mode");
+        out << "appended";
     }
+    test::success("ofstream with open modes accessible");
 
-    // Test append mode
+    test::section("Testing ifstream (input file stream)");
+
+    // Test ifstream construction and basic operations
     {
-        std::ofstream out(TEST_FILE, std::ios::app);
-        assert(out.is_open());
-        out << "Appended line\n";
-        std::cout << "  ✓ ofstream in append mode\n";
-    }
-}
+        std::ifstream in(test_file);
+        test::assert_true(in.is_open(), "ifstream open");
 
-void test_basic_ifstream() {
-    std::cout << "\nTesting basic ifstream...\n";
-
-    // First write some content
-    {
-        std::ofstream out(TEST_FILE);
-        out << "First line\n";
-        out << "Second line\n";
-        out << "42 3.14\n";
-    }
-
-    // Test basic file reading
-    {
-        std::ifstream in(TEST_FILE);
-        assert(in.is_open());
-
-        std::string line;
-        std::getline(in, line);
-        assert(line == "First line");
-        std::cout << "  ✓ Read first line: " << line << "\n";
-
-        std::getline(in, line);
-        assert(line == "Second line");
-        std::cout << "  ✓ Read second line: " << line << "\n";
-
-        int num;
-        double fnum;
-        in >> num >> fnum;
-        assert(num == 42);
-        assert(fnum == 3.14);
-        std::cout << "  ✓ Read numbers: " << num << " and " << fnum << "\n";
-    }
-
-    // Test reading entire file
-    {
-        std::ifstream in(TEST_FILE);
-        std::string content;
-        std::string line;
-        while (std::getline(in, line)) {
-            content += line + "\n";
+        test::string line;
+        if (std::getline(in, line)) {
+            test::assert_false(line.empty(), "ifstream read");
         }
-        assert(!content.empty());
-        std::cout << "  ✓ Read entire file (" << content.length() << " bytes)\n";
+
+        in.close();
+        test::assert_false(in.is_open(), "ifstream close");
     }
+    test::success("ifstream construction and basic I/O accessible");
 
-    // Test file error state when file doesn't exist
+    // Test ifstream error states
     {
-        std::ifstream in("nonexistent_file.txt");
-        assert(!in.is_open());
-        assert(in.fail());
-        std::cout << "  ✓ Proper error state for nonexistent file\n";
+        std::ifstream in("nonexistent_file_xyz.txt");
+        test::assert_false(in.is_open(), "ifstream fail on nonexistent file");
+        test::assert_true(in.fail(), "ifstream fail state");
     }
-}
+    test::success("ifstream error states accessible");
 
-void test_fstream_bidirectional() {
-    std::cout << "\nTesting bidirectional fstream...\n";
+    test::section("Testing fstream (bidirectional file stream)");
 
-    // Write and read using fstream
+    // Test fstream for read/write
     {
-        std::fstream file(TEST_FILE2, std::ios::out | std::ios::in | std::ios::trunc);
-        assert(file.is_open());
+        std::fstream file(test_file, std::ios::in | std::ios::out | std::ios::trunc);
+        test::assert_true(file.is_open(), "fstream open");
 
-        // Write some data
-        file << "Line 1\n";
-        file << "Line 2\n";
-        file << "Line 3\n";
-        std::cout << "  ✓ Write data using fstream\n";
-
-        // Seek back to beginning
+        file << "bidirectional" << test::endl;
         file.seekg(0, std::ios::beg);
 
-        // Read back the data
-        std::string line;
-        std::getline(file, line);
-        assert(line == "Line 1");
-        std::cout << "  ✓ Read back data: " << line << "\n";
+        test::string data;
+        file >> data;
+        test::assert_false(data.empty(), "fstream read/write");
+    }
+    test::success("fstream bidirectional I/O accessible");
 
-        // Test seeking
+    // Test file positioning
+    {
+        std::fstream file(test_file, std::ios::in | std::ios::out);
         file.seekg(0, std::ios::end);
         auto size = file.tellg();
-        assert(size > 0);
-        std::cout << "  ✓ File size via tellg: " << size << " bytes\n";
-    }
+        test::assert_true(size >= 0, "tellg/seekg");
 
-    // Test in-place modification
-    {
-        std::fstream file(TEST_FILE2, std::ios::in | std::ios::out);
-        assert(file.is_open());
-
-        // Read first line
-        std::string line;
-        std::getline(file, line);
-
-        // Seek back and overwrite
         file.seekp(0, std::ios::beg);
-        file << "Modified";
-        std::cout << "  ✓ In-place file modification\n";
+        auto pos = file.tellp();
+        test::assert_equal(pos, std::streampos(0), "tellp/seekp");
     }
-}
+    test::success("file positioning (tellg, seekg, tellp, seekp) accessible");
 
-void test_binary_mode() {
-    std::cout << "\nTesting binary mode...\n";
+    test::section("Testing binary mode");
 
-    // Write binary data
+    // Test binary I/O
     {
-        std::ofstream out(TEST_BINARY, std::ios::binary);
-        assert(out.is_open());
+        const char* bin_file = "test_binary.bin";
+        std::ofstream out(bin_file, std::ios::binary);
+        test::assert_true(out.is_open(), "binary ofstream open");
 
-        int numbers[] = {1, 2, 3, 4, 5};
-        out.write(reinterpret_cast<char*>(numbers), sizeof(numbers));
-        std::cout << "  ✓ Write binary data (" << sizeof(numbers) << " bytes)\n";
-    }
+        int data[] = {1, 2, 3, 4, 5};
+        out.write(reinterpret_cast<char*>(data), sizeof(data));
+        out.close();
 
-    // Read binary data
-    {
-        std::ifstream in(TEST_BINARY, std::ios::binary);
-        assert(in.is_open());
-
-        int numbers[5];
-        in.read(reinterpret_cast<char*>(numbers), sizeof(numbers));
-
-        assert(numbers[0] == 1);
-        assert(numbers[4] == 5);
-        std::cout << "  ✓ Read binary data: " << numbers[0] << " to " << numbers[4] << "\n";
-
-        // Test gcount
+        std::ifstream in(bin_file, std::ios::binary);
+        int read_data[5];
+        in.read(reinterpret_cast<char*>(read_data), sizeof(read_data));
         auto bytes_read = in.gcount();
-        assert(bytes_read == sizeof(numbers));
-        std::cout << "  ✓ gcount reports: " << bytes_read << " bytes\n";
+        test::assert_true(bytes_read > 0, "binary read/write and gcount");
     }
-}
+    test::success("binary mode I/O accessible");
 
-void test_file_positioning() {
-    std::cout << "\nTesting file positioning...\n";
+    test::section("Testing wide character streams");
 
-    // Create a test file
+    // Test wofstream, wifstream, wfstream
     {
-        std::ofstream out(TEST_FILE);
-        out << "0123456789ABCDEF";
+        const char* wide_file = "test_wide.txt";
+        std::wofstream wout(wide_file);
+        test::assert_true(wout.is_open(), "wofstream open");
+        wout << L"wide string" << test::endl;
+        wout.close();
+
+        std::wifstream win(wide_file);
+        test::assert_true(win.is_open(), "wifstream open");
+
+        std::wfstream wfile(wide_file, std::ios::in | std::ios::out);
+        test::assert_true(wfile.is_open(), "wfstream open");
     }
+    test::success("wide character file streams accessible");
 
-    std::fstream file(TEST_FILE, std::ios::in | std::ios::out);
-    assert(file.is_open());
+    test::section("Testing filebuf");
 
-    // Test tellg and seekg
-    auto pos1 = file.tellg();
-    assert(pos1 == 0);
-    std::cout << "  ✓ Initial position: " << pos1 << "\n";
-
-    file.seekg(5, std::ios::beg);
-    char ch;
-    file.get(ch);
-    assert(ch == '5');
-    std::cout << "  ✓ Read after seekg(5): " << ch << "\n";
-
-    file.seekg(-3, std::ios::end);
-    file.get(ch);
-    assert(ch == 'D');
-    std::cout << "  ✓ Read after seekg(-3, end): " << ch << "\n";
-
-    // Test tellp and seekp
-    file.seekp(0, std::ios::beg);
-    auto pos2 = file.tellp();
-    assert(pos2 == 0);
-    std::cout << "  ✓ tellp after seekp(0): " << pos2 << "\n";
-}
-
-void test_file_states() {
-    std::cout << "\nTesting file states...\n";
-
-    // Test good state
-    {
-        std::ofstream out(TEST_FILE);
-        assert(out.good());
-        assert(!out.fail());
-        assert(!out.bad());
-        assert(!out.eof());
-        std::cout << "  ✓ Fresh ofstream is in good state\n";
-    }
-
-    // Test EOF state
-    {
-        std::ifstream in(TEST_FILE);
-        while (in.get() != EOF);
-        assert(in.eof());
-        assert(!in.good());
-        std::cout << "  ✓ EOF state detected correctly\n";
-
-        // Test clear
-        in.clear();
-        assert(!in.eof());
-        std::cout << "  ✓ clear() resets error state\n";
-    }
-
-    // Test fail state
-    {
-        std::ifstream in("definitely_nonexistent_file_12345.txt");
-        assert(in.fail());
-        assert(!in.good());
-        std::cout << "  ✓ Fail state for nonexistent file\n";
-    }
-}
-
-void test_wide_char_streams() {
-    std::cout << "\nTesting wide character streams...\n";
-
-    const char* TEST_WIDE_CHAR = "test_wide_char.txt";
-
-    // Test wofstream
-    {
-        std::wofstream out(TEST_WIDE_CHAR);
-        assert(out.is_open());
-        out << L"Wide string: " << L"こんにちは" << L"\n";
-        out << L"Number: " << 42 << L"\n";
-        std::cout << "  ✓ wofstream write\n";
-    }
-
-    // Test wifstream
-    {
-        std::wifstream in(TEST_WIDE_CHAR);
-        assert(in.is_open());
-        std::wstring line;
-        std::getline(in, line);
-        // Note: Wide character reading may fail without proper locale setup
-        // This is a known limitation of wide stream I/O, not the module
-        if (!line.empty()) {
-            std::cout << "  ✓ wifstream read (" << line.length() << " wide chars)\n";
-        } else {
-            std::cout << "  ✓ wifstream opened (locale-dependent read behavior)\n";
-        }
-    }
-
-    // Test wfstream
-    {
-        std::wfstream file(TEST_WIDE_CHAR, std::ios::in | std::ios::out | std::ios::app);
-        assert(file.is_open());
-        file << L"Appended wide line\n";
-        std::cout << "  ✓ wfstream append\n";
-    }
-
-    // Cleanup
-    std::filesystem::remove(TEST_WIDE_CHAR);
-}
-
-void test_filebuf() {
-    std::cout << "\nTesting filebuf...\n";
-
-    // Test basic filebuf operations
+    // Test filebuf (underlying buffer)
     {
         std::filebuf fb;
-        fb.open(TEST_FILE, std::ios::out);
-        assert(fb.is_open());
-
-        fb.sputn("Hello from filebuf\n", 19);
-        std::cout << "  ✓ filebuf write\n";
-
+        fb.open(test_file, std::ios::out);
+        test::assert_true(fb.is_open(), "filebuf open");
+        fb.sputn("filebuf test", 12);
         fb.close();
-        assert(!fb.is_open());
-        std::cout << "  ✓ filebuf close\n";
+        test::assert_false(fb.is_open(), "filebuf close");
     }
-
-    // Test filebuf reading
-    {
-        std::filebuf fb;
-        fb.open(TEST_FILE, std::ios::in);
-        assert(fb.is_open());
-
-        char buffer[20];
-        auto n = fb.sgetn(buffer, 19);
-        buffer[n] = '\0';
-        assert(n > 0);
-        std::cout << "  ✓ filebuf read: " << buffer << " (" << n << " bytes)\n";
-    }
+    test::success("filebuf accessible");
 
     // Test wfilebuf
     {
         std::wfilebuf wfb;
-        const char* TEST_WFILEBUF = "test_wfilebuf.txt";
-        wfb.open(TEST_WFILEBUF, std::ios::out);
-        assert(wfb.is_open());
-
-        wfb.sputn(L"Wide buffer test\n", 17);
+        wfb.open(test_file, std::ios::out);
+        test::assert_true(wfb.is_open(), "wfilebuf open");
         wfb.close();
-        std::cout << "  ✓ wfilebuf write\n";
-
-        std::filesystem::remove(TEST_WFILEBUF);
     }
-}
+    test::success("wfilebuf accessible");
 
-void test_constructor_variations() {
-    std::cout << "\nTesting constructor variations...\n";
+    test::section("Testing stream state operations");
 
-    // Test default constructor
+    // Test stream state methods
+    {
+        std::ofstream out(test_file);
+        test::assert_true(out.good(), "good state");
+        test::assert_false(out.fail(), "fail state");
+        test::assert_false(out.bad(), "bad state");
+        test::assert_false(out.eof(), "eof state");
+
+        out.flush();
+        test::success("flush accessible");
+
+        auto* buf = out.rdbuf();
+        test::assert_true(buf != nullptr, "rdbuf");
+    }
+    test::success("stream state operations accessible");
+
+    test::section("Testing constructor variations");
+
+    // Test default constructor + open
     {
         std::ofstream out1;
-        assert(!out1.is_open());
-        out1.open(TEST_FILE);
-        assert(out1.is_open());
-        out1 << "Constructor test\n";
-        std::cout << "  ✓ Default constructor + open()\n";
+        test::assert_false(out1.is_open(), "default constructor");
+        out1.open(test_file);
+        test::assert_true(out1.is_open(), "open method");
     }
+    test::success("default constructor and open method accessible");
 
-    // Test constructor with filename
-    {
-        std::ofstream out2(TEST_FILE);
-        assert(out2.is_open());
-        std::cout << "  ✓ Constructor with filename\n";
-    }
-
-    // Test constructor with filename and mode
-    {
-        std::ofstream out3(TEST_FILE, std::ios::app);
-        assert(out3.is_open());
-        std::cout << "  ✓ Constructor with filename and mode\n";
-    }
-
-    // FIXME: C++20 module limitation - move constructor/assignment may not work
-    // See: https://github.com/cplusplus/papers/issues/1005
-    // {
-    //     std::ofstream out4(std::move(out3));
-    //     assert(out4.is_open());
-    //     assert(!out3.is_open());
-    //     std::cout << "  ✓ Move constructor\n";
-    // }
-}
-
-void test_flush_and_sync() {
-    std::cout << "\nTesting flush and sync operations...\n";
-
-    std::ofstream out(TEST_FILE);
-    assert(out.is_open());
-
-    out << "Line 1\n";
-    out.flush();
-    std::cout << "  ✓ flush() called\n";
-
-    out << "Line 2\n";
-    auto* buf = out.rdbuf();
-    assert(buf != nullptr);
-    buf->pubsync();
-    std::cout << "  ✓ rdbuf()->pubsync() called\n";
-}
-
-void cleanup_test_files() {
-    std::filesystem::remove(TEST_FILE);
-    std::filesystem::remove(TEST_FILE2);
-    std::filesystem::remove(TEST_BINARY);
-}
-
-int main() {
-    std::cout << "===========================================\n";
-    std::cout << "Testing std_module.fstream\n";
-    std::cout << "===========================================\n\n";
-
-    try {
-        test_basic_ofstream();
-        test_basic_ifstream();
-        test_fstream_bidirectional();
-        test_binary_mode();
-        test_file_positioning();
-        test_file_states();
-        test_wide_char_streams();
-        test_filebuf();
-        test_constructor_variations();
-        test_flush_and_sync();
-
-        cleanup_test_files();
-
-        std::cout << "\n===========================================\n";
-        std::cout << "All tests passed! ✓\n";
-        std::cout << "===========================================\n";
-        return 0;
-    } catch (const std::exception& e) {
-        std::cerr << "\nTest failed with exception: " << e.what() << "\n";
-        cleanup_test_files();
-        return 1;
-    }
+    test::test_footer();
+    return 0;
 }

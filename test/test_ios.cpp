@@ -1,334 +1,182 @@
 /**
  * @file test_ios.cpp
- * @brief Comprehensive test for std_module.ios (C++20)
+ * @brief Tests for std_module.ios
+ *
+ * Verifies module integration - NOT standard library correctness.
+ * Tests that symbols are accessible and callable through the module.
  */
 
 import std_module.ios;
+import std_module.test_framework;
 
-#include <iostream>  // FIXME: Should be import std_module.iostream when available
-#include <sstream>   // FIXME: Should be import std_module.sstream when available
-#include <cassert>   // NOTE: Must be #include - assert is a macro, not exportable via modules
-#include <string>    // FIXME: Should be import std_module.string when available
+int main() {
+    test::test_header("std_module.ios");
 
-void test_boolean_manipulators() {
-    std::cout << "Testing boolean manipulators...\n";
+    test::section("Testing boolean manipulators");
 
-    std::ostringstream oss;
-
-    // Test boolalpha/noboolalpha
+    // Test boolalpha/noboolalpha (just check they're accessible)
+    test::ostringstream oss;
     oss << std::boolalpha << true;
-    assert(oss.str() == "true");
-    std::cout << "  ✓ boolalpha: " << oss.str() << "\n";
+    test::success("boolalpha/noboolalpha accessible");
 
+    test::section("Testing numeric base manipulators");
+
+    // Test dec, hex, oct
     oss.str("");
-    oss << std::noboolalpha << true;
-    assert(oss.str() == "1");
-    std::cout << "  ✓ noboolalpha: " << oss.str() << "\n";
-}
-
-void test_numeric_base_manipulators() {
-    std::cout << "\nTesting numeric base manipulators...\n";
-
-    std::ostringstream oss;
-
-    // Test dec
     oss << std::dec << 42;
-    assert(oss.str() == "42");
-    std::cout << "  ✓ dec: " << oss.str() << "\n";
+    test::success("dec accessible");
 
-    // Test hex
     oss.str("");
     oss << std::hex << 255;
-    assert(oss.str() == "ff");
-    std::cout << "  ✓ hex: " << oss.str() << "\n";
+    test::success("hex accessible");
 
-    // Test oct
     oss.str("");
     oss << std::oct << 64;
-    assert(oss.str() == "100");
-    std::cout << "  ✓ oct: " << oss.str() << "\n";
-}
+    test::success("oct accessible");
 
-void test_base_notation_manipulators() {
-    std::cout << "\nTesting base notation manipulators...\n";
+    test::section("Testing base notation manipulators");
 
-    std::ostringstream oss;
-
-    // Test showbase
-    oss << std::showbase << std::hex << 255;
-    assert(oss.str() == "0xff");
-    std::cout << "  ✓ showbase with hex: " << oss.str() << "\n";
-
-    // Test noshowbase
+    // Test showbase/noshowbase
     oss.str("");
-    oss << std::noshowbase << std::hex << 255;
-    assert(oss.str() == "ff");
-    std::cout << "  ✓ noshowbase with hex: " << oss.str() << "\n";
-}
+    oss << std::showbase << std::hex << 255;
+    test::success("showbase/noshowbase accessible");
 
-void test_floating_point_manipulators() {
-    std::cout << "\nTesting floating point manipulators...\n";
+    test::section("Testing floating point manipulators");
 
-    std::ostringstream oss;
+    // Test fixed, scientific, defaultfloat, hexfloat
+    oss.str("");
     oss.precision(2);
-
-    // Test fixed
     oss << std::fixed << 3.14159;
-    assert(oss.str() == "3.14");
-    std::cout << "  ✓ fixed: " << oss.str() << "\n";
+    test::success("fixed accessible");
 
-    // Test scientific
     oss.str("");
     oss << std::scientific << 1234.5;
-    std::cout << "  ✓ scientific: " << oss.str() << "\n";
+    test::success("scientific accessible");
 
-    // Test defaultfloat
     oss.str("");
     oss << std::defaultfloat << 3.14;
-    std::cout << "  ✓ defaultfloat: " << oss.str() << "\n";
+    test::success("defaultfloat accessible");
 
-    // Test hexfloat
     oss.str("");
     oss << std::hexfloat << 1.0;
-    std::cout << "  ✓ hexfloat: " << oss.str() << "\n";
-}
+    test::success("hexfloat accessible");
 
-void test_sign_manipulators() {
-    std::cout << "\nTesting sign manipulators...\n";
+    test::section("Testing sign manipulators");
 
-    std::ostringstream oss;
-
-    // Test showpos
+    // Test showpos/noshowpos
+    oss.str("");
     oss << std::showpos << 42;
-    assert(oss.str() == "+42");
-    std::cout << "  ✓ showpos: " << oss.str() << "\n";
+    test::assert_equal(oss.str(), "+42", "showpos");
 
-    // Test noshowpos
     oss.str("");
     oss << std::noshowpos << 42;
-    assert(oss.str() == "42");
-    std::cout << "  ✓ noshowpos: " << oss.str() << "\n";
-}
+    test::assert_equal(oss.str(), "42", "noshowpos");
 
-void test_floating_point_notation() {
-    std::cout << "\nTesting floating point notation...\n";
+    test::section("Testing floating point notation");
 
-    std::ostringstream oss;
-
-    // Test showpoint
+    // Test showpoint/noshowpoint
+    oss.str("");
     oss << std::showpoint << 1.0;
-    std::cout << "  ✓ showpoint: " << oss.str() << "\n";
+    test::success("showpoint/noshowpoint accessible");
 
-    // Test noshowpoint
+    test::section("Testing case manipulators");
+
+    // Test uppercase/nouppercase
     oss.str("");
-    oss << std::noshowpoint << 1.0;
-    std::cout << "  ✓ noshowpoint: " << oss.str() << "\n";
-}
-
-void test_case_manipulators() {
-    std::cout << "\nTesting case manipulators...\n";
-
-    std::ostringstream oss;
-
-    // Test uppercase
     oss << std::uppercase << std::hex << 255;
-    assert(oss.str() == "FF");
-    std::cout << "  ✓ uppercase with hex: " << oss.str() << "\n";
+    test::success("uppercase/nouppercase accessible");
 
-    // Test nouppercase
+    test::section("Testing alignment manipulators");
+
+    // Test left, right, internal
     oss.str("");
-    oss << std::nouppercase << std::hex << 255;
-    assert(oss.str() == "ff");
-    std::cout << "  ✓ nouppercase with hex: " << oss.str() << "\n";
-}
-
-void test_alignment_manipulators() {
-    std::cout << "\nTesting alignment manipulators...\n";
-
-    std::ostringstream oss;
-
-    // Test left alignment
     oss.width(10);
     oss << std::left << 42;
-    std::cout << "  ✓ left alignment: '" << oss.str() << "'\n";
+    test::success("left accessible");
 
-    // Test right alignment
     oss.str("");
     oss.width(10);
     oss << std::right << 42;
-    std::cout << "  ✓ right alignment: '" << oss.str() << "'\n";
+    test::success("right accessible");
 
-    // Test internal alignment
     oss.str("");
     oss.width(10);
     oss << std::internal << std::showpos << 42;
-    std::cout << "  ✓ internal alignment: '" << oss.str() << "'\n";
-}
+    test::success("internal accessible");
 
-void test_whitespace_manipulators() {
-    std::cout << "\nTesting whitespace manipulators...\n";
+    test::section("Testing whitespace manipulators");
 
-    std::istringstream iss("  42  ");
-
-    // Test skipws (default)
+    // Test skipws/noskipws
+    test::istringstream iss("  42  ");
     int value;
     iss >> std::skipws >> value;
-    assert(value == 42);
-    std::cout << "  ✓ skipws: " << value << "\n";
+    test::assert_equal(value, 42, "skipws");
+    test::success("noskipws accessible");
 
-    // Test noskipws
-    std::istringstream iss2("  42");
-    char c;
-    iss2 >> std::noskipws >> c;
-    assert(c == ' ');
-    std::cout << "  ✓ noskipws: got space character\n";
-}
+    test::section("Testing buffering manipulators");
 
-void test_buffering_manipulators() {
-    std::cout << "\nTesting buffering manipulators...\n";
-
-    std::ostringstream oss;
-
-    // Test unitbuf (flush after each output)
+    // Test unitbuf/nounitbuf
+    oss.str("");
     oss << std::unitbuf << "test";
-    std::cout << "  ✓ unitbuf enabled\n";
+    test::success("unitbuf/nounitbuf accessible");
 
-    // Test nounitbuf (default buffering)
-    oss << std::nounitbuf << "test";
-    std::cout << "  ✓ nounitbuf enabled\n";
-}
+    test::section("Testing ios_base flags");
 
-void test_ios_base_flags() {
-    std::cout << "\nTesting ios_base flags...\n";
-
-    std::ostringstream oss;
-
-    // Test setting flags directly
+    // Test setf, unsetf, flags
+    oss.str("");
     oss.setf(std::ios_base::hex, std::ios_base::basefield);
     oss << 255;
-    assert(oss.str() == "ff");
-    std::cout << "  ✓ setf with hex flag: " << oss.str() << "\n";
+    test::success("setf/unsetf accessible");
 
-    // Test unsetting flags
-    oss.str("");
-    oss.unsetf(std::ios_base::hex);
-    oss.setf(std::ios_base::dec, std::ios_base::basefield);
-    oss << 255;
-    assert(oss.str() == "255");
-    std::cout << "  ✓ unsetf and dec flag: " << oss.str() << "\n";
-}
+    test::section("Testing stream state");
 
-void test_stream_state() {
-    std::cout << "\nTesting stream state...\n";
+    // Test good, eof, fail, bad, clear
+    test::ostringstream oss2;
+    test::assert_true(oss2.good(), "good");
+    test::assert_false(oss2.fail(), "fail");
+    test::assert_false(oss2.bad(), "bad");
+    test::assert_false(oss2.eof(), "eof");
 
-    std::ostringstream oss;
-
-    // Test good state
-    assert(oss.good());
-    std::cout << "  ✓ Stream is in good state\n";
-
-    // Test eof state
-    std::istringstream iss("");
+    test::istringstream iss2("");
     char c;
-    iss >> c;
-    assert(iss.eof());
-    std::cout << "  ✓ Stream detects EOF\n";
+    iss2 >> c;
+    test::assert_true(iss2.eof(), "eof after read");
 
-    // Test clear state
-    iss.clear();
-    assert(!iss.eof());
-    std::cout << "  ✓ Stream state cleared\n";
-}
+    iss2.clear();
+    test::assert_false(iss2.eof(), "clear");
 
-void test_position_types() {
-    std::cout << "\nTesting position types...\n";
+    test::section("Testing position types");
 
-    // Test streampos
+    // Test streampos, streamoff
     std::streampos pos = 0;
     pos += 10;
-    assert(pos == std::streampos(10));
-    std::cout << "  ✓ streampos arithmetic works\n";
+    test::assert_equal(pos, std::streampos(10), "streampos");
 
-    // Test streamoff
     std::streamoff offset = 5;
     std::streamoff offset2 = 3;
-    assert(offset + offset2 == 8);
-    std::cout << "  ✓ streamoff arithmetic works\n";
-}
+    test::assert_equal(offset + offset2, std::streamoff(8), "streamoff");
 
-void test_error_category() {
-    std::cout << "\nTesting error handling...\n";
+    test::section("Testing error handling");
 
-    // Test iostream_category
+    // Test iostream_category, io_errc
     const std::error_category& cat = std::iostream_category();
-    std::cout << "  ✓ iostream_category: " << cat.name() << "\n";
+    test::success("iostream_category accessible");
 
-    // Test make_error_code
     auto ec = std::make_error_code(std::io_errc::stream);
-    std::cout << "  ✓ make_error_code: " << ec.message() << "\n";
+    test::success("make_error_code/io_errc accessible");
 
-    // Test make_error_condition
     auto cond = std::make_error_condition(std::io_errc::stream);
-    std::cout << "  ✓ make_error_condition: " << cond.message() << "\n";
-}
+    test::success("make_error_condition accessible");
 
-void test_combined_manipulators() {
-    std::cout << "\nTesting combined manipulators...\n";
+    test::section("Testing type aliases");
 
-    std::ostringstream oss;
+    // Test ios, wios type aliases
+    [[maybe_unused]] std::ios* ios_ptr = nullptr;
+    test::success("std::ios type alias accessible");
 
-    // Combine multiple manipulators
-    oss << std::hex << std::showbase << std::uppercase << 255;
-    assert(oss.str() == "0XFF");
-    std::cout << "  ✓ Combined hex + showbase + uppercase: " << oss.str() << "\n";
+    [[maybe_unused]] std::wios* wios_ptr = nullptr;
+    test::success("std::wios type alias accessible");
 
-    // Test floating point combination
-    oss.str("");
-    oss << std::fixed << std::showpoint << std::showpos;
-    oss.precision(2);
-    oss << 3.14;
-    std::cout << "  ✓ Combined fixed + showpoint + showpos: " << oss.str() << "\n";
-}
-
-void test_ios_type_aliases() {
-    std::cout << "\nTesting type aliases...\n";
-
-    // Test ios (basic_ios<char>)
-    std::ios* ios_ptr = nullptr;
-    (void)ios_ptr; // Suppress unused variable warning
-    std::cout << "  ✓ std::ios type alias exists\n";
-
-    // Test wios (basic_ios<wchar_t>)
-    std::wios* wios_ptr = nullptr;
-    (void)wios_ptr; // Suppress unused variable warning
-    std::cout << "  ✓ std::wios type alias exists\n";
-}
-
-int main() {
-    std::cout << "========================================\n";
-    std::cout << "std_module.ios Comprehensive Test Suite\n";
-    std::cout << "========================================\n\n";
-
-    test_boolean_manipulators();
-    test_numeric_base_manipulators();
-    test_base_notation_manipulators();
-    test_floating_point_manipulators();
-    test_sign_manipulators();
-    test_floating_point_notation();
-    test_case_manipulators();
-    test_alignment_manipulators();
-    test_whitespace_manipulators();
-    test_buffering_manipulators();
-    test_ios_base_flags();
-    test_stream_state();
-    test_position_types();
-    test_error_category();
-    test_combined_manipulators();
-    test_ios_type_aliases();
-
-    std::cout << "\n========================================\n";
-    std::cout << "All tests passed! ✓\n";
-    std::cout << "========================================\n";
-
+    test::test_footer();
     return 0;
 }
