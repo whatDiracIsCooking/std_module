@@ -2,6 +2,35 @@
 # Tests for std_module
 # ==============================================================================
 
+# ==============================================================================
+# Test Framework - Testing Utility Module
+# ==============================================================================
+# Build test_framework FIRST so it's available for tests that need it
+
+if(STD_MODULE_BUILD_TESTS)
+    # Build the test_framework module library
+    add_library(std_module_test_framework)
+    target_sources(std_module_test_framework
+        PUBLIC
+            FILE_SET CXX_MODULES FILES
+                test_framework.cppm
+    )
+    target_compile_features(std_module_test_framework PUBLIC cxx_std_20)
+    add_library(std_module::test_framework ALIAS std_module_test_framework)
+    message(STATUS "Configured test utility: std_module::test_framework")
+
+    # Test the test_framework itself
+    add_executable(test_test_framework test_test_framework.cpp)
+    target_link_libraries(test_test_framework PRIVATE std_module::test_framework)
+    target_compile_features(test_test_framework PRIVATE cxx_std_20)
+    add_test(NAME test_test_framework COMMAND test_test_framework)
+    message(STATUS "Configured test: test_test_framework")
+endif()
+
+# ==============================================================================
+# Module Tests
+# ==============================================================================
+
 # Note: The std_module_add_test() macro is defined in cmake/StdModuleMacros.cmake
 # It handles:
 #   - Creating the test executable
@@ -9,35 +38,19 @@
 #   - Setting C++20 requirement
 #   - Registering with CTest
 #   - Printing status message
+#
+# Additional linking (test_framework, system libraries, etc.) is done below
 
 # Add tests for all available modules (alphabetical order)
 std_module_add_test(algorithm)
-
-# test_algorithm needs additional dependencies (vector, iostream, iterator, exception)
-if(TARGET test_algorithm)
-    target_link_libraries(test_algorithm PRIVATE
-        std_module::vector
-        std_module::iostream
-        std_module::iterator
-        std_module::exception)
-endif()
-
 std_module_add_test(any)
 std_module_add_test(array)
-# std_module_add_test(atomic)  # TODO: Fix linking with libatomic
+std_module_add_test(atomic)
 std_module_add_test(barrier)
 std_module_add_test(bit)
 std_module_add_test(bitset)
 std_module_add_test(charconv)
 std_module_add_test(chrono)
-
-# test_chrono needs iostream module as well (it imports std_module.iostream)
-if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_CHRONO)
-    if(TARGET std_module::iostream)
-        target_link_libraries(test_chrono PRIVATE std_module::iostream)
-    endif()
-endif()
-
 std_module_add_test(codecvt)
 std_module_add_test(compare)
 std_module_add_test(complex)
@@ -103,34 +116,26 @@ std_module_add_test(variant)
 std_module_add_test(vector)
 
 # ==============================================================================
-# Test Framework - Testing Utility Module
+# Additional Test Linking
 # ==============================================================================
 
-# The test_framework is a testing utility module (not a stdlib wrapper).
-# It provides assert functions, I/O utilities, and formatting helpers for
-# pure module-only tests. Only built when tests are enabled.
+# Link test_framework for tests that use it
+std_module_link_test_framework(algorithm)
+std_module_link_test_framework(any)
+std_module_link_test_framework(array)
+std_module_link_test_framework(atomic)
+std_module_link_test_framework(bit)
 
-if(STD_MODULE_BUILD_TESTS)
-    # Build the test_framework module library
-    add_library(std_module_test_framework)
-    target_sources(std_module_test_framework
-        PUBLIC
-            FILE_SET CXX_MODULES FILES
-                test_framework.cppm
-    )
-    target_compile_features(std_module_test_framework PUBLIC cxx_std_20)
-    add_library(std_module::test_framework ALIAS std_module_test_framework)
-    message(STATUS "Configured test utility: std_module::test_framework")
+# test_atomic needs libatomic for lock-free atomic operations on some platforms
+if(TARGET test_atomic)
+    target_link_options(test_atomic PRIVATE -latomic)
+endif()
 
-    # Test the test_framework itself
-    add_executable(test_test_framework test_test_framework.cpp)
-    target_link_libraries(test_test_framework PRIVATE std_module::test_framework)
-    target_compile_features(test_test_framework PRIVATE cxx_std_20)
-    add_test(NAME test_test_framework COMMAND test_test_framework)
-    message(STATUS "Configured test: test_test_framework")
-
-    # Link tests that use test_framework
-    std_module_link_test_framework(bit)
+# test_chrono needs iostream module (it imports std_module.iostream)
+if(STD_MODULE_BUILD_ALL_MODULES OR STD_MODULE_BUILD_CHRONO)
+    if(TARGET std_module::iostream)
+        target_link_libraries(test_chrono PRIVATE std_module::iostream)
+    endif()
 endif()
 
 # ==============================================================================

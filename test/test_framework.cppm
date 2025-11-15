@@ -13,7 +13,9 @@ module;
 #include <sstream>
 #include <iomanip>
 #include <string>
-#include <cstdlib>  // for std::abort
+#include <cstdlib>   // for std::abort
+#include <stdexcept> // for exception types (out_of_range, etc.)
+#include <any>       // for bad_any_cast
 
 export module std_module.test_framework;
 
@@ -40,6 +42,14 @@ export namespace std {
 
     // String support
     using std::string;
+
+    // Exception types (for testing exception handling)
+    using std::exception;
+    using std::logic_error;
+    using std::runtime_error;
+    using std::out_of_range;
+    using std::invalid_argument;
+    using std::bad_any_cast;
 
     // Stream operators (CRITICAL: must be in std namespace for ADL)
     using std::operator<<;
@@ -74,6 +84,18 @@ export namespace test {
      */
     inline void assert_true(bool condition, const char* message = "Assertion failed") {
         if (!condition) {
+            cerr << "❌ ASSERTION FAILED: " << message << endl;
+            std::abort();
+        }
+    }
+
+    /**
+     * Assert that a condition is false, abort with message if true
+     * @param condition The boolean condition to test (should be false)
+     * @param message Error message to display on failure
+     */
+    inline void assert_false(bool condition, const char* message = "Assertion failed (expected false)") {
+        if (condition) {
             cerr << "❌ ASSERTION FAILED: " << message << endl;
             std::abort();
         }

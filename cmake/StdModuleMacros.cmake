@@ -69,7 +69,10 @@ endmacro()
 #
 # Usage:
 #   std_module_add_test(format)
-#   std_module_add_test(vector)
+#   # Then optionally link test_framework:
+#   if(TARGET test_format)
+#       target_link_libraries(test_format PRIVATE std_module::test_framework)
+#   endif()
 #
 # This macro will:
 #   - Check if STD_MODULE_BUILD_ALL_MODULES or STD_MODULE_BUILD_<NAME> is ON
@@ -78,6 +81,9 @@ endmacro()
 #   - Set C++20 requirement
 #   - Register with CTest
 #   - Print status message
+#
+# Note: To link test_framework, explicitly add it after the macro call.
+#       The explicit pattern works better with CMake's C++20 module system.
 #
 # Parameters:
 #   MODULE_NAME - The name of the module (e.g., "format", "vector")
@@ -98,9 +104,7 @@ macro(std_module_add_test MODULE_NAME)
         )
 
         # Special handling for modules requiring additional system libraries
-        if(MODULE_NAME STREQUAL "atomic")
-            target_link_options(test_${MODULE_NAME} PRIVATE "-latomic")
-        elseif(MODULE_NAME STREQUAL "thread")
+        if(MODULE_NAME STREQUAL "thread")
             find_package(Threads REQUIRED)
             target_link_libraries(test_${MODULE_NAME} PRIVATE Threads::Threads)
         elseif(MODULE_NAME STREQUAL "filesystem")
